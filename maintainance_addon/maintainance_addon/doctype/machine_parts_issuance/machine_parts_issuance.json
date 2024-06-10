@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:MP-{###}",
+ "creation": "2024-06-10 13:32:58.018961",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_bbext",
+  "user",
+  "by_hand",
+  "requested_section",
+  "requested_items",
+  "issuance_section",
+  "machine_part_details",
+  "returned_section",
+  "machine_part_returned"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_bbext",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "by_hand",
+   "fieldtype": "Link",
+   "label": "Hand By Name",
+   "options": "Hand By Name"
+  },
+  {
+   "fieldname": "requested_section",
+   "fieldtype": "Section Break",
+   "label": "Requested"
+  },
+  {
+   "fieldname": "requested_items",
+   "fieldtype": "Table",
+   "label": "Requested Item",
+   "options": "Machine Parts Request"
+  },
+  {
+   "fieldname": "issuance_section",
+   "fieldtype": "Section Break",
+   "label": "Issuance "
+  },
+  {
+   "fieldname": "machine_part_details",
+   "fieldtype": "Table",
+   "label": "Machine Part Details",
+   "options": "Machine Part Details"
+  },
+  {
+   "fieldname": "returned_section",
+   "fieldtype": "Section Break",
+   "label": "Returned"
+  },
+  {
+   "fieldname": "machine_part_returned",
+   "fieldtype": "Table",
+   "label": "Machine Part Returned",
+   "options": "Machine Part Returned"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-06-10 13:49:45.826502",
+ "modified_by": "Administrator",
+ "module": "Maintainance Addon",
+ "name": "Machine Parts Issuance",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
