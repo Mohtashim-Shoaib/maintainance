@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-10 13:58:17.604472",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_ngjh4",
+  "user",
+  "column_break_ebaq4",
+  "by_hand",
+  "issuance_section",
+  "general_item_issuance_ct",
+  "returned_section"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_ngjh4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_ebaq4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "by_hand",
+   "fieldtype": "Link",
+   "label": "By Hand",
+   "options": "Hand By Name"
+  },
+  {
+   "fieldname": "issuance_section",
+   "fieldtype": "Section Break",
+   "label": "Issuance "
+  },
+  {
+   "fieldname": "general_item_issuance_ct",
+   "fieldtype": "Table",
+   "label": "General Item Issuance CT",
+   "options": "General Item Issuance CT"
+  },
+  {
+   "fieldname": "returned_section",
+   "fieldtype": "Section Break",
+   "label": "Returned"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-06-10 15:18:04.602130",
+ "modified_by": "Administrator",
+ "module": "Maintainance Addon",
+ "name": "General Item Issuance",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
