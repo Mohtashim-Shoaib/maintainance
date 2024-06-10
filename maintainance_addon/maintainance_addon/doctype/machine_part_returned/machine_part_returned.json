@@ -12,6 +12,11 @@
   {
    "fieldname": "part_name",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Part Name",
    "options": "Item"
   }
@@ -19,7 +24,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-10 13:49:08.104023",
+ "modified": "2024-06-10 16:33:42.412396",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Part Returned",

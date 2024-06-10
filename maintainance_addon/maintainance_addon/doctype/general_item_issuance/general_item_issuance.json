@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2024-06-10 13:58:17.604472",
  "default_view": "List",
  "doctype": "DocType",
@@ -14,10 +15,13 @@
   "by_hand",
   "issuance_section",
   "general_item_issuance_ct",
-  "returned_section"
+  "returned_section",
+  "machine_part_returned",
+  "naming_series"
  ],
  "fields": [
   {
+   "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date"
@@ -57,14 +61,28 @@
    "fieldname": "returned_section",
    "fieldtype": "Section Break",
    "label": "Returned"
+  },
+  {
+   "fieldname": "machine_part_returned",
+   "fieldtype": "Table",
+   "label": "General Item Return",
+   "options": "General Item Return"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "GI.-.MM.-.YY.-",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-10 15:18:04.602130",
+ "modified": "2024-06-10 16:38:23.886542",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
