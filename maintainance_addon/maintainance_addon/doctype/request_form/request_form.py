@@ -46,9 +46,11 @@ class RequestForm(Document):
                     mri.qty = row.required_qty
                     mri.department = "Production - SAH"
             mr.save()
+            
+
 @frappe.whitelist()
-def make_mr(parts_request):
-    doc = frappe.get_doc("Parts Request", parts_request)
+def make_mr(request_form):
+    doc = frappe.get_doc("Request Form", request_form)
     mr = frappe.new_doc("Material Request")
     mr.material_request_type = "Purchase"
     mr.transaction_date = doc.posting_date
@@ -62,10 +64,13 @@ def make_mr(parts_request):
             mri.uom = frappe.db.get_value('item', row.item_code, 'stock_uom')
     mr.save()
     frappe.msgprint("Material Request created!")
+    
+
+
 @frappe.whitelist()
-def make_issuance(parts_request):
-    doc = frappe.get_doc("Parts Request", parts_request)
-    mr = frappe.new_doc("Machine Parts")
+def make_issuance(request_form):
+    doc = frappe.get_doc("Request Form", request_form)
+    mr = frappe.new_doc("Machine Parts Issuance")
     mr.date = doc.posting_date
     mr.by_hand = "ABDUL REHMAN"
     mri= mr.append('machine_part_details')
