@@ -80,3 +80,9 @@ def make_issuance(request_form):
         mri.department = "Production - SAH"
     mr.save()
     frappe.msgprint("Parts Issurance created!")
+
+@frappe.whitelist()
+def get_available_qty(item_code):
+    payload_data = frappe.form_dict
+    # frappe.errprint(payload_data)
+    frappe.response["message"] = frappe.db.get_value("Bin",{"item_code":payload_data.item_code},"actual_qty")
