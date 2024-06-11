@@ -1,0 +1,61 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"1ydPis97T5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Maintainance Addon</span>\",\"col\":12}},{\"id\":\"nu1WdadBGD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request Form\",\"col\":3}},{\"id\":\"8nABJ9OHpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Machine Parts Issuance\",\"col\":3}},{\"id\":\"xfF3QSq3pZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Item Issuance\",\"col\":3}},{\"id\":\"pLGTZvSrho\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Complaint\",\"col\":3}}]",
+ "creation": "2024-06-11 12:20:26.655349",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "setting-gear",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Maintainance Addon",
+ "links": [],
+ "modified": "2024-06-12 02:43:07.928611",
+ "modified_by": "Administrator",
+ "module": "Maintainance Addon",
+ "name": "Maintainance Addon",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 23.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Request Form",
+   "link_to": "Request Form",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Complaint",
+   "link_to": "Complaint",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "General Item Issuance",
+   "link_to": "General Item Issuance",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Machine Parts Issuance",
+   "link_to": "Machine Parts Issuance",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Maintainance Addon"
+}
