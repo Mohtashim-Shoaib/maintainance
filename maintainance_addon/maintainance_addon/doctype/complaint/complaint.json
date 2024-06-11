@@ -1,0 +1,182 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "Comp-.####",
+ "creation": "2024-06-11 12:56:41.511424",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "complaint_date",
+  "subject",
+  "complaint_assigned_to",
+  "column_break_phsow",
+  "complain_raised_by",
+  "complaint_type",
+  "resolved_by",
+  "column_break_mq4ew",
+  "open",
+  "priority",
+  "resolve_date",
+  "machine_details_section",
+  "machine_no",
+  "column_break_genhl",
+  "machine_type",
+  "column_break_rbai3",
+  "model",
+  "column_break_7qsmf",
+  "brand",
+  "section_break_rkqb9",
+  "description",
+  "column_break_crr4n",
+  "resolution_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "complaint_date",
+   "fieldtype": "Date",
+   "label": "Complaint Date"
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "label": "Subject"
+  },
+  {
+   "default": "__user",
+   "fieldname": "complaint_assigned_to",
+   "fieldtype": "Link",
+   "label": "Complaint Assigned To",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_phsow",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "__user",
+   "fieldname": "complain_raised_by",
+   "fieldtype": "Link",
+   "label": "Complain Raised By",
+   "options": "User"
+  },
+  {
+   "fieldname": "complaint_type",
+   "fieldtype": "Select",
+   "label": "Complaint Type",
+   "options": "\nMachine Complaint\nGeneral Complaint"
+  },
+  {
+   "fieldname": "resolved_by",
+   "fieldtype": "Link",
+   "label": "Resolved By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_mq4ew",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "open",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nIn-Progress\nOn-Hold\nResolved\nCancelled"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "\nHigh\nMedium\nLow"
+  },
+  {
+   "fieldname": "resolve_date",
+   "fieldtype": "Date",
+   "label": "Resolve Date"
+  },
+  {
+   "fieldname": "machine_details_section",
+   "fieldtype": "Section Break",
+   "label": "Machine Details"
+  },
+  {
+   "fieldname": "machine_no",
+   "fieldtype": "Link",
+   "label": "Machine No",
+   "options": "Asset"
+  },
+  {
+   "fieldname": "column_break_genhl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "machine_type",
+   "fieldtype": "Link",
+   "label": "Machine Name",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_rbai3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "column_break_7qsmf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "brand",
+   "fieldtype": "Link",
+   "label": "Brand",
+   "options": "Brand"
+  },
+  {
+   "fieldname": "section_break_rkqb9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_crr4n",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "resolution_details",
+   "fieldtype": "Text Editor",
+   "label": "Resolution Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-06-11 13:01:09.301838",
+ "modified_by": "Administrator",
+ "module": "Maintainance Addon",
+ "name": "Complaint",
+ "name_case": "Title Case",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
