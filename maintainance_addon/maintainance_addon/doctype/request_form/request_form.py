@@ -6,7 +6,7 @@ from frappe.model.document import Document
 
 class RequestForm(Document):
     def before_submit(self):
-        frappe.msgprint(test)
+        # frappe.msgprint("test")
         self.make_part_issuance()
         self.make_gi_issuance()
     def make_part_issuance(self):
@@ -87,3 +87,5 @@ def get_available_qty(item_code):
     payload_data = frappe.form_dict
     # frappe.errprint(payload_data)
     frappe.response["message"] = frappe.db.get_value("Bin",{"item_code":payload_data.item_code},"actual_qty")
+    # b = frappe.db.get_value("Item",{"item_code" : payload_data.item_code},['item_name','item_group','stock_uom'])
+    # frappe.errprint(b)
