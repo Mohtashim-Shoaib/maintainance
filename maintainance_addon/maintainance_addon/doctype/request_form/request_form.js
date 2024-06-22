@@ -72,49 +72,49 @@ function set_rate(frm, cdt, cdn) {
 }
 
 
-frappe.ui.form.on('Request Form', {
-	refresh: function (frm) {
-		var me = frm
-		frm.add_custom_button(__('Create MR'),
-			function () {
-				frappe.call({
-					method: 'maintainance_addon.maintainance_addon.doctype.request_form.request_form.make_mr',
-					args: {
-						request_form: frm.doc.name
-					},
-					callback: function (r) {
-						if (r.message) {
-							frappe.msgprint(__('Items updated successfully.'));
-							frm.reload_doc();
-							console.log("test")
-						}
+// frappe.ui.form.on('Request Form', {
+// 	refresh: function (frm) {
+// 		var me = frm
+// 		frm.add_custom_button(__('Create MR'),
+// 			function () {
+// 				frappe.call({
+// 					method: 'maintainance_addon.maintainance_addon.doctype.request_form.request_form.make_mr',
+// 					args: {
+// 						request_form: frm.doc.name
+// 					},
+// 					callback: function (r) {
+// 						if (r.message) {
+// 							frappe.msgprint(__('Items updated successfully.'));
+// 							frm.reload_doc();
+// 							console.log("test")
+// 						}
 
-					}
-				});
-
-
-
-			}, __("Create"));
-		frm.add_custom_button(__('Parts Issuance'),
-			function () {
-				frappe.call({
-					method: 'maintainance_addon.maintainance_addon.doctype.request_form.request_form.make_issuance',
-					args: {
-						request_form: frm.doc.name
-					},
-					callback: function (r) {
-						if (r.message) {
-							frappe.msgprint(__('Items updated successfully.'));
-							frm.reload_doc();
-						}
-					}
-				});
+// 					}
+// 				});
 
 
 
-			}, __("Create"));
-	}
-});
+// 			}, __("Create"));
+// 		frm.add_custom_button(__('Parts Issuance'),
+// 			function () {
+// 				frappe.call({
+// 					method: 'maintainance_addon.maintainance_addon.doctype.request_form.request_form.make_issuance',
+// 					args: {
+// 						request_form: frm.doc.name
+// 					},
+// 					callback: function (r) {
+// 						if (r.message) {
+// 							frappe.msgprint(__('Items updated successfully.'));
+// 							frm.reload_doc();
+// 						}
+// 					}
+// 				});
+
+
+
+// 			}, __("Create"));
+// 	}
+// });
 
 
 // Define the get_prompt_fields function first
@@ -386,6 +386,7 @@ function get_available_stock_1(frm, item_code) {
 	// 	}
 	// 	}
 	// });
+
 
 
 
