@@ -50,3 +50,10 @@ function get_part_name_related(frm) {
 	return part_name_related;
 }
 
+
+frappe.ui.form.on('Machine Parts Issuance', {
+refresh:function (frm){
+	frm.set_df_property('requested_items','cannot_add_rows',1)
+	frm.set_df_property('requested_items','read_only',1)
+}
+});

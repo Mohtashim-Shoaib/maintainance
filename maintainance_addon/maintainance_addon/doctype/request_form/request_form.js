@@ -210,7 +210,7 @@ function get_available_stock(frm, item_code) {
 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
 
 						// Optional: show a message
-						frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
+						// frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
 					} else {
 						frappe.msgprint("No stock available for the selected item.");
 					}
@@ -392,3 +392,11 @@ function get_available_stock_1(frm, item_code) {
 
 
 
+	frappe.ui.form.on('Request Form', {
+		refresh: function (frm) {
+			frm.set_df_property('item', 'cannot_add_rows', true); // Hide add row button
+			frm.set_df_property('items', 'cannot_add_rows', true);
+			// frm.set_df_property('dimensions', 'cannot_delete_rows', true); // Hide delete button
+			// frm.set_df_property('dimensions', 'cannot_delete_all_rows', true); // Hide delete all button
+		}
+	});

@@ -19,14 +19,15 @@ class RequestForm(Document):
 
         part_issuance_items = []
         for item in request_form.items:
-            frappe.msgprint(item.item_code)
+            frappe.msgprint(f"Machine Part Issuance had been created for {item.item_code}")
             part_issuance_items.append({
                     'item_code': item.item_code,
                     'item_name': item.item_code,
                     'requested_qty': item.qty,
                     'remarks':item.remarks,
+                    'balance_qty':item.balance_qty
                 })
-            frappe.errprint(part_issuance_items)
+            # frappe.errprint(part_issuance_items)
             
         general_item = frappe.get_doc({
                 'doctype': 'Machine Parts Issuance',
@@ -44,6 +45,16 @@ class RequestForm(Document):
         request_form = self
         material_request_items = []
         for item in request_form.items:
+            if item.balance_qty ==  0:
+                balance_qty_not_available = True
+                frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
+                material_request_items.append({
+                        'item_code': item.item_code,
+                        'qty': item.qty,
+                        'schedule_date': request_form.posting_date,
+                        'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+                    })
+        for item in request_form.item:
             if item.balance_qty ==  0:
                 balance_qty_not_available = True
                 frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
@@ -75,7 +86,7 @@ class RequestForm(Document):
 
         general_issuance_items = []
         for item in request_form.item:
-            frappe.msgprint(item.item_code)
+            frappe.msgprint(f"General Issuance Item had been created for {item.item_code}")
             general_issuance_items.append({
                     'part_name': item.item_code,
                     'qty': item.qty,

@@ -10,43 +10,61 @@
   "item_code",
   "item_name",
   "remarks",
-  "requested_qty"
+  "requested_qty",
+  "balance_qty"
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "item_name",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Item Name"
   },
   {
+   "columns": 2,
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "in_list_view": 1,
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Remarks"
   },
   {
+   "columns": 2,
    "fieldname": "requested_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Requested Qty"
   },
   {
+   "columns": 2,
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Item Code",
    "options": "Item"
+  },
+  {
+   "columns": 2,
+   "fieldname": "balance_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Balance Qty"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-10 16:33:28.199994",
+ "modified": "2024-06-23 00:07:35.716207",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Request",

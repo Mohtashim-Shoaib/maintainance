@@ -21,7 +21,7 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "Iten",
+   "label": "Item",
    "options": "Item"
   },
   {
@@ -71,7 +71,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-22 15:11:46.610931",
+ "modified": "2024-06-23 00:19:36.081238",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Request CT",
