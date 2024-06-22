@@ -7,21 +7,79 @@ from frappe.model.document import Document
 class RequestForm(Document):
     def before_submit(self):
         self.send_data_from_request_form_to_general_issance_form()
+        self.send_data_from_request_form_to_material_request()
+        self.send_data_from_request_form_to_part()
         # self.make_part_issuance()
         # self.make_gi_issuance()
+
+
+    def send_data_from_request_form_to_part(self):
+        # frappe.msgprint("test")
+        request_form = self
+
+        part_issuance_items = []
+        for item in request_form.items:
+            frappe.msgprint(item.item_code)
+            part_issuance_items.append({
+                    'item_code': item.item_code,
+                    'item_name': item.item_code,
+                    'requested_qty': item.qty,
+                    'remarks':item.remarks,
+                })
+            frappe.errprint(part_issuance_items)
+            
+        general_item = frappe.get_doc({
+                'doctype': 'Machine Parts Issuance',
+                'date': request_form.posting_date,
+                "user": request_form.request_by,
+                "by_hand":"ABDUL REHMAN",
+                "requested_items": part_issuance_items,
+            })     
+        general_item.insert(ignore_permissions=True)
+        general_item.save()
+
+
+
+    def send_data_from_request_form_to_material_request(self):
+        request_form = self
+        material_request_items = []
+        for item in request_form.items:
+            if item.balance_qty ==  0:
+                balance_qty_not_available = True
+                frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
+                material_request_items.append({
+                        'item_code': item.item_code,
+                        'qty': item.qty,
+                        'schedule_date': request_form.posting_date,
+                        'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+                    })
+                material_request = frappe.get_doc({
+                        'doctype': 'Material Request',
+                        'material_request_type': 'Purchase',
+                        'transaction_date': request_form.posting_date,
+                        'set_warehouse': 'Stores - SAH',
+                        'items': material_request_items,
+                        'title': f"Material Request for {request_form.name}",
+                    })
+                material_request.insert(ignore_permissions=True)
+                material_request.save()
+                frappe.msgprint("Material Request created!")
+
+
+
+
 
     def send_data_from_request_form_to_general_issance_form(self):
         # frappe.msgprint("test")
         request_form = self
 
         general_issuance_items = []
-        for item in request_form.items:
+        for item in request_form.item:
             frappe.msgprint(item.item_code)
             general_issuance_items.append({
-                    'part_name': "Checking",
+                    'part_name': item.item_code,
                     'qty': item.qty,
-                    # 's_warehouse': item.s_warehouse,
-                    # 't_warehouse': item.t_warehouse
+                    'balance_qty':item.balance_qty,
                 })
             frappe.errprint(general_issuance_items)
             
@@ -31,8 +89,7 @@ class RequestForm(Document):
                 "user": request_form.request_by,
                 "by_hand":"ABDUL REHMAN",
                 "general_item_issuance_ct": general_issuance_items,
-            })
-            
+            })     
         general_item.insert(ignore_permissions=True)
         general_item.save()
 
