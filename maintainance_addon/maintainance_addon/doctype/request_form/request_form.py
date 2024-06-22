@@ -6,6 +6,7 @@ from frappe.model.document import Document
 
 class RequestForm(Document):
     def before_submit(self):
+        frappe.msgprint(test)
         self.make_part_issuance()
         self.make_gi_issuance()
     def make_part_issuance(self):
