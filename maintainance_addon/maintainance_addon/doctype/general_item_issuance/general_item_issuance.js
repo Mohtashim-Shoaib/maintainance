@@ -1,6 +1,5 @@
 // Copyright (c) 2024, mohtashim and contributors
 // For license information, please see license.txt
-
 /*frappe.ui.form.on('Machine Parts', {
 	  refresh(frm) {
 		  frm.set_query('part_name', 'machine_part_details', function(doc, cdt, cdn) {
@@ -116,3 +115,111 @@
 // 		}
 // 	});
 // }
+
+
+
+// frappe.ui.form.on('General Item Issuance', {
+// 	refresh(frm) {
+// 		frm.fields_dict['machine_part_returned'].grid.get_field('part_name').get_query = function (doc, cdt, cdn) {
+// 			var requested_items = get_requested_items(frm);
+// 			// var requested_items = "STATIONERY ITEMS";
+// 			return {
+// 				filters: [
+// 					["item_code", "=", requested_items]
+// 				]
+// 			};
+// 		}
+// 	}
+// });
+
+// frappe.ui.form.on('General Item Issuance', {
+//     refresh(frm) {
+//         frm.fields_dict['general_item_request_ct'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
+//             var requested_items = get_requested_items(frm);
+//             if (requested_items.length > 0) {
+//                 // Use the first item for filtering
+//                 return {
+//                     filters: [
+//                         ["item_code", "=", requested_items[0]]
+//                     ]
+//                 };
+//             } 
+// 			// else {
+//             //     // Fallback filter if no items are requested
+//             //     return {
+//             //         filters: [
+//             //             ["item_code", "=", "STATIONERY ITEMS"]
+//             //         ]
+//             //     };
+//             // }
+//         }
+//     }
+// });
+// frappe.ui.form.on('General Item Issuance', {
+//     refresh(frm) {
+//         frm.fields_dict['general_item_request_ct'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
+//             var requested_items = get_requested_items(frm);
+//             var childDoc = locals[cdt][cdn]; // Get the current row's document
+
+//             // Replace 'actual_field_name' with the field you want to check in childDoc
+//             if (childDoc && childDoc.part_name && requested_items.length > 0) {
+//                 // Assuming you want to filter by the actual value of 'actual_field_name'
+//                 return {
+//                     filters: [
+//                         ["item_code", "=", childDoc.part_name] // Adjust this based on actual logic
+//                     ]
+//                 };
+//             }
+//             // If no specific condition is met, you might want to return a default filter or no filter
+//             // Example: return {}; for no filter or adjust accordingly
+//         }
+//     }
+// });
+
+// function get_requested_items(frm) {
+// 	var requested_items = [];
+// 	// console.log(requested_items)
+// 	frm.doc.general_item_issuance_ct.forEach(row => {
+// 		console.log(row)
+// 		console.log(row.part_name)
+// 		requested_items.push(row.part_name);
+// 		// requested_items.push("STATIONERY ITEMS");
+// 		// if (row.item_code) {
+// 			// requested_items.push(row.part_name);
+// 			console.log(requested_items)
+// 		// }
+// 	});
+// 	return requested_items;
+// }
+
+frappe.ui.form.on('General Item Issuance', {
+    refresh(frm) {
+        frm.fields_dict['general_item_request_ct'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
+            var requested_items = get_requested_items(frm);
+                return {
+                    filters: [
+                        ["Item","item_code", "in", requested_items ]
+                    ] 
+            }
+        }
+    }
+});
+
+function get_requested_items(frm) {
+    var requested_items = [];
+    frm.doc.general_item_issuance_ct.forEach(row => {
+        if (!requested_items.includes(row.part_name)) {
+            requested_items.push(row.part_name);
+        }
+    });
+    console.log("Requested Items:", requested_items);
+    return requested_items;
+}
+
+
+frappe.ui.form.on('General Item Issuance', {
+	refresh:function (frm){
+		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
+		frm.set_df_property('general_item_issuance_ct','read_only',1)
+	}
+	});

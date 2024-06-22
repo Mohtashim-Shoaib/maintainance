@@ -13,8 +13,10 @@
   "user",
   "column_break_ebaq4",
   "by_hand",
-  "issuance_section",
+  "request_section",
   "general_item_issuance_ct",
+  "issuance_section",
+  "general_item_request_ct",
   "returned_section",
   "machine_part_returned",
   "naming_series"
@@ -49,7 +51,7 @@
   {
    "fieldname": "issuance_section",
    "fieldtype": "Section Break",
-   "label": "Issuance "
+   "label": "Issuance"
   },
   {
    "fieldname": "general_item_issuance_ct",
@@ -74,11 +76,22 @@
    "label": "Naming Series",
    "options": "GI.-.MM.-.YY.-",
    "read_only": 1
+  },
+  {
+   "fieldname": "request_section",
+   "fieldtype": "Section Break",
+   "label": "Request"
+  },
+  {
+   "fieldname": "general_item_request_ct",
+   "fieldtype": "Table",
+   "label": "General Item Request CT",
+   "options": "General Item Request CT"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-22 19:08:58.302678",
+ "modified": "2024-06-23 01:42:01.858058",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance",
