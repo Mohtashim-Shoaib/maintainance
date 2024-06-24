@@ -32,44 +32,44 @@ frappe.ui.form.on('Request Form', {
 // 	},
 // });
 
-frappe.ui.form.on('Parts Request CT', {
-	item_code(frm, cdt, cdn) {
-		set_rate(frm, cdt, cdn);
+// frappe.ui.form.on('Parts Request CT', {
+// 	item_code(frm, cdt, cdn) {
+// 		set_rate(frm, cdt, cdn);
 
-	},
-	qty(frm, cdt, cdn) {
-		set_order(frm, cdt, cdn);
+// 	},
+// 	qty(frm, cdt, cdn) {
+// 		set_order(frm, cdt, cdn);
 
-	}
+// 	}
 
-});
-function set_order(frm, cdt, cdn) {
-	var d = locals[cdt][cdn];
-	if (d.qty > d.balance_qty) {
-		frappe.model.set_value(d.doctype, d.name, "required_qty", d.qty - d.balance_qty)
-	}
-	else {
-		frappe.model.set_value(d.doctype, d.name, "required_qty", 0)
-	}
-}
-function set_rate(frm, cdt, cdn) {
-	var d = locals[cdt][cdn];
-	frappe.call({
-		method: "frappe.client.get_value",
-		args: {
-			doctype: "Item Price",
-			filters: {
-				item_code: d.part_name,
-				price_list: "Standard Buying"
-			},
-			fieldname: ["price_list_rate"]
-		},
-		callback: function (r) {
-			frappe.model.set_value(d.doctype, d.name, "rate", r.message["price_list_rate"])
+// });
+// function set_order(frm, cdt, cdn) {
+// 	var d = locals[cdt][cdn];
+// 	if (d.qty > d.balance_qty) {
+// 		frappe.model.set_value(d.doctype, d.name, "required_qty", d.qty - d.balance_qty)
+// 	}
+// 	else {
+// 		frappe.model.set_value(d.doctype, d.name, "required_qty", 0)
+// 	}
+// }
+// function set_rate(frm, cdt, cdn) {
+// 	var d = locals[cdt][cdn];
+// 	frappe.call({
+// 		method: "frappe.client.get_value",
+// 		args: {
+// 			doctype: "Item Price",
+// 			filters: {
+// 				item_code: d.part_name,
+// 				price_list: "Standard Buying"
+// 			},
+// 			fieldname: ["price_list_rate"]
+// 		},
+// 		callback: function (r) {
+// 			frappe.model.set_value(d.doctype, d.name, "rate", r.message["price_list_rate"])
 
-		}
-	});
-}
+// 		}
+// 	});
+// }
 
 
 // frappe.ui.form.on('Request Form', {
@@ -400,3 +400,73 @@ function get_available_stock_1(frm, item_code) {
 			// frm.set_df_property('dimensions', 'cannot_delete_all_rows', true); // Hide delete all button
 		}
 	});
+
+
+
+	// frappe.ui.form.on('Parts Request CT',{
+	// 	qty: function(frm, cdt, cdn){
+	// 		let row = locals[cdt][cdn]	
+	// 		if(row.qty){
+	// 				let total= 0
+	// 				for (let i in frm.doc.items){
+	// 					total += frm.doc.items[i].qty
+	// 				}
+	// 				frm.set_value('total_parts', total)
+	// 				frm.refresh()
+	// 		}
+	// 	},
+	// 	qty:function(frm, cdt, cdn){  // amount replace it with your amount fieldname
+	// 		frm.script_manager.trigger('qty', cdt, cdn)  // the above item_code function is calling here
+	// 	},
+	// 	items_remove(frm,cdt,cdn){ // items is the child table fieldname so here you put your childtable-fieldname_remove
+	// 		frm.script_manager.trigger('qty', cdt,cdn)
+	// 	}
+		
+	// })
+
+
+	frappe.ui.form.on("Parts Request CT", {
+		qty:function(frm,cdt, cdn){
+			let row= locals[cdt][cdn]
+			console.log(row)
+			let total=0
+			for(let i in frm.doc.items){
+				total += frm.doc.items[i].qty
+			}
+		  
+			frm.set_value('total_parts',total)
+			// console.log(total)
+			frm.refresh()
+		},
+		items:function(frm,cdt,cdn){
+			frm.script_manager.trigger("qty",cdt,cdn)
+			// console.log("test1")
+		},
+		items_remove(frm,cdt,cdn){
+			frm.script_manager.trigger('qty',cdt,cdn)
+			// console.log("test2")
+			
+		}
+		
+	})
+
+	frappe.ui.form.on('General Request CT', {
+		qty:function(frm,cdt,cdn){
+				let row = locals[cdt][cdn]
+				console.log(row)
+				let total=0
+				for (let i in frm.doc.item){
+					total += frm.doc.item[i].qty
+				}
+				frm.set_value('total_generals',total)
+				frm.refresh()
+			},
+			item:function(frm,cdt,cdn){
+				frm.script_manager.trigger('qty',cdt,cdn)
+				console.log(1)
+			},
+			item_remove(frm,cdt,cdn){
+				frm.script_manager.trigger('qty',cdt,cdn)
+				console.log(2)
+			}
+	})

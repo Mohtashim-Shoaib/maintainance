@@ -39,6 +39,16 @@ class RequestForm(Document):
         general_item.insert(ignore_permissions=True)
         general_item.save()
 
+         # Update the part_request field with the name of the newly created document
+        request_form.db_set('part_request', general_item.name)
+        request_form.db_set('part_request_form', general_item.name)
+
+    # Fetch the updated value from the database to confirm the update
+        updated_part_request = frappe.db.get_value('Request Form', request_form.name, 'part_request_form')
+
+        # Print the updated value to verify
+        frappe.errprint(updated_part_request)
+
 
 
     def send_data_from_request_form_to_material_request(self):
@@ -104,6 +114,8 @@ class RequestForm(Document):
         general_item.insert(ignore_permissions=True)
         general_item.save()
 
+        request_form.db_set('general_request_form',general_item.name)
+        
 
     
     # def make_part_issuance(self):

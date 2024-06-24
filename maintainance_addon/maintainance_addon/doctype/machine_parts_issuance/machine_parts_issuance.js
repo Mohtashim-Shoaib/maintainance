@@ -51,9 +51,62 @@ function get_part_name_related(frm) {
 }
 
 
-// frappe.ui.form.on('Machine Parts Issuance', {
-// refresh:function (frm){
-// 	frm.set_df_property('requested_items','cannot_add_rows',1)
-// 	frm.set_df_property('requested_items','read_only',1)
-// }
-// });
+frappe.ui.form.on('Machine Parts Issuance', {
+refresh:function (frm){
+	frm.set_df_property('requested_items','cannot_add_rows',1)
+	frm.set_df_property('requested_items','read_only',1)
+}
+});
+
+
+frappe.ui.form.on('Machine Parts Issuance', {
+    onload: function(frm) {
+        update_total_qty(frm);
+    },
+    refresh: function(frm) {
+        update_total_qty(frm);
+    },
+    requested_items_add: function(frm) {
+        update_total_qty(frm);
+    },
+    requested_items_remove: function(frm) {
+        update_total_qty(frm);
+    }
+});
+
+function update_total_qty(frm) {
+    let total_qty = 0;
+    frm.doc.requested_items.forEach(function(row) {
+        total_qty += row.requested_qty || 0; // Assuming 'qty' is the field name for quantity in the child table
+    });
+
+    // Assuming 'total_quantity' is the field name in the parent doctype where you want to show the sum
+    frm.set_value('total_requested_item', total_qty);
+    refresh_field('total_requested_item'); // Refresh the field to show the updated value
+}
+
+frappe.ui.form.on('Machine Parts Issuance', {
+    onload: function(frm) {
+        update_total_qty(frm);
+    },
+    refresh: function(frm) {
+        update_total_qty(frm);
+    },
+    requested_items_add: function(frm) {
+        update_total_qty(frm);
+    },
+    requested_items_remove: function(frm) {
+        update_total_qty(frm);
+    }
+});
+
+function update_total_qty(frm) {
+    let total_qty = 0;
+    frm.doc.machine_part_details.forEach(function(row) {
+        total_qty += row.required_qty || 0; // Assuming 'qty' is the field name for quantity in the child table
+    });
+
+    // Assuming 'total_quantity' is the field name in the parent doctype where you want to show the sum
+    frm.set_value('total_issued_item', total_qty);
+    refresh_field('total_issued_item'); // Refresh the field to show the updated value
+}

@@ -14,8 +14,16 @@
   "request_by",
   "section_break_aosm2",
   "items",
+  "total_parts",
+  "general_request_ct_section",
+  "item",
+  "total_generals",
+  "more_info_section",
+  "status",
+  "part_request",
+  "part_request_form",
   "amended_from",
-  "item"
+  "general_request_form"
  ],
  "fields": [
   {
@@ -54,7 +62,8 @@
   },
   {
    "fieldname": "section_break_aosm2",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Part Request CT"
   },
   {
    "fieldname": "items",
@@ -67,12 +76,70 @@
    "fieldtype": "Table",
    "label": "General Request CT",
    "options": "General Request CT"
+  },
+  {
+   "fieldname": "general_request_ct_section",
+   "fieldtype": "Section Break",
+   "label": "General Request CT"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nIn Progress\nComplete",
+   "print_hide": 1,
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_parts",
+   "fieldtype": "Float",
+   "label": "Total Parts",
+   "precision": "0",
+   "read_only": 1
+  },
+  {
+   "fieldname": "more_info_section",
+   "fieldtype": "Tab Break",
+   "label": "More Info"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_generals",
+   "fieldtype": "Float",
+   "label": "Total Generals",
+   "precision": "0",
+   "read_only": 1
+  },
+  {
+   "fieldname": "part_request",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Part Request"
+  },
+  {
+   "fieldname": "part_request_form",
+   "fieldtype": "Link",
+   "label": "Part Request Form ",
+   "options": "Machine Parts Issuance"
+  },
+  {
+   "fieldname": "general_request_form",
+   "fieldtype": "Link",
+   "label": "General Request Form",
+   "options": "General Item Issuance"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-22 15:10:15.141478",
+ "modified": "2024-06-24 11:55:35.335987",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Request Form",
