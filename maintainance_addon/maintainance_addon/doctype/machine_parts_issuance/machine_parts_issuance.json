@@ -21,7 +21,11 @@
   "returned_section",
   "machine_part_returned",
   "status",
-  "amended_from"
+  "amended_from",
+  "qty_to_be_provided",
+  "title",
+  "total_issue",
+  "total_request"
  ],
  "fields": [
   {
@@ -79,9 +83,11 @@
    "options": "Machine Part Returned"
   },
   {
+   "default": "0",
    "fieldname": "total_requested_item",
    "fieldtype": "Float",
-   "label": "Total Requested Item"
+   "label": "Total Requested Item",
+   "precision": "0"
   },
   {
    "fieldname": "total_issued_item",
@@ -91,13 +97,8 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Status",
-   "no_copy": 1,
-   "options": "Draft\nComplete\nIn Progress\nHold",
-   "print_hide": 1,
-   "read_only": 1
+   "options": "Draft\nCompleted\nIn Progress\nHold"
   },
   {
    "fieldname": "amended_from",
@@ -108,12 +109,32 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "qty_to_be_provided",
+   "fieldtype": "Float",
+   "label": "Qty to be Provided"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title"
+  },
+  {
+   "fieldname": "total_issue",
+   "fieldtype": "Int",
+   "label": "Total Issue"
+  },
+  {
+   "fieldname": "total_request",
+   "fieldtype": "Int",
+   "label": "Total Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-24 12:21:56.155211",
+ "modified": "2024-06-24 14:57:25.726673",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",

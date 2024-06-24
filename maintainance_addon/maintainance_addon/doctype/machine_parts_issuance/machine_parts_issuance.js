@@ -51,39 +51,55 @@ function get_part_name_related(frm) {
 }
 
 
-frappe.ui.form.on('Machine Parts Issuance', {
-refresh:function (frm){
-	frm.set_df_property('requested_items','cannot_add_rows',1)
-	frm.set_df_property('requested_items','read_only',1)
-}
-});
+	// frappe.ui.form.on('Machine Parts Issuance', {
+	// refresh:function (frm){
+	// 	frm.set_df_property('requested_items','cannot_add_rows',1)
+	// 	frm.set_df_property('requested_items','read_only',1)
+	// }
+	// });
 
 
 frappe.ui.form.on('Machine Parts Issuance', {
     onload: function(frm) {
-        update_total_qty(frm);
+        update_total_qty1(frm);
     },
     refresh: function(frm) {
-        update_total_qty(frm);
+        update_total_qty1(frm);
     },
     requested_items_add: function(frm) {
-        update_total_qty(frm);
+        update_total_qty1(frm);
     },
     requested_items_remove: function(frm) {
-        update_total_qty(frm);
-    }
+        update_total_qty1(frm);
+    },
+	// before_save:function(frm){
+	// 	update_total_qty1(frm)
+	// },
+	// validate:function(frm){
+	// 	update_total_qty1(frm)
+	// }
 });
 
-function update_total_qty(frm) {
+function update_total_qty1(frm) {
+	console.log("test")
     let total_qty = 0;
     frm.doc.requested_items.forEach(function(row) {
-        total_qty += row.requested_qty || 0; // Assuming 'qty' is the field name for quantity in the child table
+        total_qty += row.request_quantity || 0; // Assuming 'qty' is the field name for quantity in the child table
+		console.log(total_qty)
     });
 
     // Assuming 'total_quantity' is the field name in the parent doctype where you want to show the sum
     frm.set_value('total_requested_item', total_qty);
     refresh_field('total_requested_item'); // Refresh the field to show the updated value
+
+	// frm.set_value('total_request', total_qty);
+    // refresh_field('total_request');
+	// frappe.msgprint('issued')
 }
+
+
+
+
 
 frappe.ui.form.on('Machine Parts Issuance', {
     onload: function(frm) {
@@ -92,10 +108,13 @@ frappe.ui.form.on('Machine Parts Issuance', {
     refresh: function(frm) {
         update_total_qty(frm);
     },
-    requested_items_add: function(frm) {
+    machine_part_details_add: function(frm) {
         update_total_qty(frm);
     },
-    requested_items_remove: function(frm) {
+	before_save: function(frm) {
+		update_total_qty(frm);
+	},
+    machine_part_details_remove: function(frm) {
         update_total_qty(frm);
     }
 });
@@ -103,10 +122,39 @@ frappe.ui.form.on('Machine Parts Issuance', {
 function update_total_qty(frm) {
     let total_qty = 0;
     frm.doc.machine_part_details.forEach(function(row) {
-        total_qty += row.required_qty || 0; // Assuming 'qty' is the field name for quantity in the child table
+        total_qty += row.issued_qty || 0; // Assuming 'qty' is the field name for quantity in the child table
     });
 
     // Assuming 'total_quantity' is the field name in the parent doctype where you want to show the sum
     frm.set_value('total_issued_item', total_qty);
     refresh_field('total_issued_item'); // Refresh the field to show the updated value
+
+	// frm.set_value('total_issue', total_qty);
+    // refresh_field('total_issue');
 }
+
+
+
+
+// frappe.ui.form.on('Machine Parts Issuance', {
+// 	onload: function(frm) {
+// 		update_total_qty(frm);
+// 	},
+// 	before_save:function(frm){
+// 		update_total_qty(frm);
+// 	},
+// 	refresh: function(frm) {
+// 		update_total_qty(frm);
+// 	},
+// 	validate:function(frm){
+// 		update_total_qty(frm);
+// 	},
+// })
+
+// function set_qty(frm){
+// 	let requested_qty = frm.doc.total_requested_item;
+// 	let issued_qty = frm.doc.total_issued_item;
+// 	let qty = requested_qty - issued_qty;
+// 	frm.set_value('qty_to_be_provided',90);
+// }
+
