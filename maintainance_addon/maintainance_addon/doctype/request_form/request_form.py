@@ -9,8 +9,17 @@ class RequestForm(Document):
         self.send_data_from_request_form_to_general_issance_form()
         self.send_data_from_request_form_to_material_request()
         self.send_data_from_request_form_to_part()
+        # self.calculation()
         # self.make_part_issuance()
         # self.make_gi_issuance()
+
+    # def calculation(self):
+    #     pass
+        # frappe.msgprint("t")
+        # part_request_form = frappe.get_doc("Machine Parts Issuance", self.part_request_form)
+        # general_request_form = frappe.get_doc("General Item Issuance",self.general_request_form)
+        # frappe.errprint(f"Test{part_request_form}")
+        # frappe.errprint(f"Test2{general_request_form}")
 
 
     def send_data_from_request_form_to_part(self):
@@ -24,6 +33,7 @@ class RequestForm(Document):
                     'item_code': item.item_code,
                     'item_name': item.item_code,
                     'requested_qty': item.qty,
+                    'request_quantity': item.qty,
                     'remarks':item.remarks,
                     'balance_qty':item.balance_qty
                 })
@@ -115,7 +125,7 @@ class RequestForm(Document):
         general_item.save()
 
         request_form.db_set('general_request_form',general_item.name)
-        
+
 
     
     # def make_part_issuance(self):
@@ -198,3 +208,5 @@ def get_available_qty(item_code):
     frappe.response["message"] = frappe.db.get_value("Bin",{"item_code":payload_data.item_code},"actual_qty")
     # b = frappe.db.get_value("Item",{"item_code" : payload_data.item_code},['item_name','item_group','stock_uom'])
     # frappe.errprint(b)
+
+
