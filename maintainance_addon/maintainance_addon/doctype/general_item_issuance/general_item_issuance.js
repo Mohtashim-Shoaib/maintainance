@@ -217,9 +217,26 @@ function get_requested_items(frm) {
 }
 
 
-frappe.ui.form.on('General Item Issuance', {
-	refresh:function (frm){
-		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
-		frm.set_df_property('general_item_issuance_ct','read_only',1)
-	}
-	});
+// frappe.ui.form.on('General Item Issuance', {
+// 	refresh:function (frm){
+// 		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
+// 		frm.set_df_property('general_item_issuance_ct','read_only',1)
+// 	}
+// 	});
+
+// frappe.ui.form.on('General Item Issuance', {	
+// 	quantity: function(frm,cdt,cdn){
+// 		calculate_and_set_total(frm)
+// 	}
+
+// });
+
+// function calculate_and_set_total(frm){
+// 	let total_quantity = 0;
+// 	frm.doc.total_requested.forEach(function(d){
+// 		total_quantity += d.qty;
+// 	})
+// 	frm.set_value('total_quantity',total_quantity);
+// 	frm.refresh_field('total_requested');
+
+// }
