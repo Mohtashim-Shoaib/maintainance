@@ -23,9 +23,7 @@
   "status",
   "amended_from",
   "qty_to_be_provided",
-  "title",
-  "total_issue",
-  "total_request"
+  "title"
  ],
  "fields": [
   {
@@ -92,7 +90,8 @@
   {
    "fieldname": "total_issued_item",
    "fieldtype": "Float",
-   "label": "Total Issued Item"
+   "label": "Total Issued Item",
+   "precision": "0"
   },
   {
    "fieldname": "status",
@@ -119,22 +118,12 @@
    "fieldname": "title",
    "fieldtype": "Data",
    "label": "Title"
-  },
-  {
-   "fieldname": "total_issue",
-   "fieldtype": "Int",
-   "label": "Total Issue"
-  },
-  {
-   "fieldname": "total_request",
-   "fieldtype": "Int",
-   "label": "Total Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-24 14:57:25.726673",
+ "modified": "2024-06-26 17:26:21.303331",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",
@@ -154,9 +143,11 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "title",
  "track_changes": 1,
  "track_seen": 1,
  "track_views": 1

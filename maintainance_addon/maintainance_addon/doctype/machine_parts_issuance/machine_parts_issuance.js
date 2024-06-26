@@ -158,3 +158,8 @@ function update_total_qty(frm) {
 // 	frm.set_value('qty_to_be_provided',90);
 // }
 
+frappe.ui.form.on('Machine Parts Issuance', {
+    after_save: function(frm) {
+        frm.reload_doc();
+    }
+});
