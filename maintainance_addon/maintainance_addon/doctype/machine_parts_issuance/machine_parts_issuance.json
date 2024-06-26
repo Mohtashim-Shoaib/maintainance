@@ -94,6 +94,7 @@
    "precision": "0"
   },
   {
+   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -123,7 +124,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-26 17:26:21.303331",
+ "modified": "2024-06-26 18:49:13.979817",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",

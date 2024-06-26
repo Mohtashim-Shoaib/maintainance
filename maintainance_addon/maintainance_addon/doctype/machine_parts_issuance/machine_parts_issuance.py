@@ -22,6 +22,7 @@ class MachinePartsIssuance(Document):
 
 	def validate(self):
 		self.qty_to_provided()
+		self.set_status()
 
 	def after_save(self):
 		self.qty_to_provided()
@@ -37,11 +38,13 @@ class MachinePartsIssuance(Document):
 		# qty_to_be_provided = self.total_requested_item - self.total_issued_item 
 		self.db_set('qty_to_be_provided',qty_to_be_provided)
 		# frappe.db.commit()
-		if qty_to_be_provided == 0:
-			self.status = "Completed"
-		elif qty_to_be_provided < self.total_requested_item:
-			self.status = "In Progress"
-		elif qty_to_be_provided == self.total_requested_item:
+		
+	def set_status(self):
+		if self.total_issued_item == 0:
 			self.status = "Draft"
-		title = self.status
-		self.db_set('title', title)
+		elif self.total_issued_item < self.total_requested_item:
+			self.status = "In Progress"
+		elif self.qty_to_be_provided == 0:
+			self.status = "Completed"
+		# title = self.status
+		# self.db_set('title', title)

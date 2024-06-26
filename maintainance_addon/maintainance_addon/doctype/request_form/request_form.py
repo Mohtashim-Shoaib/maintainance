@@ -13,6 +13,11 @@ class RequestForm(Document):
         # self.make_part_issuance()
         # self.make_gi_issuance()
 
+    def validate(self):
+        self.set_status()
+
+    def set_status(self):
+        pass
     # def calculation(self):
     #     pass
         # frappe.msgprint("t")
