@@ -11,7 +11,9 @@ class GeneralItemIssuance(Document):
 		self.set_remarks()
 		self.calculate_qty_to_provided()
 		self.set_title()
+		self.set_check()
 
+	
 	def calculate_total_requested(self):
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
@@ -60,3 +62,43 @@ class GeneralItemIssuance(Document):
 	def set_title(self):
 		title = self.remarks if self.remarks is not None else "No Remarks"
 		self.title = title
+
+	def set_check(self):
+		pass
+		# for i in self.general_item_issuance_ct:
+		# 	if i.qty > i.balance_qty:
+		# 		i.check = 1
+		# 	else:
+		# 		i.check = 0
+
+
+
+	def onload(self):
+		# Assuming 'self.name' gives the document name
+		doc = frappe.get_doc('General Item Issuance', self.name)
+		if doc.docstatus != 1:
+			self.update_balance_qty(self.name)
+
+	@frappe.whitelist()
+	def update_balance_qty(self, docname):
+		doc = frappe.get_doc('General Item Issuance', docname)
+
+		if doc.docstatus == 1:
+			frappe.throw('Cannot update balance quantity after submission.')
+			return
+
+		changes_made = False
+		for item in doc.general_item_issuance_ct:
+			item_code = item.part_name
+			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+			balance_qty = bin_doc.actual_qty
+
+			if item.balance_qty != balance_qty:
+				item.balance_qty = balance_qty
+				changes_made = True
+
+		if changes_made:
+			try:
+				doc.save()
+			except frappe.DocstatusTransitionError:
+				frappe.msgprint('Document status has changed, please reload and try again.')

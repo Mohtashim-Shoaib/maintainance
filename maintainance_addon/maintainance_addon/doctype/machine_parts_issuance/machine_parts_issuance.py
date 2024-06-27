@@ -48,3 +48,34 @@ class MachinePartsIssuance(Document):
 			self.status = "Completed"
 		# title = self.status
 		# self.db_set('title', title)
+
+
+	def onload(self):
+		# Assuming 'self.name' gives the document name
+		doc = frappe.get_doc('Machine Parts Issuance', self.name)
+		if doc.docstatus != 1:
+			self.update_balance_qty(self.name)
+
+	@frappe.whitelist()
+	def update_balance_qty(self, docname):
+		doc = frappe.get_doc('Machine Parts Issuance', docname)
+
+		if doc.docstatus == 1:
+			frappe.throw('Cannot update balance quantity after submission.')
+			return
+
+		changes_made = False
+		for item in doc.requested_items:
+			item_code = item.item_code
+			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+			balance_qty = bin_doc.actual_qty
+
+			if item.balance_qty != balance_qty:
+				item.balance_qty = balance_qty
+				changes_made = True
+
+		if changes_made:
+			try:
+				doc.save()
+			except frappe.DocstatusTransitionError:
+				frappe.msgprint('Document status has changed, please reload and try again.')
