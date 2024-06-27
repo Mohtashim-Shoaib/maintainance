@@ -107,3 +107,66 @@ class GeneralItemIssuance(Document):
 				doc.save()
 			except frappe.DocstatusTransitionError:
 				frappe.msgprint('Document status has changed, please reload and try again.')
+
+
+	def validate(self):
+		issued_quantities = {}
+		# Collecting issued quantities
+		for issuance in self.general_item_issuance_ct:
+			item_code = issuance.part_name  # Ensure this is the correct field name
+			frappe.errprint(issuance)
+			if item_code in issued_quantities:
+				issued_quantities[item_code] += issuance.qty
+			else:
+				issued_quantities[item_code] = issuance.qty
+
+		# # Debugging: Print issued quantities to verify correct accumulation
+		frappe.errprint(f"Issued Quantities: {issued_quantities}")
+
+		for request in self.general_item_request_ct:
+			requested_item_code = request.item_code  # Ensure this matches the field name in your child table
+			issued_qty = issued_quantities.get(requested_item_code, 0)
+			if request.qty > issued_qty:
+				frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Requested quantity ({request.qty}) cannot be greater than issued quantity ({issued_qty}).")
+
+
+		
+	def validate(self):
+		issued_quantities = {}
+		# Collecting issued quantities
+		for issuance in self.general_item_issuance_ct:
+			item_code = issuance.part_name  # Ensure this is the correct field name
+			frappe.errprint(issuance)
+			if item_code in issued_quantities:
+				issued_quantities[item_code] += issuance.balance_qty
+			else:
+				issued_quantities[item_code] = issuance.balance_qty
+
+		# # Debugging: Print issued quantities to verify correct accumulation
+		frappe.errprint(f"Issued Quantities: {issued_quantities}")
+
+		for request in self.general_item_request_ct:
+			requested_item_code = request.item_code  # Ensure this matches the field name in your child table
+			issued_qty = issued_quantities.get(requested_item_code, 0)
+			if request.qty > issued_qty:
+				frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Issue Qty quantity ({request.qty}) cannot be greater than balanced quantity ({issued_qty}).")
+
+	def onload(self):
+		self.calculate_total_requested()
+		self.calculate_total_issued()
+
+	def validate(self):
+		self.calculate_total_requested()
+		self.calculate_total_issued()
+
+	def calculate_total_requested(self):
+		total_quantity = 0
+		for item in self.general_item_issuance_ct:
+			total_quantity += item.qty
+		self.total_requested = total_quantity
+
+	def calculate_total_issued(self):
+		total_quantity = 0
+		for item in self.general_item_request_ct:
+			total_quantity += item.qty
+		self.total_issued = total_quantity

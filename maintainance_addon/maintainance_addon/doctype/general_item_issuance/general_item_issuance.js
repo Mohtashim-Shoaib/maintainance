@@ -217,12 +217,12 @@ function get_requested_items(frm) {
 }
 
 
-frappe.ui.form.on('General Item Issuance', {
-	refresh:function (frm){
-		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
-		frm.set_df_property('general_item_issuance_ct','read_only',1)
-	}
-	});
+// frappe.ui.form.on('General Item Issuance', {
+// 	refresh:function (frm){
+// 		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
+// 		frm.set_df_property('general_item_issuance_ct','read_only',1)
+// 	}
+// 	});
 
 // frappe.ui.form.on('General Item Issuance', {	
 // 	quantity: function(frm,cdt,cdn){
@@ -240,3 +240,24 @@ frappe.ui.form.on('General Item Issuance', {
 // 	frm.refresh_field('total_requested');
 
 // }
+// frappe.ui.form.on('General Item Issuance', {
+//     validate: function(frm) {
+//         // Create a map for quick lookup of issued quantities by item_code
+//         let issuedQuantities = {};
+//         frm.doc.general_item_issuance_ct.forEach(function(issuance) {
+//             if (issuedQuantities[issuance.item_code]) {
+//                 issuedQuantities[issuance.item_code] += issuance.qty;
+//             } else {
+//                 issuedQuantities[issuance.item_code] = issuance.qty;
+//             }
+//         });	
+
+//         // Validate requested quantities against issued quantities
+//         frm.doc.general_item_request_ct.forEach(function(request) {
+//             let issuedQty = issuedQuantities[request.item_code] || 0;
+//             if (request.qty > issuedQty) {
+//                 frappe.throw(`You have selected an incorrect value for the item ${request.item_code}. Requested quantity (${request.qty}) cannot be greater than issued quantity (${issuedQty}).`);
+//             }
+//         });
+//     }
+// });
