@@ -90,6 +90,11 @@ class GeneralItemIssuance(Document):
 		changes_made = False
 		for item in doc.general_item_issuance_ct:
 			item_code = item.part_name
+			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
+			if not bin_exists:
+				# frappe.msgprint(f'Bin for item_code {item_code} not found. Skipping update for this item.')
+				continue  # Skip this item and continue with the next one
+
 			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
 			balance_qty = bin_doc.actual_qty
 
