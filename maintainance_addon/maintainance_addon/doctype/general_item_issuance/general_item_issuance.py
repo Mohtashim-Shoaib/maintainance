@@ -31,14 +31,32 @@ class GeneralItemIssuance(Document):
         # frappe.db_set('qty_to_provided', qty_to_provided)
 
 
+	# def set_remarks(self):
+	# 	if self.qty_to_provided == 0:
+	# 		self.remarks = "In Progress"
+	# 	elif self.qty_to_provided < self.total_requested:
+	# 		self.remarks = "Completed"
+	# 	# elif self.total_issued == 0 and self.total_requested > 0:
+	# 	# 	self.remarks = "Draft"
+
+
+	# def set_title(self):
+	# 	title = self.remarks
+	# 	self.title = 
+	
 	def set_remarks(self):
-		if self.total_requested == self.total_issued:
-			self.remarks = "Completed"
-		elif self.total_requested > self.total_issued:
-			self.remarks = "In Progress"
-		elif self.total_requested < self.total_issued:
+		# if self.qty_to_provided == 0;
+		# 	self.sta
+		if self.total_issued == 0:
 			self.remarks = "Draft"
+		elif self.total_issued == self.total_requested:
+			self.remarks = "Completed"
+		else:
+			# self.total_issued > 1
+			self.remarks = "In Progress"
+		# elif self.total_issued < self.total_requested:
+		# 	self.remarks = "In Progress"
 
 	def set_title(self):
-		title = self.remarks
+		title = self.remarks if self.remarks is not None else "No Remarks"
 		self.title = title

@@ -5,27 +5,60 @@ import frappe
 from frappe.model.document import Document
 
 class RequestForm(Document):
-    def before_submit(self):
-        self.send_data_from_request_form_to_general_issance_form()
-        self.send_data_from_request_form_to_material_request()
-        self.send_data_from_request_form_to_part()
+    # def before_submit(self):
+        # self.send_data_from_request_form_to_general_issance_form()
+        # self.send_data_from_request_form_to_material_request()
+        # self.send_data_from_request_form_to_part()
+        # self.send_data_from_request_form_to_material_request()
         # self.calculation()
         # self.make_part_issuance()
         # self.make_gi_issuance()
 
+    def before_save(self):
+        pass
+        # self.set_status()
+        # if self.is_new():
+        #     self.send_data_from_request_form_to_general_issance_form()
+        #     self.send_data_from_request_form_to_part()
+        #     self.send_data_from_request_form_to_material_request()
+
     def validate(self):
+        # self.set_status()
+        if self.is_new():
+            self.send_data_from_request_form_to_general_issance_form()
+            self.send_data_from_request_form_to_part()
+            self.send_data_from_request_form_to_material_request()
+
+
+    def onload(self):
         self.set_status()
 
     def set_status(self):
-        pass
-    # def calculation(self):
-    #     pass
-        # frappe.msgprint("t")
-        # part_request_form = frappe.get_doc("Machine Parts Issuance", self.part_request_form)
-        # general_request_form = frappe.get_doc("General Item Issuance",self.general_request_form)
-        # frappe.errprint(f"Test{part_request_form}")
-        # frappe.errprint(f"Test2{general_request_form}")
-
+        b = frappe.get_doc('Machine Parts Issuance', self.part_request_form)
+        status = b.status
+        frappe.errprint(f"parttttttttttttttttttttt{status}")
+        
+        a = frappe.get_doc('General Item Issuance', self.general_request_form)
+        status1= a.remarks
+        frappe.errprint(f"generalllllllllllllllllllllllll{status1}")
+        if status == "Completed" and status1 == "Completed":
+            self.status = "Completed"
+        elif status == "In Progress":
+            self.status = "In Progress"
+        elif status1 == "In Progress":
+            self.status = "In Progress"
+        elif status == "Completed" and status1 == "Draft":
+            self.status = "In Progress"
+        elif status == "Draft" and status1 == "Completed":
+            self.status = "In Progress"
+        elif status == "In Progress" and status1 == "In Progress":
+            self.status = "In Progress"
+        elif status == "Completed" and status1 == "In Progress":
+            self.status = "In Progress"
+        elif status == "In Progress" and status1 == "Completed":
+            self.status = "In Progress"
+        else:
+            self.status = "Draft"
 
     def send_data_from_request_form_to_part(self):
         # frappe.msgprint("test")
@@ -66,41 +99,83 @@ class RequestForm(Document):
 
 
 
+    # def send_data_from_request_form_to_material_request(self):
+    #     request_form = self
+    #     material_request_items = []
+    #     for item in request_form.items:
+    #         if item.balance_qty ==  0:
+    #             balance_qty_not_available = True
+    #             frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
+    #             material_request_items.append({
+    #                     'item_code': item.item_code,
+    #                     'qty': item.qty,
+    #                     'schedule_date': request_form.posting_date,
+    #                     'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+    #                 })
+    #     for item in request_form.item:
+    #         if item.balance_qty ==  0:
+    #             # balance_qty_not_available = True
+    #             frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
+    #             material_request_items.append({
+    #                     'item_code': item.item_code,
+    #                     'qty': item.qty,
+    #                     'schedule_date': request_form.posting_date,
+    #                     'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+    #                 })
+    #             material_request = frappe.get_doc({
+    #                     'doctype': 'Material Request',
+    #                     'material_request_type': 'Purchase',
+    #                     'transaction_date': request_form.posting_date,
+    #                     'set_warehouse': 'Stores - SAH',
+    #                     'items': material_request_items,
+    #                     'title': f"Material Request for {request_form.name}",
+    #                 })
+    #             material_request.insert(ignore_permissions=True)
+    #             material_request.save()
+    #             frappe.msgprint("Material Request created!")
+
     def send_data_from_request_form_to_material_request(self):
         request_form = self
         material_request_items = []
-        for item in request_form.items:
-            if item.balance_qty ==  0:
-                balance_qty_not_available = True
-                frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
-                material_request_items.append({
-                        'item_code': item.item_code,
-                        'qty': item.qty,
-                        'schedule_date': request_form.posting_date,
-                        'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
-                    })
-        for item in request_form.item:
-            if item.balance_qty ==  0:
-                balance_qty_not_available = True
-                frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
-                material_request_items.append({
-                        'item_code': item.item_code,
-                        'qty': item.qty,
-                        'schedule_date': request_form.posting_date,
-                        'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
-                    })
-                material_request = frappe.get_doc({
-                        'doctype': 'Material Request',
-                        'material_request_type': 'Purchase',
-                        'transaction_date': request_form.posting_date,
-                        'set_warehouse': 'Stores - SAH',
-                        'items': material_request_items,
-                        'title': f"Material Request for {request_form.name}",
-                    })
-                material_request.insert(ignore_permissions=True)
-                material_request.save()
-                frappe.msgprint("Material Request created!")
+        balance_qty_not_available = False  # Initialize outside the loop
 
+        # Loop through parts items
+        for item in request_form.items:
+            if item.balance_qty == 0:
+                balance_qty_not_available = True
+                frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
+                material_request_items.append({
+                    'item_code': item.item_code,
+                    'qty': item.qty,
+                    'schedule_date': request_form.posting_date,
+                    'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+                })
+
+        # Loop through general items
+        for item in request_form.item:
+            if item.balance_qty == 0:
+                balance_qty_not_available = True
+                frappe.msgprint(f"Balance Qty is not available for item {item.item_code}")
+                material_request_items.append({
+                    'item_code': item.item_code,
+                    'qty': item.qty,
+                    'schedule_date': request_form.posting_date,
+                    'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+                })
+
+        # Create Material Request outside the loop if there are items with balance_qty == 0
+        if balance_qty_not_available:
+            material_request = frappe.get_doc({
+                'doctype': 'Material Request',
+                'material_request_type': 'Purchase',
+                'transaction_date': request_form.posting_date,
+                'set_warehouse': 'Stores - SAH',
+                'items': material_request_items,
+                'title': f"Material Request for {request_form.name}",
+            })
+            material_request.insert(ignore_permissions=True)
+            material_request.save()
+            frappe.msgprint("Material Request created!")
 
 
 
