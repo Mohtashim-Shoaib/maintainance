@@ -16,9 +16,21 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_requested()
 		self.calculate_total_issuance()
 		self.set_remarks()
-	
+
+	def set_remarks(self):
+		if self.total_issued == 0:
+			self.remarks = "Draft"
+		elif self.total_issued < self.total_requested:
+			self.remarks = "In Progress"
+		elif self.total_issued == self.total_requested:
+			self.remarks = "Completed"
+
+
+
+
+
 	def calculate_total_requested(self):
-		frappe.msgprint('hello world')
+		# frappe.msgprint('hello world')
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
 			total_quantity += item.qty
@@ -29,56 +41,34 @@ class GeneralItemIssuance(Document):
 		for item in self.general_item_request_ct:
 			total_quantity += item.qty
 		self.total_issued = total_quantity
-
-
-	def validate(self):
-		self.calculate_qty_to_provided()
-
-	def load(self):
-		self.calculate_qty_to_provided()
-		self.check_qty()
-
-	# def calculate_qty_to_provided(self):  # Method renamed here
-	# 	frappe.msgprint('hello')
-	# 	print(f"Total Requested: {self.total_requested}")  # Debug print
-	# 	print(f"Total Issued: {self.total_issued}")  # Debug print
-	# 	qty_to_provided = self.total_requested - self.total_issued
-	# 	self.qty_to_provided = qty_to_provided
-	# 	frappe.msgprint(f"Qty to be provided: {qty_to_provided}")
-	# 	# To log the message as an error, you can use frappe.log_error
-	# 	frappe.log_error(f"Qty to be provided: {qty_to_provided}", "Calculation Error")
-
+		
 	
-        
+
+	# def before_save(self):
+	# 	self.set_remarks() 
+	# 	# self.save()
+	# def validate(self):
+	# 	self.set_remarks()
+	# def onload(self):
+	# 	self.set_remarks()
 	
-	def set_remarks(self):
-		# if self.qty_to_provided == 0;
-		# 	self.sta
-		if self.total_issued == 0:
-			self.remarks = "Draft"
-		# elif self.total_issued > self.total_requested:
-		# 	self.remarks = "Over Issued"
-		# elif self.total_issued < self.total_requested:
-		# 	self.remarks = "In Progress"
-		# elif self.total_issued == self.total_requested:
-			self.remarks = "Completed"
-		else:
-			# self.total_issued > 1
-			self.remarks = "In Progress"
-		# elif self.total_issued < self.total_requested:
-		# 	self.remarks = "In Progress"
+	# def set_remarks(self):
+	# 	pass
+		# frappe.errprint(f"Total Issued: {self.total_issued}, Total Requested: {self.total_requested}")  # Debugging print
+		# # if self.total_issued < self.total_requested:
+		# # 	self.remarks = "In Progress"
+		# if self.qty_to_provided == 0:
+		# 	self.remarks = "Completed"
+		# elif self.total_issued ==0 :
+		# 	self.remarks = "Draft"
+		# frappe.errprint(f"Remarks set to: {self.remarks}")  # Debugging print
+		# self.save()
+
 
 	def set_title(self):
 		title = self.remarks if self.remarks is not None else "No Remarks"
 		self.title = title
 
-	def set_check(self):
-		pass
-		# for i in self.general_item_issuance_ct:
-		# 	if i.qty > i.balance_qty:
-		# 		i.check = 1
-		# 	else:
-		# 		i.check = 0
 
 
 
@@ -101,7 +91,7 @@ class GeneralItemIssuance(Document):
 			item_code = item.part_name
 			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
 			if not bin_exists:
-				# frappe.msgprint(f'Bin for item_code {item_code} not found. Skipping update for this item.')
+				frappe.msgprint(f'Bin for item_code {item_code} not found. Skipping update for this item.')
 				continue  # Skip this item and continue with the next one
 
 			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
@@ -185,7 +175,7 @@ class GeneralItemIssuance(Document):
 		for item in self.general_item_request_ct:
 			total_quantity += item.qty
 		self.total_issued = total_quantity
-
+		
 	def onload(self):
 		total_quantity = 0
 		for item in self.general_item_request_ct:
@@ -197,11 +187,6 @@ class GeneralItemIssuance(Document):
 		
 	
 	def validate(self):
-		if self.qty_to_provided == 0:
-			self.set_remarks == "Completed"
-			frappe.msgprint('comp')
-
-		# frappe.msgprint("hello1")
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
 			total_quantity += item.qty
