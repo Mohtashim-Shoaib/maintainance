@@ -9,12 +9,16 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_requested()
 		self.calculate_total_issuance()
 		self.set_remarks()
-		self.calculate_qty_to_provided()
 		self.set_title()
 		self.set_check()
 
+	def onload(self):
+		self.calculate_total_requested()
+		self.calculate_total_issuance()
+		self.set_remarks()
 	
 	def calculate_total_requested(self):
+		frappe.msgprint('hello world')
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
 			total_quantity += item.qty
@@ -26,32 +30,37 @@ class GeneralItemIssuance(Document):
 			total_quantity += item.qty
 		self.total_issued = total_quantity
 
-	def calculate_qty_to_provided(self):  # Method renamed here
-		qty_to_provided = self.total_requested - self.total_issued
-		self.qty_to_provided = qty_to_provided
-        # frappe.errprint(f"Qty to be provided: {qty_to_provided}")
-        # frappe.db_set('qty_to_provided', qty_to_provided)
 
+	def validate(self):
+		self.calculate_qty_to_provided()
 
-	# def set_remarks(self):
-	# 	if self.qty_to_provided == 0:
-	# 		self.remarks = "In Progress"
-	# 	elif self.qty_to_provided < self.total_requested:
-	# 		self.remarks = "Completed"
-	# 	# elif self.total_issued == 0 and self.total_requested > 0:
-	# 	# 	self.remarks = "Draft"
+	def load(self):
+		self.calculate_qty_to_provided()
+		self.check_qty()
 
+	# def calculate_qty_to_provided(self):  # Method renamed here
+	# 	frappe.msgprint('hello')
+	# 	print(f"Total Requested: {self.total_requested}")  # Debug print
+	# 	print(f"Total Issued: {self.total_issued}")  # Debug print
+	# 	qty_to_provided = self.total_requested - self.total_issued
+	# 	self.qty_to_provided = qty_to_provided
+	# 	frappe.msgprint(f"Qty to be provided: {qty_to_provided}")
+	# 	# To log the message as an error, you can use frappe.log_error
+	# 	frappe.log_error(f"Qty to be provided: {qty_to_provided}", "Calculation Error")
 
-	# def set_title(self):
-	# 	title = self.remarks
-	# 	self.title = 
+	
+        
 	
 	def set_remarks(self):
 		# if self.qty_to_provided == 0;
 		# 	self.sta
 		if self.total_issued == 0:
 			self.remarks = "Draft"
-		elif self.total_issued == self.total_requested:
+		# elif self.total_issued > self.total_requested:
+		# 	self.remarks = "Over Issued"
+		# elif self.total_issued < self.total_requested:
+		# 	self.remarks = "In Progress"
+		# elif self.total_issued == self.total_requested:
 			self.remarks = "Completed"
 		else:
 			# self.total_issued > 1
@@ -162,19 +171,41 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_issued()
 
 	def calculate_total_requested(self):
+		frappe.msgprint("1")
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
 			total_quantity += item.qty
 		self.total_requested = total_quantity
 
+	def validate(self):
+		frappe.msgprint("2")
 	def calculate_total_issued(self):
+		# pass
 		total_quantity = 0
 		for item in self.general_item_request_ct:
 			total_quantity += item.qty
 		self.total_issued = total_quantity
 
+	def onload(self):
+		total_quantity = 0
+		for item in self.general_item_request_ct:
+			total_quantity += item.qty
+		self.total_issued = total_quantity
+		# frappe.msgprint('hello')
+		qty_to_provided = self.total_requested - self.total_issued
+		self.qty_to_provided = qty_to_provided
+		
 	
 	def validate(self):
+		if self.qty_to_provided == 0:
+			self.set_remarks == "Completed"
+			frappe.msgprint('comp')
+
+		# frappe.msgprint("hello1")
+		total_quantity = 0
+		for item in self.general_item_issuance_ct:
+			total_quantity += item.qty
+		self.total_requested = total_quantity
 		# Initialize dictionaries for requested and balance quantities
 		general_item_issuance_ct = {}
 		balance_quantities = {}
