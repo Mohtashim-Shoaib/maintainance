@@ -111,10 +111,12 @@ class GeneralItemIssuance(Document):
 
 	def validate(self):
 		issued_quantities = {}
+		frappe.msgprint(1)
 		# Collecting issued quantities
 		for issuance in self.general_item_issuance_ct:
 			item_code = issuance.part_name  # Ensure this is the correct field name
 			frappe.errprint(issuance)
+			frappe.errprint("issuance")
 			if item_code in issued_quantities:
 				issued_quantities[item_code] += issuance.qty
 			else:

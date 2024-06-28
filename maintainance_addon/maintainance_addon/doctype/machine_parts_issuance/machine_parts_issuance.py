@@ -113,25 +113,25 @@ class MachinePartsIssuance(Document):
 
 
 
-	def validate(self):
-			# pass
-			issued_quantities = {}
-			# Collecting issued quantities
-			for issuance in self.requested_items:
-				item_code = issuance.item_code  # Ensure this is the correct field name
-				frappe.errprint(issuance)
-				if item_code in issued_quantities:
-					issued_quantities[item_code] += issuance.request_qty
-				else:
-					issued_quantities[item_code] = issuance.request_qty
+	# def validate(self):
+	# 		# pass
+	# 		issued_quantities = {}
+	# 		# Collecting issued quantities
+	# 		for issuance in self.requested_items:
+	# 			item_code = issuance.item_code  # Ensure this is the correct field name
+	# 			frappe.errprint(issuance)
+	# 			if item_code in issued_quantities:
+	# 				issued_quantities[item_code] += issuance.request_quantity
+	# 			else:
+	# 				issued_quantities[item_code] = issuance.request_quantity
 
-			# for request in self.machine_part_details:
-			# 	requested_item_code = request.item_code  # Ensure this matches the field name in your child table
-			# 	issued_qty = issued_quantities.get(requested_item_code, 0)
-			# 	request_qty = request.qty if request.qty is not None else 0  # Ensure request.qty is an int
-			# 	if request_qty > issued_qty:
-			# 		pass
-					# frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Requested quantity ({request_qty}) cannot be greater than issued quantity ({issued_qty}).")
+	# 		for request in self.machine_part_details:
+	# 			requested_item_code = request.item_code  # Ensure this matches the field name in your child table
+	# 			issued_qty = issued_quantities.get(requested_item_code, 0)
+	# 			request_quantity = request.qty if request.qty is not None else 0  # Ensure request.qty is an int
+	# 			if request_quantity > issued_qty:
+	# 				# pass
+	# 				frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Requested quantity ({request_quantity}) cannot be greater than issued quantity ({issued_qty}).")
 
 
 		
@@ -155,3 +155,86 @@ class MachinePartsIssuance(Document):
 	# 		if request.qty > issued_qty:
 	# 			frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Issue Qty quantity ({request.qty}) cannot be greater than balanced quantity ({issued_qty}).")
 
+
+	#  for qty validation
+	# def before_save(self):
+	# 	# Step 1: Initialize a dictionary for requested quantities
+	# 	requested_quantities = {}
+
+	# 	# Step 2: Populate the dictionary with total request quantities for each item
+	# 	for item in self.requested_items:
+	# 		item_code = item.item_code
+	# 		if item_code in requested_quantities:
+	# 			requested_quantities[item_code] += item.request_quantity
+	# 		else:
+	# 			requested_quantities[item_code] = item.request_quantity
+
+	# 	# Step 3: Validate issued quantities against requested quantities
+	# 	for detail in self.machine_part_details:
+	# 		item_code = detail.item_code
+	# 		issued_qty = detail.issued_qty  # Assuming detail.issued_qty is already an integer or None is handled
+	# 		# Get the total requested quantity for the item, defaulting to 0 if not found
+	# 		total_requested_qty = requested_quantities.get(item_code, 0)
+
+	# 		# Step 4: Check if issued quantity exceeds requested quantity
+	# 		if issued_qty > total_requested_qty:
+	# 			frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than requested quantity ({total_requested_qty}).")
+
+
+	# #  for balance quantity validation
+	# def validate(self):
+	# 	# Step 1: Initialize a dictionary for requested quantities
+	# 	requested_quantities = {}
+
+	# 	# Step 2: Populate the dictionary with total request quantities for each item
+	# 	for item in self.requested_items:
+	# 		item_code = item.item_code
+	# 		if item_code in requested_quantities:
+	# 			requested_quantities[item_code] += item.balance_qty
+	# 		else:
+	# 			requested_quantities[item_code] = item.balance_qty
+
+	# 	# Step 3: Validate issued quantities against requested quantities
+	# 	for detail in self.machine_part_details:
+	# 		item_code = detail.item_code
+	# 		issued_qty = detail.issued_qty  # Assuming detail.issued_qty is already an integer or None is handled
+	# 		# Get the total requested quantity for the item, defaulting to 0 if not found
+	# 		total_requested_qty = requested_quantities.get(item_code, 0)
+
+	# 		# Step 4: Check if issued quantity exceeds requested quantity
+	# 		if issued_qty > total_requested_qty:
+	# 			frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than Balance quantity ({total_requested_qty}).")
+	
+	def validate(self):
+		# Initialize dictionaries for requested and balance quantities
+		requested_quantities = {}
+		balance_quantities = {}
+
+		# Populate dictionaries with total request and balance quantities for each item
+		for item in self.requested_items:
+			item_code = item.item_code
+			# Update requested quantities
+			if item_code in requested_quantities:
+				requested_quantities[item_code] += item.request_quantity
+			else:
+				requested_quantities[item_code] = item.request_quantity
+			# Update balance quantities
+			if item_code in balance_quantities:
+				balance_quantities[item_code] += item.balance_qty
+			else:
+				balance_quantities[item_code] = item.balance_qty
+
+		# Validate issued quantities against requested and balance quantities
+		for detail in self.machine_part_details:
+			item_code = detail.item_code
+			issued_qty = detail.issued_qty  # Assuming detail.issued_qty is already an integer
+			# Get the total requested and balance quantity for the item, defaulting to 0 if not found
+			total_requested_qty = requested_quantities.get(item_code, 0)
+			total_balance_qty = balance_quantities.get(item_code, 0)
+
+			# Check if issued quantity exceeds requested quantity
+			if issued_qty > total_requested_qty:
+				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than requested quantity ({total_requested_qty}).")
+			# Check if issued quantity exceeds balance quantity
+			if issued_qty > total_balance_qty:
+				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
