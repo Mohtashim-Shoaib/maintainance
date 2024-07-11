@@ -14,109 +14,6 @@ frappe.ui.form.on('Request Form', {
 })
 
 
-// frappe.ui.form.on('Parts Request CT', {
-// 	item_code: function (frm, cdt, cdn) {
-// 		var d = locals[cdt][cdn];
-// 		frappe.call({
-// 			method: 'maintainance_addon.maintainance_addon.doctype.machine_parts.machine_parts.get_balance_qty',
-// 			args: {
-// 				item: d.item_code
-// 			},
-// 			callback: function (r) {
-// 				console.log(r)
-// 				d.balance_qty = r.message
-
-// 				frm.refresh_field("machine_part_details")
-// 			}
-// 		})
-// 	},
-// });
-
-// frappe.ui.form.on('Parts Request CT', {
-// 	item_code(frm, cdt, cdn) {
-// 		set_rate(frm, cdt, cdn);
-
-// 	},
-// 	qty(frm, cdt, cdn) {
-// 		set_order(frm, cdt, cdn);
-
-// 	}
-
-// });
-// function set_order(frm, cdt, cdn) {
-// 	var d = locals[cdt][cdn];
-// 	if (d.qty > d.balance_qty) {
-// 		frappe.model.set_value(d.doctype, d.name, "required_qty", d.qty - d.balance_qty)
-// 	}
-// 	else {
-// 		frappe.model.set_value(d.doctype, d.name, "required_qty", 0)
-// 	}
-// }
-// function set_rate(frm, cdt, cdn) {
-// 	var d = locals[cdt][cdn];
-// 	frappe.call({
-// 		method: "frappe.client.get_value",
-// 		args: {
-// 			doctype: "Item Price",
-// 			filters: {
-// 				item_code: d.part_name,
-// 				price_list: "Standard Buying"
-// 			},
-// 			fieldname: ["price_list_rate"]
-// 		},
-// 		callback: function (r) {
-// 			frappe.model.set_value(d.doctype, d.name, "rate", r.message["price_list_rate"])
-
-// 		}
-// 	});
-// }
-
-
-// frappe.ui.form.on('Request Form', {
-// 	refresh: function (frm) {
-// 		var me = frm
-// 		frm.add_custom_button(__('Create MR'),
-// 			function () {
-// 				frappe.call({
-// 					method: 'maintainance_addon.maintainance_addon.doctype.request_form.request_form.make_mr',
-// 					args: {
-// 						request_form: frm.doc.name
-// 					},
-// 					callback: function (r) {
-// 						if (r.message) {
-// 							frappe.msgprint(__('Items updated successfully.'));
-// 							frm.reload_doc();
-// 							console.log("test")
-// 						}
-
-// 					}
-// 				});
-
-
-
-// 			}, __("Create"));
-// 		frm.add_custom_button(__('Parts Issuance'),
-// 			function () {
-// 				frappe.call({
-// 					method: 'maintainance_addon.maintainance_addon.doctype.request_form.request_form.make_issuance',
-// 					args: {
-// 						request_form: frm.doc.name
-// 					},
-// 					callback: function (r) {
-// 						if (r.message) {
-// 							frappe.msgprint(__('Items updated successfully.'));
-// 							frm.reload_doc();
-// 						}
-// 					}
-// 				});
-
-
-
-// 			}, __("Create"));
-// 	}
-// });
-
-
 // Define the get_prompt_fields function first
 var get_prompt_fields = () => {
 	return [
@@ -148,260 +45,6 @@ frappe.ui.form.on('Request Form', {
 	}
 });
 
-// Define the function to get available stock
-// function get_available_stock(frm, item_code) {
-// 	console.log("Fetching available stock for item_code:", item_code);
-// 	frappe.db.get_doc("Item", item_code).then(doc => {
-// 		console.log(doc.item_group)
-// 		var group = doc.item_group
-
-// })
-// 	if(group == "ELECTRIC ITEMS"){
-// 		// console.log(group)
-// 	frappe.call({
-// 		method: 'get_available_qty',
-// 		args: {
-// 			item_code: item_code
-// 		},
-// 		callback: function (r) {
-// 			if (r.message) {
-// 				// Add a new child row and set the item code
-// 				let child = frm.add_child("items", {
-// 					"item_code": item_code
-// 				});
-// 				// Refresh the child table field
-// 				frm.refresh_field("items");	
-// 				// Set the balance_qty in the newly added child row
-// 				frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-// 				// Optional: show a message
-// 				frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-// 			} else {
-// 				frappe.msgprint("No stock available for the selected item.");
-// 			}
-// 		}
-
-// 	});
-// }
-// }
-
-
-
-// function get_available_stock(frm, item_code) {
-// 	console.log("Fetching available stock for item_code:", item_code);
-// 	frappe.db.get_doc("Item", item_code).then(doc => {
-// 		console.log(doc.item_group)
-// 		var group = doc.item_group
-// 		if (group == "ELECTRIC ITEMS"){
-// 			frappe.call({
-// 				method: 'get_available_qty',
-// 				args: {
-// 					item_code: item_code
-// 				},
-// 				callback: function (r) {
-// 					if (r.message) {
-// 						// Add a new child row and set the item code
-// 						let child = frm.add_child("items", {
-// 							"item_code": item_code
-// 						});
-// 						// Refresh the child table field
-// 						frm.refresh_field("items");
-// 						// Set the balance_qty in the newly added child row
-// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-// 						// Optional: show a message
-// 						// frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-// 					} else {
-// 						frappe.msgprint("No stock available for the selected item.");
-// 						// frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-// 					}
-// 				}
-// 			});
-// 		}
-// 		if (group == "MACHINE SPARE PARTS"){
-// 			frappe.call({
-// 				method: 'get_available_qty',
-// 				args: {
-// 					item_code: item_code
-// 				},
-// 				callback: function (r) {
-// 					if (r.message) {
-// 						// Add a new child row and set the item code
-// 						let child = frm.add_child("items", {
-// 							"item_code": item_code
-// 						});
-// 						// Refresh the child table field
-// 						frm.refresh_field("items");
-// 						// Set the balance_qty in the newly added child row
-// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-// 						// Optional: show a message
-// 						frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-// 					} else {
-// 						frappe.msgprint("No stock available for the selected item.");
-// 					}
-// 				}
-// 			});
-// 		}
-// 		if (group == "TOOLS"){
-// 			frappe.call({
-// 				method: 'get_available_qty',
-// 				args: {
-// 					item_code: item_code
-// 				},
-// 				callback: function (r) {
-// 					if (r.message) {
-// 						// Add a new child row and set the item code
-// 						let child = frm.add_child("items", {
-// 							"item_code": item_code
-// 						});
-// 						// Refresh the child table field
-// 						frm.refresh_field("items");
-// 						// Set the balance_qty in the newly added child row
-// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-// 						// Optional: show a message
-// 						frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-// 					} else {
-// 						frappe.msgprint("No stock available for the selected item.");
-// 					}
-// 				}
-// 			});
-// 		}
-// 	})
-// }
-
-
-
-
-// function get_available_stock_1(frm, item_code) {
-// 	console.log("Fetching available stock for item_code:", item_code);
-// 	frappe.db.get_doc("Item", item_code).then(doc => {
-// 		console.log(doc.item_group)
-// 		var group = doc.item_group
-// 		if (group == "GENERAL ITEM"){
-// 			frappe.call({
-// 				method: 'get_available_qty',
-// 				args: {
-// 					item_code: item_code
-// 				},
-// 				callback: function (r) {
-// 					if (r.message) {
-// 						// Add a new child row and set the item code
-// 						let child = frm.add_child("item", {
-// 							"item_code": item_code
-// 						});
-// 						// Refresh the child table field
-// 						frm.refresh_field("item");
-// 						// Set the balance_qty in the newly added child row
-// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-// 						// Optional: show a message
-// 						frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-// 					} else {
-// 						frappe.msgprint("No stock available for the selected item.");
-// 					}
-// 				}
-// 			});
-// 		}
-// 		else if (group == "STATIONERY ITEMS"){
-// 			frappe.call({
-// 				method: 'get_available_qty',
-// 				args: {
-// 					item_code: item_code
-// 				},
-// 				callback: function (r) {
-// 					if (r.message) {
-// 						// Add a new child row and set the item code
-// 						let child = frm.add_child("item", {
-// 							"item_code": item_code
-// 						});
-// 						// Refresh the child table field
-// 						frm.refresh_field("item");
-// 						// Set the balance_qty in the newly added child row
-// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-// 						// Optional: show a message
-// 						frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-// 					} else {
-// 						frappe.msgprint("No stock available for the selected item.");
-// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-// 					}
-// 				}
-// 			});
-// 		}
-		
-// 	})
-// }
-
-// function get_available_stock(frm, item_code) {
-//     console.log("Fetching available stock for item_code:", item_code);
-//     frappe.db.get_doc("Item", item_code).then(doc => {
-
-//         console.log(doc.item_group)
-//         var group = doc.item_group;
-//         if (["ELECTRIC ITEMS", "MACHINE SPARE PARTS", "TOOLS"].includes(group)) {
-//             frappe.call({
-//                 method: 'get_available_qty',
-//                 args: {
-//                     item_code: item_code
-//                 },
-//                 callback: function (r) {
-//                     // Add a new child row and set the item code regardless of balance_qty availability
-//                     let child = frm.add_child("items", {
-//                         "item_code": item_code,
-//                         "balance_qty": r.message ? r.message : 0 // Use r.message if available, otherwise default to 0
-//                     });
-//                     // Refresh the child table field
-//                     frm.refresh_field("items");
-
-//                     if (r.message) {
-//                         // Optional: show a message with available stock
-//                         frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-//                     } else {
-//                         // Show a message when no stock is available
-//                         frappe.msgprint("No stock available for the selected item.");
-//                     }
-//                 }
-//             });
-//         }
-//     });
-// }
-// function get_available_stock(frm, item_code) {
-//     console.log("Fetching available stock for item_code:", item_code);
-//     frappe.db.get_doc("Item", item_code).then(doc => {
-
-//         console.log(doc.item_group)
-//         var group = doc.item_group;
-//         // Added "STATIONERY ITEMS" to the list
-//         if (["ELECTRIC ITEMS", "MACHINE SPARE PARTS", "TOOLS", "STATIONERY ITEMS"].includes(group)) {
-//             frappe.call({
-//                 method: 'get_available_qty',
-//                 args: {
-//                     item_code: item_code
-//                 },
-//                 callback: function (r) {
-//                     // Add a new child row and set the item code regardless of balance_qty availability
-//                     let child = frm.add_child("items", {
-//                         "item_code": item_code,
-//                         "balance_qty": r.message ? r.message : 0 // Use r.message if available, otherwise default to 0
-//                     });
-//                     // Refresh the child table field
-//                     frm.refresh_field("items");
-
-//                     if (r.message) {
-//                         // Optional: show a message with available stock
-//                         frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-//                     } else {
-//                         // Show a message when no stock is available
-//                         frappe.msgprint("No stock available for the selected item.");
-//                     }
-//                 }
-//             });
-//         }
-//     });
-// }
-
 function get_available_stock(frm, item_code) {
     console.log("Fetching available stock for item_code:", item_code);
     frappe.db.get_doc("Item", item_code).then(doc => {
@@ -426,9 +69,9 @@ function get_available_stock(frm, item_code) {
                 callback: function (r) {
                     addItemToTable(item_code, r.message);
                     if (r.message) {
-                        frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
+                        // frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
                     } else {
-                        frappe.msgprint("No stock available for the selected item.");
+                        // frappe.msgprint("No stock available for the selected item.");
                     }
                 }
             });
@@ -459,74 +102,15 @@ function get_available_stock_1(frm, item_code) {
                 callback: function (r) {
                     addItemToTable(item_code, r.message);
                     if (r.message) {
-                        frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
+                        // frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
                     } else {
-                        frappe.msgprint("No stock available for the selected item.");
+                        // frappe.msgprint("No stock available for the selected item.");
                     }
                 }
             });
         }
     });
 }
-	// function get_available_stock(frm, item_code) {
-	// 	console.log("Fetching available stock for item_code:", item_code);
-	// 	frappe.db.get_doc("Item", item_code).then(doc => {
-	// 		console.log(doc.item_group)
-	// 		var group = doc.item_group
-	// 		if(group == "ELECTRIC ITEMS"){
-	// 			frappe.call({
-	// 				method: 'get_available_qty',
-	// 				args: {
-	// 					item_code: item_code
-	// 				},
-	// 				callback: function (r) {
-	// 					if (r.message) {
-	// 						// Add a new child row and set the item code
-	// 						let child = frm.add_child("item", {
-	// 							"item_code": item_code
-	// 						});
-	// 						// Refresh the child table field
-	// 						frm.refresh_field("item");
-	// 						// Set the balance_qty in the newly added child row
-	// 						frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-
-	// 						// Optional: show a message
-	// 						frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-	// 					} else {
-	// 						frappe.msgprint("No stock available for the selected item.");
-	// 					}
-	// 				}
-	// 			});
-	// 		}
-	// 	})
-	// frappe.call({
-	// 	method: 'get_available_qty',
-	// 	args: {
-	// 		item_code: item_code
-	// 	},
-	// 	callback: function (r) {
-	// 		if (r.message) {
-	// 			frappe.db.get_doc("Item", item_code).then(doc => {
-	// 				console.log(doc)
-	// 			})
-	// 			if(item_group == "General"){
-	// 			let child = frm.add_child("item", {
-	// 				"item_code": item_code
-	// 			});
-	// 			frm.refresh_field("item");
-	// 			frappe.model.set_value(child.doctype, child.name, "balance_qty", r.message);
-	// 			frappe.msgprint(`Available stock for ${item_code}: ${r.message}`);
-	// 		} else {
-	// 			frappe.msgprint("No stock available for the selected item.");
-	// 		}
-	// 	}
-	// 	}
-	// });
-
-
-
-
-
 
 	frappe.ui.form.on('Request Form', {
 		refresh: function (frm) {
@@ -536,30 +120,6 @@ function get_available_stock_1(frm, item_code) {
 			// frm.set_df_property('dimensions', 'cannot_delete_all_rows', true); // Hide delete all button
 		}
 	});
-
-
-
-	// frappe.ui.form.on('Parts Request CT',{
-	// 	qty: function(frm, cdt, cdn){
-	// 		let row = locals[cdt][cdn]	
-	// 		if(row.qty){
-	// 				let total= 0
-	// 				for (let i in frm.doc.items){
-	// 					total += frm.doc.items[i].qty
-	// 				}
-	// 				frm.set_value('total_parts', total)
-	// 				frm.refresh()
-	// 		}
-	// 	},
-	// 	qty:function(frm, cdt, cdn){  // amount replace it with your amount fieldname
-	// 		frm.script_manager.trigger('qty', cdt, cdn)  // the above item_code function is calling here
-	// 	},
-	// 	items_remove(frm,cdt,cdn){ // items is the child table fieldname so here you put your childtable-fieldname_remove
-	// 		frm.script_manager.trigger('qty', cdt,cdn)
-	// 	}
-		
-	// })
-
 
 	frappe.ui.form.on("Parts Request CT", {
 		qty:function(frm,cdt, cdn){
@@ -580,7 +140,7 @@ function get_available_stock_1(frm, item_code) {
 		},
 		items_remove(frm,cdt,cdn){
 			frm.script_manager.trigger('qty',cdt,cdn)
-			// console.log("test2")
+	
 			
 		}
 		
@@ -594,7 +154,7 @@ function get_available_stock_1(frm, item_code) {
 				for (let i in frm.doc.item){
 					total += frm.doc.item[i].qty
 				}
-				frm.set_value('total_generals',total)
+				frm.set_value('total_general',total)
 				frm.refresh()
 			},
 			item:function(frm,cdt,cdn){

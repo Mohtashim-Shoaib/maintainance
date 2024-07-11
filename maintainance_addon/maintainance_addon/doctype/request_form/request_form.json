@@ -14,20 +14,13 @@
   "request_by",
   "section_break_aosm2",
   "items",
-  "total_parts",
-  "general_request_ct_section",
-  "item",
-  "total_generals",
-  "more_info_section",
-  "status",
-  "part_request",
-  "part_request_form",
   "amended_from",
+  "item",
+  "total_general",
+  "total_parts",
   "general_request_form",
-  "part_request_form_column",
-  "pt_status",
-  "general_item_form_status",
-  "pr_status"
+  "part_request",
+  "status"
  ],
  "fields": [
   {
@@ -66,8 +59,7 @@
   },
   {
    "fieldname": "section_break_aosm2",
-   "fieldtype": "Section Break",
-   "label": "Part Request CT"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "items",
@@ -82,94 +74,37 @@
    "options": "General Request CT"
   },
   {
-   "fieldname": "general_request_ct_section",
-   "fieldtype": "Section Break",
-   "label": "General Request CT"
+   "fieldname": "total_general",
+   "fieldtype": "Int",
+   "label": "Total General"
   },
   {
-   "allow_on_submit": 1,
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "no_copy": 1,
-   "options": "\nDraft\nIn Progress\nCompleted",
-   "print_hide": 1,
-   "read_only": 1,
-   "reqd": 1,
-   "search_index": 1
-  },
-  {
-   "default": "0",
    "fieldname": "total_parts",
-   "fieldtype": "Float",
-   "label": "Total Parts",
-   "precision": "0",
-   "read_only": 1
+   "fieldtype": "Int",
+   "label": "Total Parts"
   },
   {
-   "fieldname": "more_info_section",
-   "fieldtype": "Tab Break",
-   "label": "More Info"
-  },
-  {
-   "default": "0",
-   "fieldname": "total_generals",
-   "fieldtype": "Float",
-   "label": "Total Generals",
-   "precision": "0",
-   "read_only": 1
+   "fieldname": "general_request_form",
+   "fieldtype": "Data",
+   "label": "General Request Form"
   },
   {
    "fieldname": "part_request",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Part Request"
-  },
-  {
-   "fieldname": "part_request_form",
-   "fieldtype": "Link",
-   "label": "Part Request Form ",
-   "options": "Machine Parts Issuance"
-  },
-  {
-   "fieldname": "general_request_form",
-   "fieldtype": "Link",
-   "label": "General Request Form",
-   "options": "General Item Issuance"
+   "label": "Machine Part Details Link"
   },
   {
    "default": "Draft",
-   "fetch_from": "general_request_form.title",
-   "fieldname": "general_item_form_status",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "General Item Form Status"
-  },
-  {
-   "fetch_from": "part_request_form.status",
-   "fieldname": "pt_status",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Part Request Status"
-  },
-  {
-   "fieldname": "part_request_form_column",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "part_request_form.status",
-   "fieldname": "pr_status",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Part Request"
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Completed\nIn Progress\nDraft"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2024-06-27 13:04:44.723344",
+ "modified": "2024-07-11 17:25:19.442180",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Request Form",
