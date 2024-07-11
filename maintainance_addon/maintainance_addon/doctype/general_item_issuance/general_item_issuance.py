@@ -8,22 +8,43 @@ class GeneralItemIssuance(Document):
 	def validate(self):
 		self.calculate_total_requested()
 		self.calculate_total_issuance()
-		self.set_remarks()
+		# self.set_remarks()
 		self.set_title()
 		self.set_check()
+		self.set_qty_to_provided()
 
 	def onload(self):
 		self.calculate_total_requested()
 		self.calculate_total_issuance()
-		self.set_remarks()
+		# self.set_remarks()
+		self.set_status()
+	def set_qty_to_provided(self):
+		try:
+			total_requested = float(self.total_requested)  if self.total_requested else 0
+			total_issued = float(self.total_issued)  if self.total_issued else 0
+			self.qty_to_provided = total_requested - total_issued
+		except ValueError as e:
+			frappe.throw(f"Error in set_qty_to_provided: {e}")
+		except Exception as e:
+			frappe.throw(f"Unexpected error in set_qty_to_provided: {e}")
+			
 
-	def set_remarks(self):
+
+	def set_status(self):
 		if self.total_issued == 0:
 			self.remarks = "Draft"
 		elif self.total_issued < self.total_requested:
 			self.remarks = "In Progress"
 		elif self.total_issued == self.total_requested:
 			self.remarks = "Completed"
+
+	# def set_remarks(self):
+	# 	if self.total_issued == 0:
+	# 		self.remarks = "Draft"
+	# 	elif self.total_issued < self.total_requested:
+	# 		self.remarks = "In Progress"
+	# 	elif self.total_issued == self.total_requested:
+	# 		self.remarks = "Completed"
 
 
 
@@ -182,8 +203,8 @@ class GeneralItemIssuance(Document):
 			total_quantity += item.qty
 		self.total_issued = total_quantity
 		# frappe.msgprint('hello')
-		qty_to_provided = self.total_requested - self.total_issued
-		self.qty_to_provided = qty_to_provided
+		# qty_to_provided = self.total_requested - self.total_issued
+		# self.qty_to_provided = qty_to_provided
 		
 	
 	def validate(self):
