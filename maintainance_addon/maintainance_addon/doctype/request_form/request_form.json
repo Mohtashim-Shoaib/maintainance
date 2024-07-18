@@ -20,7 +20,8 @@
   "total_parts",
   "general_request_form",
   "part_request",
-  "status"
+  "status",
+  "material_request"
  ],
  "fields": [
   {
@@ -99,12 +100,17 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Completed\nIn Progress\nDraft"
+  },
+  {
+   "fieldname": "material_request",
+   "fieldtype": "Data",
+   "label": "Material Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-11 17:25:19.442180",
+ "modified": "2024-07-18 16:32:58.385488",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Request Form",

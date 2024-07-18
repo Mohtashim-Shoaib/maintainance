@@ -7,15 +7,43 @@ class RequestForm(Document):
 		pass
 
 	def validate(self):
-		# if self.is_new():
+		if self.is_new():
 			self.send_data_from_request_form_to_part()
 			# self.send_data_from_request_form_to_material_request()
 			self.send_data_from_request_form_to_general()
 
-	# def onload(self):
-	# 	self.set_status()
+	def validate(self):
+		self.send_data_from_request_form_to_material_request()
 
 	
+	def send_data_from_request_form_to_material_request(self):
+			try:
+				material_request_items = []
+				for item in getattr(self, 'items', []) + getattr(self, 'item', []):
+					if item.balance_qty == 0:
+						material_request_items.append({
+							'item_code': item.item_code,
+							'qty': item.qty,
+							'schedule_date': self.posting_date,
+							'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
+						})
+
+				if material_request_items:
+					material_request = frappe.get_doc({
+						'doctype': 'Material Request',
+						'material_request_type': 'Purchase',
+						'transaction_date': self.posting_date,
+						'set_warehouse': 'Stores - SAH',
+						'items': material_request_items,
+						'title': f"Material Request for {self.name}",
+					})
+					material_request.insert(ignore_permissions=True)
+					material_request.save()
+					self.db_set('material_request', material_request.name)
+					frappe.msgprint("Material Request created!")
+			except Exception as e:
+				frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
+
 
 	def send_data_from_request_form_to_part(self):
 		try:
@@ -70,32 +98,6 @@ class RequestForm(Document):
 		except Exception as e:
 		 	frappe.log_error(f"Error in send_data_from_request_form_to_general: {e}", "RequestForm send_data_from_request_form_to_general")
 
-# def send_data_from_request_form_to_material_request(self):
-# 		try:
-# 			material_request_items = []
-# 			for item in getattr(self, 'items', []) + getattr(self, 'item', []):
-# 				if item.balance_qty == 0:
-# 					material_request_items.append({
-# 						'item_code': item.item_code,
-# 						'qty': item.qty,
-# 						'schedule_date': self.posting_date,
-# 						'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
-# 					})
-
-# 			if material_request_items:
-# 				material_request = frappe.get_doc({
-# 					'doctype': 'Material Request',
-# 					'material_request_type': 'Purchase',
-# 					'transaction_date': self.posting_date,
-# 					'set_warehouse': 'Stores - SAH',
-# 					'items': material_request_items,
-# 					'title': f"Material Request for {self.name}",
-# 				})
-# 				material_request.insert(ignore_permissions=True)
-# 				material_request.save()
-# 				frappe.msgprint("Material Request created!")
-# 		except Exception as e:
-# 			frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
 
 # @frappe.whitelist()
 # def get_available_qty(item_code):
