@@ -100,7 +100,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nCompleted\nIn Progress\nHold"
+   "options": "Draft\nCompleted\nIn Progress"
   },
   {
    "fieldname": "amended_from",
@@ -136,7 +136,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-28 13:02:07.301209",
+ "modified": "2024-07-18 11:19:40.404388",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",
@@ -159,7 +159,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "status",
  "track_changes": 1,
  "track_seen": 1,
  "track_views": 1

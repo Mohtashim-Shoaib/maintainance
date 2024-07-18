@@ -267,3 +267,34 @@ function get_requested_items(frm) {
 //         frm.reload_doc();
 //     }
 // });
+
+// frappe.ui.form.on('General Item Issuance', {
+// 	    refresh: function(frm) {
+// 	        frappe.msgprint('testing/...')
+// 	    }
+// 	});
+
+frappe.ui.form.on("General Item Issuance",{
+	refresh:function(frm){
+		set_status(frm)
+	}
+})
+
+function set_status(frm){
+	let totalRequested= cur_frm.doc.total_requested
+	let  toalIssued = cur_frm.doc.total_issued
+	let  totalBalanced = totalRequested - toalIssued
+	frm.set_value('qty_to_provided',totalBalanced)
+	if (totalBalanced === 0){
+		frm.set_value('status','Completed')
+	}
+	else if(toalIssued == 0){
+		frm.set_value('status','Draft')
+	}
+	else if (toalIssued < totalRequested){
+		frm.set_value('status','In Progress')
+	}
+	
+
+}
+

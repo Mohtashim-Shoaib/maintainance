@@ -25,11 +25,10 @@
   "returned_section",
   "machine_part_returned",
   "naming_series",
+  "status",
   "qty_to_provided",
-  "remarks",
   "title",
-  "amended_from",
-  "status"
+  "amended_from"
  ],
  "fields": [
   {
@@ -114,13 +113,6 @@
    "label": "Qty to Provided"
   },
   {
-   "default": "Draft",
-   "fieldname": "remarks",
-   "fieldtype": "Select",
-   "label": "Remarks",
-   "options": "\nDraft\nIn Progress\nCompleted"
-  },
-  {
    "fieldname": "title",
    "fieldtype": "Data",
    "label": "Title"
@@ -143,9 +135,10 @@
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2024-07-11 18:19:26.655191",
+ "modified": "2024-07-18 11:58:29.508843",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance",
@@ -168,5 +161,5 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "title"
+ "title_field": "status"
 }
