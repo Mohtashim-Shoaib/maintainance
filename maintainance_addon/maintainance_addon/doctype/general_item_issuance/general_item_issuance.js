@@ -277,6 +277,9 @@ function get_requested_items(frm) {
 frappe.ui.form.on("General Item Issuance",{
 	refresh:function(frm){
 		set_status(frm)
+	},
+	total_issued:function(frm){
+		set_status(frm)
 	}
 })
 
