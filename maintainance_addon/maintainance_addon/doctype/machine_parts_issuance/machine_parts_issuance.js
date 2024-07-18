@@ -163,3 +163,49 @@ frappe.ui.form.on('Machine Parts Issuance', {
         frm.reload_doc();
     }
 });
+
+// frappe.ui.form.on('Machine Parts Issuance', {
+//     refresh: function(frm) {
+//         console.log(frm); // For debugging, consider removing for production
+//         var totalRequested = frm.doc.total_requested_item;
+//         var totalIssued = frm.doc.total_issued_item;
+//         var balanceQty = totalRequested - totalIssued;
+//         // frappe.msgprint('Balance Quantity: ' + balanceQty);
+// 		frm.set_value('qty_to_be_provided', balanceQty);
+//         if (balanceQty === 0) {
+//             frm.set_value('status', 'Completed');
+//         }
+// 		else if (totalIssued === 0) {
+//             frm.set_value('status', 'Draft');
+//         }
+// 		else if (totalIssued < totalRequested) {
+//             frm.set_value('status', 'In Progress');
+//         }
+//     }
+// });
+
+frappe.ui.form.on('Machine Parts Issuance', {
+	    refresh: function(frm) {
+			set_status(frm)
+		},
+		total_issued_item: function(frm) {
+			set_status(frm)
+		}
+	})
+
+function set_status(frm){
+	var totalRequested = frm.doc.total_requested_item;
+        var totalIssued = frm.doc.total_issued_item;
+        var balanceQty = totalRequested - totalIssued;
+        // frappe.msgprint('Balance Quantity: ' + balanceQty);
+		frm.set_value('qty_to_be_provided', balanceQty);
+        if (balanceQty === 0) {
+            frm.set_value('status', 'Completed');
+        }
+		else if (totalIssued === 0) {
+            frm.set_value('status', 'Draft');
+        }
+		else if (totalIssued < totalRequested) {
+            frm.set_value('status', 'In Progress');
+        }
+}
