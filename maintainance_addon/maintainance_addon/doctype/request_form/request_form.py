@@ -70,7 +70,7 @@ class RequestForm(Document):
 		except Exception as e:
 		 	frappe.log_error(f"Error in send_data_from_request_form_to_general: {e}", "RequestForm send_data_from_request_form_to_general")
 
-# 	def send_data_from_request_form_to_material_request(self):
+# def send_data_from_request_form_to_material_request(self):
 # 		try:
 # 			material_request_items = []
 # 			for item in getattr(self, 'items', []) + getattr(self, 'item', []):
@@ -97,10 +97,20 @@ class RequestForm(Document):
 # 		except Exception as e:
 # 			frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
 
+# @frappe.whitelist()
+# def get_available_qty(item_code):
+# 	try:
+# 		actual_qty = frappe.db.get_value("Bin", {"item_code": item_code}, "actual_qty")
+# 		frappe.response["message"] = actual_qty
+# 	except Exception as e:
+# 		frappe.log_error(f"Error getting available qty for {item_code}: {e}", "get_available_qty")
+
+
 @frappe.whitelist()
 def get_available_qty(item_code):
-	try:
-		actual_qty = frappe.db.get_value("Bin", {"item_code": item_code}, "actual_qty")
-		frappe.response["message"] = actual_qty
-	except Exception as e:
-		frappe.log_error(f"Error getting available qty for {item_code}: {e}", "get_available_qty")
+    try:
+        actual_qty = frappe.db.get_value("Bin", {"item_code": item_code}, "actual_qty")
+        return actual_qty
+    except Exception as e:
+        frappe.log_error(f"Error getting available qty for {item_code}: {e}", "get_available_qty")
+        return None
