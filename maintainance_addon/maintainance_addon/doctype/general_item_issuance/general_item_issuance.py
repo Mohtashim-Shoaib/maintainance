@@ -17,6 +17,38 @@ class GeneralItemIssuance(Document):
 
 	def test1(self):
 		frappe.msgprint("testing./././")
+	
+	def on_submit(self):
+		self.send_data_from_gii_to_si()
+
+
+	def send_data_from_gii_to_si(self):
+		try:
+			frappe.errprint("Starting send_data_from_mpi_to_si")
+			stock_entry_item = []
+			for item in self.general_item_request_ct:
+				stock_entry_item.append({
+					'item_code': item.item_code,
+					'qty': item.qty,
+					's_warehouse': "Stores - SAH",
+					# 'basic_rate': item.rate,
+					# 'warehouse': item.warehouse
+				})
+			stock_entry= frappe.get_doc({
+				'doctype': 'Stock Entry',
+				'posting_date': self.date,
+				'stock_entry_type': 'Material Issue',
+				# 'posting_time': self.posting_time,
+				'from_warehouse': "Stores - SAH",
+				# 'to_warehouse': "Work In Progress - SAH",
+				'items': stock_entry_item
+			})
+			stock_entry.insert()
+			stock_entry.save()
+			frappe.errprint('Stock Entry created Successfully')
+			# frappe.errrint(item)
+		except Exception as e:
+			frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
 
 	@frappe.whitelist()
 	def my_python_method(self):
