@@ -12,15 +12,9 @@ class GeneralItemIssuance(Document):
 		self.set_title()
 		self.set_check()
 		self.set_qty_to_provided()
-		self.test1()
-		self.my_python_method()
 
-	def test1(self):
-		frappe.msgprint("testing./././")
-	
 	def on_submit(self):
 		self.send_data_from_gii_to_si()
-
 
 	def send_data_from_gii_to_si(self):
 		try:
@@ -50,15 +44,11 @@ class GeneralItemIssuance(Document):
 		except Exception as e:
 			frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
 
-	@frappe.whitelist()
-	def my_python_method(self):
-		frappe.msgprint('This is a message from Python')
-
 	def onload(self):
 		self.calculate_total_requested()
 		self.calculate_total_issuance()
-		# self.set_remarks()
 		self.set_status()
+
 	def set_qty_to_provided(self):
 		try:
 			total_requested = float(self.total_requested)  if self.total_requested else 0
@@ -69,28 +59,6 @@ class GeneralItemIssuance(Document):
 		except Exception as e:
 			frappe.throw(f"Unexpected error in set_qty_to_provided: {e}")
 			
-
-
-	def set_status(self):
-		if self.total_issued == 0:
-			self.remarks = "Draft"
-		elif self.total_issued < self.total_requested:
-			self.remarks = "In Progress"
-		elif self.total_issued == self.total_requested:
-			self.remarks = "Completed"
-
-	# def set_remarks(self):
-	# 	if self.total_issued == 0:
-	# 		self.remarks = "Draft"
-	# 	elif self.total_issued < self.total_requested:
-	# 		self.remarks = "In Progress"
-	# 	elif self.total_issued == self.total_requested:
-	# 		self.remarks = "Completed"
-
-
-
-
-
 	def calculate_total_requested(self):
 		# frappe.msgprint('hello world')
 		total_quantity = 0
@@ -103,152 +71,51 @@ class GeneralItemIssuance(Document):
 		for item in self.general_item_request_ct:
 			total_quantity += item.qty
 		self.total_issued = total_quantity
-		
-	
 
-	# def before_save(self):
-	# 	self.set_remarks() 
-	# 	# self.save()
-	# def validate(self):
-	# 	self.set_remarks()
+	def before_save(self):
+		# doc = frappe.get_doc('General Item Issuance', self.name)
+		self.update_balance_qty()
+
 	# def onload(self):
-	# 	self.set_remarks()
-	
-	# def set_remarks(self):
-	# 	pass
-		# frappe.errprint(f"Total Issued: {self.total_issued}, Total Requested: {self.total_requested}")  # Debugging print
-		# # if self.total_issued < self.total_requested:
-		# # 	self.remarks = "In Progress"
-		# if self.qty_to_provided == 0:
-		# 	self.remarks = "Completed"
-		# elif self.total_issued ==0 :
-		# 	self.remarks = "Draft"
-		# frappe.errprint(f"Remarks set to: {self.remarks}")  # Debugging print
-		# self.save()
-
-
-	def set_title(self):
-		title = self.remarks if self.remarks is not None else "No Remarks"
-		self.title = title
-	def onload(self):
-		self.test()
-
-	def test(self):
-		frappe.msgprint('test')
-
-	def onload(self):
-		doc = frappe.get_doc('General Item Issuance', self.name)
-		if doc.docstatus != 1:
-			self.update_balance_qty(self.name)
+		# Assuming 'self.name' gives the document name
+		# doc = frappe.get_doc('General Item Issuance', self.name)
+		# self.update_balance_qty()
+		# if doc.docstatus != 1:
+		# 	self.update_balance_qty(self.name)
 
 	@frappe.whitelist()
-	def update_balance_qty(self, docname):
-		doc = frappe.get_doc('General Item Issuance', docname)
-		if doc.docstatus == 1:
+	def update_balance_qty(self):
+		# doc = frappe.get_doc('General Item Issuance', self.name)
+		if self.docstatus == 1:
 			frappe.throw('Cannot update balance quantity after submission.')
 			return
-
 		changes_made = False
-		for item in doc.general_item_issuance_ct:
+		for item in self.general_item_issuance_ct:
 			item_code = item.part_name
-			bin_doc = frappe.db.get_value('Bin', {'item_code': item_code}, '*', as_dict=True)
-			if not bin_doc:
+			# Check if Bin exists for the item_code
+			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
+			if not bin_exists:
 				frappe.msgprint(f'Bin for item_code {item_code} not found. Skipping update for this item.')
-				continue
+				continue  # Skip this item and continue with the next one
 
+			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
 			balance_qty = bin_doc.actual_qty
+			frappe.errprint(balance_qty)
 			if item.balance_qty != balance_qty:
 				item.balance_qty = balance_qty
+				frappe.errprint("3")
 				changes_made = True
 
 		if changes_made:
 			try:
-				doc.save()
-				frappe.msgprint('Balance quantities updated successfully.')
-			except Exception as e:
-				frappe.log_error(f'Error saving document: {str(e)}', 'Update Balance Quantity Error')
-				frappe.msgprint('An error occurred while saving the document. Please check the error log for details.')
+				self.save()
+			except frappe.DocstatusTransitionError:
+				frappe.msgprint('Document status has changed, please reload and try again.')
+	
 
-
-	# def onload(self):
-	# 	# Assuming 'self.name' gives the document name
-	# 	doc = frappe.get_doc('General Item Issuance', self.name)
-	# 	if doc.docstatus != 1:
-	# 		self.update_balance_qty(self.name)
-
-	# @frappe.whitelist()
-	# def update_balance_qty(self, docname):
-	# 	frappe.msgprint('Document status has changed, please reload and try again.')
-	# 	doc = frappe.get_doc('General Item Issuance', docname)
-
-	# 	if doc.docstatus == 1:
-	# 		frappe.throw('Cannot update balance quantity after submission.')
-	# 		return
-
-	# 	changes_made = False
-	# 	for item in doc.general_item_issuance_ct:
-	# 		item_code = item.part_name
-	# 		bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
-	# 		if not bin_exists:
-	# 			frappe.msgprint(f'Bin for item_code {item_code} not found. Skipping update for this item.')
-	# 			continue  # Skip this item and continue with the next one
-
-	# 		bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
-	# 		balance_qty = bin_doc.actual_qty
-
-	# 		if item.balance_qty != balance_qty:
-	# 			item.balance_qty = balance_qty
-	# 			changes_made = True
-
-	# 	if changes_made:
-	# 		try:
-	# 			doc.save()
-	# 		except frappe.DocstatusTransitionError:
-	# 			frappe.msgprint('Document status has changed, please reload and try again.')
-
-	# def validate(self):
-	# 	issued_quantities = {}
-	# 	frappe.msgprint(1)
-	# 	# Collecting issued quantities
-	# 	for issuance in self.general_item_issuance_ct:
-	# 		item_code = issuance.part_name  # Ensure this is the correct field name
-	# 		frappe.errprint(issuance)
-	# 		frappe.errprint("issuance")
-	# 		if item_code in issued_quantities:
-	# 			issued_quantities[item_code] += issuance.qty
-	# 		else:
-	# 			issued_quantities[item_code] = issuance.qty
-
-	# 	# # Debugging: Print issued quantities to verify correct accumulation
-	# 	frappe.errprint(f"Issued Quantities: {issued_quantities}")
-
-	# 	for request in self.general_item_request_ct:
-	# 		requested_item_code = request.item_code  # Ensure this matches the field name in your child table
-	# 		issued_qty = issued_quantities.get(requested_item_code, 0)
-	# 		if request.qty > issued_qty:
-	# 			frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Requested quantity ({request.qty}) cannot be greater than issued quantity ({issued_qty}).")
-
-
-		
-	# def validate(self):
-	# 	issued_quantities = {}
-	# 	# Collecting issued quantities
-	# 	for issuance in self.general_item_issuance_ct:
-	# 		item_code = issuance.part_name  # Ensure this is the correct field name
-	# 		frappe.errprint(issuance)
-	# 		if item_code in issued_quantities:
-	# 			issued_quantities[item_code] += issuance.balance_qty
-	# 		else:
-	# 			issued_quantities[item_code] = issuance.balance_qty
-
-	# 	# # Debugging: Print issued quantities to verify correct accumulation
-	# 	frappe.errprint(f"Issued Quantities: {issued_quantities}")
-
-	# 	for request in self.general_item_request_ct:
-	# 		requested_item_code = request.item_code  # Ensure this matches the field name in your child table
-	# 		issued_qty = issued_quantities.get(requested_item_code, 0)
-	# 		if request.qty > issued_qty:
-	# 			frappe.throw(f"You have selected an incorrect value for the item {requested_item_code}. Issue Qty quantity ({request.qty}) cannot be greater than balanced quantity ({issued_qty}).")
+	def set_title(self):
+		title = self.remarks if self.remarks is not None else "No Remarks"
+		self.title = title
 
 	def onload(self):
 		self.calculate_total_requested()
@@ -259,14 +126,11 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_issued()
 
 	def calculate_total_requested(self):
-		frappe.msgprint("1")
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
 			total_quantity += item.qty
 		self.total_requested = total_quantity
-
-	def validate(self):
-		frappe.msgprint("2")
+	
 	def calculate_total_issued(self):
 		# pass
 		total_quantity = 0
@@ -279,11 +143,7 @@ class GeneralItemIssuance(Document):
 		for item in self.general_item_request_ct:
 			total_quantity += item.qty
 		self.total_issued = total_quantity
-		# frappe.msgprint('hello')
-		# qty_to_provided = self.total_requested - self.total_issued
-		# self.qty_to_provided = qty_to_provided
 		
-	
 	def validate(self):
 		total_quantity = 0
 		for item in self.general_item_issuance_ct:
@@ -293,7 +153,6 @@ class GeneralItemIssuance(Document):
 		general_item_issuance_ct = {}
 		balance_quantities = {}
 
-		# Populate dictionaries with total request and balance quantities for each item
 		for item in self.general_item_issuance_ct:
 			item_code = item.part_name
 			# Update requested quantities
