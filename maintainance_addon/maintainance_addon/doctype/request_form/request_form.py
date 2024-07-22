@@ -4,13 +4,16 @@ from frappe.model.document import Document
 class RequestForm(Document):
 
 	def before_save(self):
-		pass
+		self.send_data_from_request_form_to_part()
+		self.send_data_from_request_form_to_general()
+		# pass
 
 	def validate(self):
-		if self.is_new():
-			self.send_data_from_request_form_to_part()
+		pass
+		# if self.is_new():
+			# self.send_data_from_request_form_to_part()
 			# self.send_data_from_request_form_to_material_request()
-			self.send_data_from_request_form_to_general()
+			# self.send_data_from_request_form_to_general()
 
 	def validate(self):
 		self.send_data_from_request_form_to_material_request()
