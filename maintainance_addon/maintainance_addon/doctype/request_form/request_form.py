@@ -69,17 +69,18 @@ class RequestForm(Document):
 						"by_hand": "ABDUL REHMAN",
 						"requested_items": part_issuance_items,
 					})     
-				general_item.insert(ignore_permissions=True)
-				general_item.save()
-				self.db_set('part_request', general_item.name)
-				self.db_set('part_request_form', general_item.name)
+			general_item.insert(ignore_permissions=True)
+			general_item.save()
+			self.db_set('part_request', general_item.name)
+			self.db_set('part_request_form', general_item.name)
 		except Exception as e:
 			frappe.log_error(f"Error in send_data_from_request_form_to_part: {e}", "RequestForm send_data_from_request_form_to_part")
 
 	def send_data_from_request_form_to_general(self):
 		try:
 			general_item_issuance = []
-			for item in getattr(self, 'item', []):
+			for item in self.item:
+			# for item in getattr(self, 'item', []):
 				general_item_issuance.append({
 						'part_name': item.item_code,
 						'qty': item.qty,
@@ -87,16 +88,16 @@ class RequestForm(Document):
 						'balance_qty': item.balance_qty
 					})
 
-				general_item = frappe.get_doc({
+			general_item = frappe.get_doc({
 						'doctype': 'General Item Issuance',
 						'date': self.posting_date,
 						"user": self.request_by,
 						"by_hand": "ABDUL REHMAN",
 						"general_item_issuance_ct": general_item_issuance
 					})     
-				general_item.insert(ignore_permissions=True)
-				general_item.save()
-				self.db_set('general_request_form', general_item.name)
+			general_item.insert(ignore_permissions=True)
+			# general_item.save()
+			self.db_set('general_request_form', general_item.name)
 
 		except Exception as e:
 		 	frappe.log_error(f"Error in send_data_from_request_form_to_general: {e}", "RequestForm send_data_from_request_form_to_general")
