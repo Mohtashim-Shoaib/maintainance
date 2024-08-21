@@ -17,8 +17,21 @@ class RequestForm(Document):
 
 	def validate(self):
 		self.send_data_from_request_form_to_material_request()
+		self.calculation_of_child_table()
+		self.calculation_of_child_table1()
 
-	
+	def calculation_of_child_table(self):
+		total = 0
+		for item in self.items:
+			total += item.qty
+		self.total_parts = total
+
+	def calculation_of_child_table1(self):
+		total1 = 0
+		for item in self.item:
+			total1 += item.qty
+		self.total_general = total1
+
 	def send_data_from_request_form_to_material_request(self):
 			try:
 				material_request_items = []
@@ -49,58 +62,60 @@ class RequestForm(Document):
 
 
 	def send_data_from_request_form_to_part(self):
-		try:
-			part_issuance_items = []
-			for item in getattr(self, 'items', []):
-				part_issuance_items.append({
-						'item_code': item.item_code,
-						'item_name': item.item_code,
-						'requested_qty': item.qty,
-						'request_quantity': item.qty,
-						'remarks': item.remarks,
-						'balance_qty': item.balance_qty
-					})
+		if self.total_parts > 0:
+			try:
+				part_issuance_items = []
+				for item in getattr(self, 'items', []):
+					part_issuance_items.append({
+							'item_code': item.item_code,
+							'item_name': item.item_code,
+							'requested_qty': item.qty,
+							'request_quantity': item.qty,
+							'remarks': item.remarks,
+							'balance_qty': item.balance_qty
+						})
 
-			if part_issuance_items:
-				general_item = frappe.get_doc({
-						'doctype': 'Machine Parts Issuance',
-						'date': self.posting_date,
-						"user": self.request_by,
-						"by_hand": "ABDUL REHMAN",
-						"requested_items": part_issuance_items,
-					})     
-			general_item.insert(ignore_permissions=True)
-			general_item.save()
-			self.db_set('part_request', general_item.name)
-			self.db_set('part_request_form', general_item.name)
-		except Exception as e:
-			frappe.log_error(f"Error in send_data_from_request_form_to_part: {e}", "RequestForm send_data_from_request_form_to_part")
+				if part_issuance_items:
+					general_item = frappe.get_doc({
+							'doctype': 'Machine Parts Issuance',
+							'date': self.posting_date,
+							"user": self.request_by,
+							"by_hand": "ABDUL REHMAN",
+							"requested_items": part_issuance_items,
+						})     
+				general_item.insert(ignore_permissions=True)
+				general_item.save()
+				self.db_set('part_request', general_item.name)
+				self.db_set('part_request_form', general_item.name)
+			except Exception as e:
+				frappe.log_error(f"Error in send_data_from_request_form_to_part: {e}", "RequestForm send_data_from_request_form_to_part")
 
 	def send_data_from_request_form_to_general(self):
-		try:
-			general_item_issuance = []
-			for item in self.item:
-			# for item in getattr(self, 'item', []):
-				general_item_issuance.append({
-						'part_name': item.item_code,
-						'qty': item.qty,
-						'remarks': item.remarks,
-						'balance_qty': item.balance_qty
-					})
+		if self.total_general > 0:
+			try:
+				general_item_issuance = []
+				for item in self.item:
+				# for item in getattr(self, 'item', []):
+					general_item_issuance.append({
+							'part_name': item.item_code,
+							'qty': item.qty,
+							'remarks': item.remarks,
+							'balance_qty': item.balance_qty
+						})
 
-			general_item = frappe.get_doc({
-						'doctype': 'General Item Issuance',
-						'date': self.posting_date,
-						"user": self.request_by,
-						"by_hand": "ABDUL REHMAN",
-						"general_item_issuance_ct": general_item_issuance
-					})     
-			general_item.insert(ignore_permissions=True)
-			# general_item.save()
-			self.db_set('general_request_form', general_item.name)
+				general_item = frappe.get_doc({
+							'doctype': 'General Item Issuance',
+							'date': self.posting_date,
+							"user": self.request_by,
+							"by_hand": "ABDUL REHMAN",
+							"general_item_issuance_ct": general_item_issuance
+						})     
+				general_item.insert(ignore_permissions=True)
+				# general_item.save()
+				self.db_set('general_request_form', general_item.name)
 
-		except Exception as e:
-		 	frappe.log_error(f"Error in send_data_from_request_form_to_general: {e}", "RequestForm send_data_from_request_form_to_general")
+			except Exception as e:
+				frappe.log_error(f"Error in send_data_from_request_form_to_general: {e}", "RequestForm send_data_from_request_form_to_general")
 
 
 # @frappe.whitelist()
