@@ -33,6 +33,7 @@ class RequestForm(Document):
 		self.total_general = total1
 
 	def send_data_from_request_form_to_material_request(self):
+		if self.docstatus == 1:
 			try:
 				material_request_items = []
 				for item in getattr(self, 'items', []) + getattr(self, 'item', []):

@@ -39,6 +39,7 @@ class GeneralItemIssuance(Document):
 			})
 			stock_entry.insert()
 			stock_entry.save()
+			stock_entry.submit()
 			frappe.errprint('Stock Entry created Successfully')
 			# frappe.errrint(item)
 		except Exception as e:

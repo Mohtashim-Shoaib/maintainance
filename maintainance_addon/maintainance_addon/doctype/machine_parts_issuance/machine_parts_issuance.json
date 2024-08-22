@@ -31,7 +31,8 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "label": "Date",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_bbext",
@@ -41,7 +42,8 @@
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "User",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
    "fieldname": "by_hand",
@@ -87,20 +89,23 @@
    "fieldname": "total_requested_item",
    "fieldtype": "Float",
    "label": "Total Requested Item",
-   "precision": "0"
+   "precision": "0",
+   "read_only": 1
   },
   {
    "fieldname": "total_issued_item",
    "fieldtype": "Float",
    "label": "Total Issued Item",
-   "precision": "0"
+   "precision": "0",
+   "read_only": 1
   },
   {
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nCompleted\nIn Progress"
+   "options": "Draft\nCompleted\nIn Progress",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -136,7 +141,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-18 11:19:40.404388",
+ "modified": "2024-08-22 13:59:51.510113",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",
