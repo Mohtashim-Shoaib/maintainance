@@ -24,10 +24,15 @@
   "total_issued",
   "returned_section",
   "machine_part_returned",
-  "naming_series",
+  "section_break_jpuo",
   "status",
+  "column_break_ulxe",
   "qty_to_provided",
+  "column_break_elox",
   "title",
+  "column_break_levl",
+  "naming_series",
+  "column_break_rnjp",
   "amended_from"
  ],
  "fields": [
@@ -45,6 +50,10 @@
   {
    "fieldname": "user",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "User",
    "options": "User",
    "read_only": 1
@@ -56,6 +65,10 @@
   {
    "fieldname": "by_hand",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "By Hand",
    "options": "Hand By Name"
   },
@@ -102,23 +115,36 @@
   {
    "fieldname": "total_requested",
    "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Total Requested",
    "read_only": 1
   },
   {
    "fieldname": "total_issued",
    "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Total Issued",
    "read_only": 1
   },
   {
    "fieldname": "qty_to_provided",
    "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Qty to Provided"
   },
   {
    "fieldname": "title",
    "fieldtype": "Data",
+   "hidden": 1,
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Title"
   },
   {
@@ -134,15 +160,39 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "Draft\nCompleted\nIn Progress"
+   "no_copy": 1,
+   "options": "\nDraft\nCompleted\nIn Progress",
+   "read_only": 1,
+   "sort_options": 1
+  },
+  {
+   "fieldname": "section_break_jpuo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ulxe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_elox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_levl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_rnjp",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2024-08-22 14:01:36.984371",
+ "modified": "2024-08-22 18:41:21.769762",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance",
@@ -164,6 +214,10 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "title_field": "status"
+ "states": [
+  {
+   "color": "Red",
+   "title": "In Progress"
+  }
+ ]
 }
