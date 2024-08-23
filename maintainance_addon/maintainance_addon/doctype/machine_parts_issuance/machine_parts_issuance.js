@@ -81,7 +81,7 @@ frappe.ui.form.on('Machine Parts Issuance', {
 });
 
 function update_total_qty1(frm) {
-	console.log("test")
+	// console.log("test")
     let total_qty = 0;
     frm.doc.requested_items.forEach(function(row) {
         total_qty += row.request_quantity || 0; // Assuming 'qty' is the field name for quantity in the child table
@@ -199,13 +199,16 @@ function set_status(frm){
         var balanceQty = totalRequested - totalIssued;
         // frappe.msgprint('Balance Quantity: ' + balanceQty);
 		frm.set_value('qty_to_be_provided', balanceQty);
-        if (balanceQty === 0) {
+        if (balanceQty == 0) {
             frm.set_value('status', 'Completed');
         }
-		else if (totalIssued === 0) {
-            frm.set_value('status', 'Draft');
-        }
-		else if (totalIssued < totalRequested) {
+		// else if (totalIssued === 0) {
+            
+        // }
+		else if (frm.doc.qty_to_be_provided > 0 ) {
             frm.set_value('status', 'In Progress');
         }
+			// else{
+			// 	frm.set_value('status', 'Draft');
+			// }
 }

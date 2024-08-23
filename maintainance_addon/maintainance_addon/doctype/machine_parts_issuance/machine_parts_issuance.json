@@ -11,6 +11,7 @@
   "date",
   "column_break_bbext",
   "user",
+  "column_break_bgxq",
   "by_hand",
   "requested_section",
   "requested_items",
@@ -20,12 +21,18 @@
   "total_issued_item",
   "returned_section",
   "machine_part_returned",
+  "section_break_cryg",
   "status",
-  "amended_from",
+  "column_break_wwmw",
   "qty_to_be_provided",
+  "column_break_rdxy",
   "title",
+  "column_break_hbea",
   "requested_qty",
-  "issued_qty"
+  "column_break_ywqs",
+  "issued_qty",
+  "column_break_ywfs",
+  "amended_from"
  ],
  "fields": [
   {
@@ -114,7 +121,6 @@
    "read_only": 1
   },
   {
-   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_filter": 1,
@@ -122,7 +128,7 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Draft\nCompleted\nIn Progress"
+   "options": "Draft\nCompleted\nIn Progress\nPartial\nCancel\nHold"
   },
   {
    "fieldname": "amended_from",
@@ -169,12 +175,40 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Issued Qty"
+  },
+  {
+   "fieldname": "column_break_bgxq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cryg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_wwmw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_rdxy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hbea",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ywqs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ywfs",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-22 17:42:37.224724",
+ "modified": "2024-08-23 12:19:17.002109",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",

@@ -1,14 +1,15 @@
-# Copyright (c) 2024, mohtashim and contributors
-# For license information, please see license.txt
+# # Copyright (c) 2024, mohtashim and contributors
+# # For license information, please see license.txt
 
 import frappe
 from frappe.model.document import Document
 
 class MachinePartsIssuance(Document):
+    # pass
 	def on_load(self):
 		self.qty_to_provided()
 		self.calculate_total()
-		self.set_status()
+		# self.set_status()
 		# self.send_data_from_mpi_to_si()
 
 	def send_data_from_mpi_to_si(self):
@@ -63,15 +64,32 @@ class MachinePartsIssuance(Document):
 		self.db_set('qty_to_be_provided',qty_to_be_provided)
 
 	def set_status(self):
-		# pass
-			if self.total_issued_item == 0:
-				self.status = "Draft"
-			elif self.total_issued_item < self.total_requested_item:
-				self.status = "In Progress"
-			elif self.qty_to_be_provided == 0:
-				self.status = "Completed"
-			title = self.status
-			self.db_set('title', title)
+		if self.qty_to_be_provided:
+			self.status = "In Progress"
+			self.title = "In Progress"
+		else:
+			self.status = "In Progress"
+			self.title = "In Progress"
+		# if self.total_issued_item < self.total_requested_item:
+		# 	self.status = "In Progress"
+		# elif self.qty_to_be_provided == 0:
+		# 	self.status = "Completed"
+		# else:
+		# 	self.status = "Draft"  # Or another default status
+
+		self.db_set('status', self.status)
+		self.db_set('title', self.status)
+
+	# def set_status(self):
+	# 	# pass
+	# 		# if self.total_issued_item == 0:
+	# 		# 	self.status = "Draft"
+	# 		if self.total_issued_item > 1:
+	# 			self.status = "In Progress"
+	# 		# elif self.qty_to_be_provided == 0:
+	# 		# 	self.status = "Completed"
+	# 		title = self.status
+	# 		self.db_set('title', title)
 
 
 	def onload(self):

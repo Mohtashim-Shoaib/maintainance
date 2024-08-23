@@ -1,27 +1,16 @@
 frappe.listview_settings["General Item Issuance"] = {
-    add_fields: [
-        "status",
-        "date",
-        "user",
-        "total_requested",
-        "total_issued",
-        "qty_to_provided"
-    ],
-    get_indicator: function(doc) {
-    console.log('Document Status:', doc.status); // Debugging line
-    const status_colors = {
-        "Draft": "orange",
-        "In Progress": "red",
-        "Completed": "green",
-        "":""
-    };
-    return [__(doc.status), status_colors[doc.status], "status,=," + doc.status];
-    // if (status_colors[doc.status]) {
-    //     return [__(doc.status), status_colors[doc.status], "status,=," + doc.status];
-    // } 
-    // else {
-    //     return [__("Unknown"), "darkgray", "status,=," + doc.status];
-    // }
-}
+    add_fields: ["status"],
 
+    get_indicator: function(doc) {
+        if (doc.status == "In Progress") {
+            return [__('In Progress'), 'blue'];
+        }
+        if (doc.status == "Completed") {
+            return [__('Completed'), 'green'];
+        }
+        else if (doc.status == "Draft") {
+            return [__('Draft'), 'green'];
+        }
+       
+    }
 };
