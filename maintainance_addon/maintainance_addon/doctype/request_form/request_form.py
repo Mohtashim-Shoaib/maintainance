@@ -37,10 +37,10 @@ class RequestForm(Document):
 			try:
 				material_request_items = []
 				for item in getattr(self, 'items', []) + getattr(self, 'item', []):
-					if item.balance_qty == 0:
+					if item.balance_qty < item.qty:
 						material_request_items.append({
 							'item_code': item.item_code,
-							'qty': item.qty,
+							'qty': (item.qty - item.balance_qty),
 							'schedule_date': self.posting_date,
 							'uom': frappe.db.get_value('Item', item.item_code, 'stock_uom'),
 						})
