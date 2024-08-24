@@ -5,12 +5,77 @@ import frappe
 from frappe.model.document import Document
 
 class MachinePartsIssuance(Document):
-    # pass
-	def on_load(self):
+	def validate(self):
+		self.calculate_requested_total()
+		self.calculate_issued_total()
 		self.qty_to_provided()
-		self.calculate_total()
-		# self.set_status()
-		# self.send_data_from_mpi_to_si()
+		self.set_status()
+		self.update_balance_qty()
+		self.conditions()
+	
+	def on_submit(self):
+		self.send_data_from_mpi_to_si()
+
+	def calculate_requested_total(self):
+		total = 0
+		for item in self.requested_items:
+			total += item.request_quantity
+		self.total_requested_item = total
+	
+	def calculate_issued_total(self):
+		total = 0
+		for item in self.machine_part_details:
+			total += item.issued_qty
+		self.total_issued_item = total
+	
+	def qty_to_provided(self):
+		if self.total_requested_item is not None and self.total_issued_item is not None:
+			self.qty_to_be_provided = (self.total_requested_item - self.total_issued_item)
+	
+	def set_status(self):
+		if self.qty_to_be_provided == 0:
+			self.status = "Completed"
+		elif self.total_issued_item < self.total_requested_item:
+			self.status = "In Progress"
+		elif self.qty_to_be_provided < 0:
+			self.status = "Draft"
+
+	def update_balance_qty(self):
+		if self.docstatus == 1:
+			frappe.throw('Cannot update balance quantity after submission.')
+			return
+		for item in self.requested_items:
+			item_code = item.item_code
+			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
+			if not bin_exists:
+				continue
+			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+			balance_qty = bin_doc.actual_qty
+			item.balance_qty = balance_qty
+			item.db_set('balance_qty', balance_qty)
+
+	def conditions(self):
+		requested_quantities = {}
+		balance_quantities = {}
+		for item in self.requested_items:
+			item_code = item.item_code
+			if item_code in requested_quantities:
+				requested_quantities[item_code] += item.request_quantity
+			else:
+				requested_quantities[item_code] = item.request_quantity
+			if item_code in balance_quantities:
+				balance_quantities[item_code] += item.balance_qty
+			else:
+				balance_quantities[item_code] = item.balance_qty
+		for detail in self.machine_part_details:
+			item_code = detail.item_code
+			issued_qty = detail.issued_qty
+			total_requested_qty = requested_quantities.get(item_code, 0)
+			total_balance_qty = balance_quantities.get(item_code, 0)
+			if issued_qty > total_requested_qty:
+				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than requested quantity ({total_requested_qty}).")
+			if issued_qty > total_balance_qty:
+				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
 
 	def send_data_from_mpi_to_si(self):
 		try:
@@ -38,128 +103,3 @@ class MachinePartsIssuance(Document):
 			frappe.errprint("Stock Entry created successfully")
 		except Exception as e:
 			frappe.errprint(f"Error in send_data_from_mpi_to_si: {e}")
-
-	def on_submit(self):
-		self.send_data_from_mpi_to_si()
-
-	def validate(self):
-		self.qty_to_provided()
-		self.set_status()
-		self.send_data_from_mpi_to_si()
-
-	def after_save(self):
-		self.qty_to_provided()
-		self.send_data_from_mpi_to_si()
-		
-	def calculate_total(self):
-		total = 0
-		for item in self.requested_items:
-			total += item.request_quantity
-		self.requested_qty = total
-
-
-	def qty_to_provided(self):
-		qty_to_be_provided = self.requested_qty - self.issued_qty
-		# qty_to_be_provided = self.total_requested_item - self.total_issued_item 
-		self.db_set('qty_to_be_provided',qty_to_be_provided)
-
-	def set_status(self):
-		if self.qty_to_be_provided:
-			self.status = "In Progress"
-			self.title = "In Progress"
-		else:
-			self.status = "In Progress"
-			self.title = "In Progress"
-		# if self.total_issued_item < self.total_requested_item:
-		# 	self.status = "In Progress"
-		# elif self.qty_to_be_provided == 0:
-		# 	self.status = "Completed"
-		# else:
-		# 	self.status = "Draft"  # Or another default status
-
-		self.db_set('status', self.status)
-		self.db_set('title', self.status)
-
-	# def set_status(self):
-	# 	# pass
-	# 		# if self.total_issued_item == 0:
-	# 		# 	self.status = "Draft"
-	# 		if self.total_issued_item > 1:
-	# 			self.status = "In Progress"
-	# 		# elif self.qty_to_be_provided == 0:
-	# 		# 	self.status = "Completed"
-	# 		title = self.status
-	# 		self.db_set('title', title)
-
-
-	def onload(self):
-		# Assuming 'self.name' gives the document name
-		doc = frappe.get_doc('Machine Parts Issuance', self.name)
-		if doc.docstatus != 1:
-			self.update_balance_qty(self.name)
-
-
-
-	@frappe.whitelist()
-	def update_balance_qty(self, docname):
-		doc = frappe.get_doc('Machine Parts Issuance', docname)
-
-		if doc.docstatus == 1:
-			frappe.throw('Cannot update balance quantity after submission.')
-			return
-
-		changes_made = False
-		for item in doc.requested_items:
-			item_code = item.item_code
-			# Check if Bin exists for the item_code
-			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
-			if not bin_exists:
-				# frappe.msgprint(f'Bin for item_code {item_code} not found. Skipping update for this item.')
-				continue  # Skip this item and continue with the next one
-
-			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
-			balance_qty = bin_doc.actual_qty
-
-			if item.balance_qty != balance_qty:
-				item.balance_qty = balance_qty
-				changes_made = True
-
-		if changes_made:
-			try:
-				doc.save()
-			except frappe.DocstatusTransitionError:
-				frappe.msgprint('Document status has changed, please reload and try again.')
-	
-	def validate(self):
-		# Initialize dictionaries for requested and balance quantities
-		requested_quantities = {}
-		balance_quantities = {}
-
-		# Populate dictionaries with total request and balance quantities for each item
-		for item in self.requested_items:
-			item_code = item.item_code
-			# Update requested quantities
-			if item_code in requested_quantities:
-				requested_quantities[item_code] += item.request_quantity
-			else:
-				requested_quantities[item_code] = item.request_quantity
-			# Update balance quantities
-			if item_code in balance_quantities:
-				balance_quantities[item_code] += item.balance_qty
-			else:
-				balance_quantities[item_code] = item.balance_qty
-
-		# Validate issued quantities against requested and balance quantities
-		for detail in self.machine_part_details:
-			item_code = detail.item_code
-			issued_qty = detail.issued_qty  # Assuming detail.issued_qty is already an integer
-			# Get the total requested and balance quantity for the item, defaulting to 0 if not found
-			total_requested_qty = requested_quantities.get(item_code, 0)
-			total_balance_qty = balance_quantities.get(item_code, 0)
-
-			# Check if issued quantity exceeds requested quantity
-			if issued_qty > total_requested_qty:
-				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than requested quantity ({total_requested_qty}).")
-			# Check if issued quantity exceeds balance quantity
-			if issued_qty > total_balance_qty:
-				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")

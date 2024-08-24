@@ -3,7 +3,7 @@ from frappe.model.document import Document
 
 class RequestForm(Document):
 
-	def before_save(self):
+	def on_submit(self):
 		self.send_data_from_request_form_to_part()
 		self.send_data_from_request_form_to_general()
 		# pass
@@ -57,7 +57,7 @@ class RequestForm(Document):
 					material_request.insert(ignore_permissions=True)
 					material_request.save()
 					self.db_set('material_request', material_request.name)
-					frappe.msgprint("Material Request created!")
+					# frappe.msgprint("Material Request created!")
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
 

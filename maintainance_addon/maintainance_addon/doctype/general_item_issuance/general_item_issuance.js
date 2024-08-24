@@ -262,11 +262,11 @@ function get_requested_items(frm) {
 //     }
 // });
 
-// frappe.ui.form.on('General Item Issuance', {
-//     before_save: function(frm) {
-//         frm.reload_doc();
-//     }
-// });
+frappe.ui.form.on('General Item Issuance', {
+    before_save: function(frm) {
+        frm.reload_doc();
+    }
+});
 
 // frappe.ui.form.on('General Item Issuance', {
 // 	    refresh: function(frm) {
