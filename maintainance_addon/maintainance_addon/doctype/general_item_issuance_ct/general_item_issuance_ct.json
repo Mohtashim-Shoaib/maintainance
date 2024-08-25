@@ -7,11 +7,16 @@
  "engine": "InnoDB",
  "field_order": [
   "part_name",
+  "column_break_mzqe",
   "qty",
+  "column_break_ljpg",
   "unit",
+  "column_break_rfrl",
   "department",
-  "balance_qty",
+  "section_break_ibdb",
   "rate",
+  "column_break_bbcy",
+  "balance_qty",
   "remarks"
  ],
  "fields": [
@@ -21,6 +26,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Item Code",
+   "link_filters": "[[\"Item\",\"item_group\",\"in\",[\"STATIONERY ITEMS\",\"GENERAL ITEM\"]]]",
    "options": "Item"
   },
   {
@@ -70,12 +76,32 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Remarks"
+  },
+  {
+   "fieldname": "column_break_mzqe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ljpg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_rfrl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ibdb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_bbcy",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-23 00:58:56.570694",
+ "modified": "2024-08-24 18:42:37.633890",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance CT",
