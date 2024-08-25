@@ -57,7 +57,7 @@ class RequestForm(Document):
 					material_request.insert(ignore_permissions=True)
 					material_request.save()
 					self.db_set('material_request', material_request.name)
-					# frappe.msgprint("Material Request created!")
+					frappe.msgprint("Material Request created!")
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
 
@@ -103,7 +103,7 @@ class RequestForm(Document):
 							'remarks': item.remarks,
 							'balance_qty': item.balance_qty
 						})
-
+				# frappe.errprint('\n\n\n\{11111}n\n\n')
 				general_item = frappe.get_doc({
 							'doctype': 'General Item Issuance',
 							'date': self.posting_date,
@@ -112,7 +112,7 @@ class RequestForm(Document):
 							"general_item_issuance_ct": general_item_issuance
 						})     
 				general_item.insert(ignore_permissions=True)
-				# general_item.save()
+				general_item.save()
 				self.db_set('general_request_form', general_item.name)
 
 			except Exception as e:
