@@ -21,7 +21,12 @@ class GeneralItemIssuance(Document):
 		request_form_doc = frappe.get_doc('Request Form', self.request_form)
 		request_form_doc.status = self.status
 		request_form_doc.save()
-		
+
+	# def append_status_in_rf(self):
+	# 	request_form_doc = frappe.get_doc('Request Form', self.request_form)
+	# 	request_form_doc.status = self.status
+	# 	request_form_doc.save()
+
 
 
 
