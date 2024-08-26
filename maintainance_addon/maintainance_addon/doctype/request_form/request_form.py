@@ -11,44 +11,44 @@ class RequestForm(Document):
 		self.send_data_from_request_form_to_material_request()
 		self.calculation_of_child_table()
 		self.calculation_of_child_table1()
-		self.update_status()
+		# self.update_status()
 	
-	def update_status(self):
-		if self.docstatus == 1:
-			self.status = "Draft"
+# 	def update_status(self):
+# 		if self.docstatus == 1:
+# 			self.status = "Draft"
 
-			# Check if `self.general_request_form` is not None and fetch the document
-			if not self.material_request:
-				if self.general_request_form:
-					try:
-						general_doc = frappe.get_doc('General Item Issuance', self.general_request_form)
-						if general_doc.status == "Completed":
-							self.status = "Completed"
-						elif general_doc.status == "In Progress":
-							self.status = "In Progress"
-						else:
-							self.status = "Draft"
-					except frappe.DoesNotExistError:
-						frappe.msgprint(f"General Item Issuance '{self.general_request_form}' not found.")
-				else:
-					frappe.msgprint("No General Item Issuance request specified.")
+# 			# Check if `self.general_request_form` is not None and fetch the document
+# 			if not self.material_request:
+# 				if self.general_request_form:
+# 					try:
+# 						general_doc = frappe.get_doc('General Item Issuance', self.general_request_form)
+# 						if general_doc.status == "Completed":
+# 							self.status = "Completed"
+# 						elif general_doc.status == "In Progress":
+# 							self.status = "In Progress"
+# 						else:
+# 							self.status = "Draft"
+# 					except frappe.DoesNotExistError:
+# 						frappe.msgprint(f"General Item Issuance '{self.general_request_form}' not found.")
+# 				else:
+# 					frappe.msgprint("No General Item Issuance request specified.")
 
-# Check if `self.part_request` is not None and fetch the document
-			# Check if `self.part_request` is not None and fetch the document
-			if not self.material_request:
-				if self.part_request:
-					try:
-						part_request_doc = frappe.get_doc('Machine Parts Issuance', self.part_request)
-						if part_request_doc.status == "Completed":
-							self.status = "Completed"
-						elif part_request_doc.status == "In Progress":
-							self.status = "In Progress"
-						else:
-							self.status = "Draft"
-					except frappe.DoesNotExistError:
-						frappe.msgprint(f"Machine Parts Issuance '{self.part_request}' not found.")
-				else:
-					frappe.msgprint("No Machine Parts Issuance request specified.")
+# # Check if `self.part_request` is not None and fetch the document
+# 			# Check if `self.part_request` is not None and fetch the document
+# 			if not self.material_request:
+# 				if self.part_request:
+# 					try:
+# 						part_request_doc = frappe.get_doc('Machine Parts Issuance', self.part_request)
+# 						if part_request_doc.status == "Completed":
+# 							self.status = "Completed"
+# 						elif part_request_doc.status == "In Progress":
+# 							self.status = "In Progress"
+# 						else:
+# 							self.status = "Draft"
+# 					except frappe.DoesNotExistError:
+# 						frappe.msgprint(f"Machine Parts Issuance '{self.part_request}' not found.")
+# 				else:
+# 					frappe.msgprint("No Machine Parts Issuance request specified.")
 
 
 
