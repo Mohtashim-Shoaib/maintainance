@@ -6,20 +6,43 @@ class RequestForm(Document):
 	def on_submit(self):
 		self.send_data_from_request_form_to_part()
 		self.send_data_from_request_form_to_general()
-		# pass
-
-	def validate(self):
-		pass
-		# if self.is_new():
-			# self.send_data_from_request_form_to_part()
-			# self.send_data_from_request_form_to_material_request()
-			# self.send_data_from_request_form_to_general()
 
 	def validate(self):
 		self.send_data_from_request_form_to_material_request()
 		self.calculation_of_child_table()
 		self.calculation_of_child_table1()
-
+		# self.status()
+	
+	# def status(self):
+	# 	machine_part_doc = frappe.get_doc("Machine Parts Issuance", self.part_request)
+	# 	machine_part_qty = machine_part_doc.qty_to_be_provided
+	# 	general_item_doc = frappe.get_doc('General Item Issuance', self.general_request_form)
+	# 	general_item_qty = general_item_doc.qty_to_provided
+	# 	if machine_part_doc:
+	# 		if machine_part_qty == 0:
+	# 			self.status = "Complete"
+	# 		elif machine_part_qty != 0:
+	# 			self.status = "In Progress"
+	# 		else:
+	# 			self.status = "Draft"
+	# 	if general_item_doc:
+	# 		if general_item_qty == 0:
+	# 			self.status = "Complete"
+	# 		elif general_item_qty != 0:
+	# 			self.status = "In Progress"
+	# 		else:
+	# 			self.status = "Draft"
+	# 	if machine_part_qty is not None and general_item_doc is not None:
+	# 		if machine_part_qty == 0 and general_item_qty == 0:
+	# 			self.status = "Complete"
+	# 		elif machine_part_qty != 0 and general_item_qty == 0:
+	# 			self.status = "In Progress"
+	# 		elif machine_part_qty == 0 and general_item_qty != 0:
+	# 			self.status = "In Progress"
+	# 		else:
+	# 			self.status = "Draft"
+		
+	
 	def calculation_of_child_table(self):
 		total = 0
 		for item in self.items:
@@ -31,7 +54,7 @@ class RequestForm(Document):
 		for item in self.item:
 			total1 += item.qty
 		self.total_general = total1
-
+	
 	def send_data_from_request_form_to_material_request(self):
 		if self.docstatus == 1:
 			try:
@@ -52,6 +75,7 @@ class RequestForm(Document):
 						'transaction_date': self.posting_date,
 						'set_warehouse': 'Stores - SAH',
 						'items': material_request_items,
+						'custom_request_form': self.name,
 						'title': f"Material Request for {self.name}",
 					})
 					material_request.insert(ignore_permissions=True)
@@ -103,7 +127,6 @@ class RequestForm(Document):
 							'remarks': item.remarks,
 							'balance_qty': item.balance_qty
 						})
-				# frappe.errprint('\n\n\n\{11111}n\n\n')
 				general_item = frappe.get_doc({
 							'doctype': 'General Item Issuance',
 							'date': self.posting_date,
@@ -117,15 +140,6 @@ class RequestForm(Document):
 
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_general: {e}", "RequestForm send_data_from_request_form_to_general")
-
-
-# @frappe.whitelist()
-# def get_available_qty(item_code):
-# 	try:
-# 		actual_qty = frappe.db.get_value("Bin", {"item_code": item_code}, "actual_qty")
-# 		frappe.response["message"] = actual_qty
-# 	except Exception as e:
-# 		frappe.log_error(f"Error getting available qty for {item_code}: {e}", "get_available_qty")
 
 
 @frappe.whitelist()

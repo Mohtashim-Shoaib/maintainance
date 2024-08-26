@@ -13,6 +13,7 @@ frappe.ui.form.on('Request Form', {
 	}
 })
 
+
 var get_prompt_fields = () => {
 	return [
 		{

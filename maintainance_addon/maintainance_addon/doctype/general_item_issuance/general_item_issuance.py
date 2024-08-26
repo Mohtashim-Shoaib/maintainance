@@ -42,27 +42,23 @@ class GeneralItemIssuance(Document):
 		elif self.total_issued == 0:
 			self.status = "Draft"
 		
+	
 	def update_balance_qty(self):
-		if self.docstatus == 1:
-			frappe.throw('Cannot update balance quantity after submission.')
-			return
-		for item in self.general_item_issuance_ct:
-			item_code = item.part_name
-			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
-			if not bin_exists:
-				continue 
-			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
-			balance_qty = bin_doc.actual_qty
-			item.balance_qty = balance_qty
-			item.db_set('balance_qty', balance_qty)
+		if self.docstatus == 0:
+			for item in self.general_item_issuance_ct:
+				item_code = item.part_name
+				bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
+				if not bin_exists:
+					continue
+				bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+				balance_qty = bin_doc.actual_qty
+				item.balance_qty = balance_qty
+				item.db_set('balance_qty', balance_qty)
+
 
 	def condition(self):
 			general_item_issuance_ct = {}
 			balance_quantities = {}
-			# total_quantity = 0
-			# for item in self.general_item_issuance_ct:
-			# 	total_quantity += item.qty
-			# self.total_requested = total_quantity
 			for item in self.general_item_issuance_ct:
 				item_code = item.part_name
 				if item_code in general_item_issuance_ct:

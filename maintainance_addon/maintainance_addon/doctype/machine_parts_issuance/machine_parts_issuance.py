@@ -41,18 +41,18 @@ class MachinePartsIssuance(Document):
 			self.status = "Draft"
 
 	def update_balance_qty(self):
-		if self.docstatus == 1:
-			frappe.throw('Cannot update balance quantity after submission.')
-			return
-		for item in self.requested_items:
-			item_code = item.item_code
-			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
-			if not bin_exists:
-				continue
-			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
-			balance_qty = bin_doc.actual_qty
-			item.balance_qty = balance_qty
-			item.db_set('balance_qty', balance_qty)
+		if self.docstatus == 0:
+			# frappe.throw('Cannot update balance quantity after submission.')
+			# return
+			for item in self.requested_items:
+				item_code = item.item_code
+				bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
+				if not bin_exists:
+					continue
+				bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+				balance_qty = bin_doc.actual_qty
+				item.balance_qty = balance_qty
+				item.db_set('balance_qty', balance_qty)
 
 	def conditions(self):
 		requested_quantities = {}
