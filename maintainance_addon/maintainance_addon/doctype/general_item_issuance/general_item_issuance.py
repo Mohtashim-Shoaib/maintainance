@@ -12,10 +12,19 @@ class GeneralItemIssuance(Document):
 		self.set_remarks()
 		self.update_balance_qty()
 		self.condition()
+		self.append_status_in_rf()
 
 	def on_submit(self):
 		self.send_data_from_gii_to_si()
 	
+	def append_status_in_rf(self):
+		request_form_doc = frappe.get_doc('Request Form', self.request_form)
+		request_form_doc.status = self.status
+		request_form_doc.save()
+		
+
+
+
 	def calculate_total_requested(self):
 		total = 0
 		for item in self.general_item_issuance_ct:

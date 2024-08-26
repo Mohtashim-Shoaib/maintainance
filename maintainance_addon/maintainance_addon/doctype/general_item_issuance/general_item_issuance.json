@@ -26,6 +26,7 @@
   "machine_part_returned",
   "section_break_jpuo",
   "status",
+  "request_form",
   "column_break_ulxe",
   "qty_to_provided",
   "column_break_elox",
@@ -184,13 +185,18 @@
   {
    "fieldname": "column_break_rnjp",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "request_form",
+   "fieldtype": "Data",
+   "label": "Request Form"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2024-08-24 18:55:23.147458",
+ "modified": "2024-08-26 17:59:57.465608",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance",

@@ -12,9 +12,15 @@ class MachinePartsIssuance(Document):
 		self.set_status()
 		self.update_balance_qty()
 		self.conditions()
+		self.append_status_to_rf()
 	
 	def on_submit(self):
 		self.send_data_from_mpi_to_si()
+
+	def append_status_to_rf(self):
+		request_form_doc = frappe.get_doc("Request Form",self.request_form)
+		request_form_doc.status = self.status
+		request_form_doc.save()
 
 	def calculate_requested_total(self):
 		total = 0

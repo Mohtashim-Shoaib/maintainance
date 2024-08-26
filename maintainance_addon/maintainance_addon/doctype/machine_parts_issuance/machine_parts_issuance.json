@@ -23,6 +23,7 @@
   "machine_part_returned",
   "section_break_cryg",
   "status",
+  "request_form",
   "column_break_wwmw",
   "qty_to_be_provided",
   "column_break_rdxy",
@@ -203,12 +204,17 @@
   {
    "fieldname": "column_break_ywfs",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "request_form",
+   "fieldtype": "Data",
+   "label": "Request Form"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-24 16:55:43.604579",
+ "modified": "2024-08-26 18:01:37.682837",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",

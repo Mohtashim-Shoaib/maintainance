@@ -11,36 +11,46 @@ class RequestForm(Document):
 		self.send_data_from_request_form_to_material_request()
 		self.calculation_of_child_table()
 		self.calculation_of_child_table1()
-		# self.status()
+		self.update_status()
 	
-	# def status(self):
-	# 	machine_part_doc = frappe.get_doc("Machine Parts Issuance", self.part_request)
-	# 	machine_part_qty = machine_part_doc.qty_to_be_provided
-	# 	general_item_doc = frappe.get_doc('General Item Issuance', self.general_request_form)
-	# 	general_item_qty = general_item_doc.qty_to_provided
-	# 	if machine_part_doc:
-	# 		if machine_part_qty == 0:
-	# 			self.status = "Complete"
-	# 		elif machine_part_qty != 0:
-	# 			self.status = "In Progress"
-	# 		else:
-	# 			self.status = "Draft"
-	# 	if general_item_doc:
-	# 		if general_item_qty == 0:
-	# 			self.status = "Complete"
-	# 		elif general_item_qty != 0:
-	# 			self.status = "In Progress"
-	# 		else:
-	# 			self.status = "Draft"
-	# 	if machine_part_qty is not None and general_item_doc is not None:
-	# 		if machine_part_qty == 0 and general_item_qty == 0:
-	# 			self.status = "Complete"
-	# 		elif machine_part_qty != 0 and general_item_qty == 0:
-	# 			self.status = "In Progress"
-	# 		elif machine_part_qty == 0 and general_item_qty != 0:
-	# 			self.status = "In Progress"
-	# 		else:
-	# 			self.status = "Draft"
+	def update_status(self):
+		if self.docstatus == 1:
+			self.status = "Draft"
+
+			# Check if `self.general_request_form` is not None and fetch the document
+			if self.general_request_form:
+				try:
+					general_doc = frappe.get_doc('General Item Issuance', self.general_request_form)
+					if general_doc.status == "Completed":
+						self.status = "Completed"
+					elif general_doc.status == "In Progress":
+						self.status = "In Progress"
+					else:
+						self.status = "Draft"
+				except frappe.DoesNotExistError:
+					frappe.msgprint(f"General Item Issuance '{self.general_request_form}' not found.")
+			else:
+				frappe.msgprint("No General Item Issuance request specified.")
+
+			# Check if `self.part_request` is not None and fetch the document
+			if self.part_request:
+				try:
+					part_request_doc = frappe.get_doc('Machine Parts Issuance', self.part_request)
+					if part_request_doc.status == "Completed":
+						self.status = "Completed"
+					elif part_request_doc.status == "In Progress":
+						self.status = "In Progress"
+					else:
+						self.status = "Draft"
+				except frappe.DoesNotExistError:
+					frappe.msgprint(f"Machine Parts Issuance '{self.part_request}' not found.")
+			else:
+				frappe.msgprint("No Machine Parts Issuance request specified.")
+
+
+
+
+		
 		
 	
 	def calculation_of_child_table(self):
@@ -107,6 +117,7 @@ class RequestForm(Document):
 							"user": self.request_by,
 							"by_hand": "ABDUL REHMAN",
 							"requested_items": part_issuance_items,
+							"request_form": self.name
 						})     
 				general_item.insert(ignore_permissions=True)
 				general_item.save()
@@ -132,6 +143,7 @@ class RequestForm(Document):
 							'date': self.posting_date,
 							"user": self.request_by,
 							"by_hand": "ABDUL REHMAN",
+							"request_form": self.name,
 							"general_item_issuance_ct": general_item_issuance
 						})     
 				general_item.insert(ignore_permissions=True)
