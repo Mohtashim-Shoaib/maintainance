@@ -33,6 +33,7 @@ class RequestForm(Document):
 				else:
 					frappe.msgprint("No General Item Issuance request specified.")
 
+# Check if `self.part_request` is not None and fetch the document
 			# Check if `self.part_request` is not None and fetch the document
 			if not self.material_request:
 				if self.part_request:
