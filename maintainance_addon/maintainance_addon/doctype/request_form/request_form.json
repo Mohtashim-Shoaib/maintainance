@@ -22,7 +22,8 @@
   "part_request",
   "status",
   "material_request",
-  "status1"
+  "status1",
+  "text"
  ],
  "fields": [
   {
@@ -144,12 +145,17 @@
    "fieldname": "status1",
    "fieldtype": "Data",
    "label": "Status1"
+  },
+  {
+   "fieldname": "text",
+   "fieldtype": "Long Text",
+   "label": "Text"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-26 13:52:29.871025",
+ "modified": "2024-08-26 22:47:07.673229",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Request Form",

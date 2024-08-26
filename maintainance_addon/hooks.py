@@ -116,12 +116,12 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#     "Material Request": {
-#         "validate": "maintainance_addon.maintainance_addon.doctype.material_request.material_request.check",
-#         "on_change": "maintainance_addon.maintainance_addon.doctype.material_request.material_request.check"
-#     }
-# }
+doc_events = {  
+    "Material Request": {
+        "validate": "maintainance_addon.maintainance_addon.doctype.material_request.material_request.check_status",
+        "on_change": "maintainance_addon.maintainance_addon.doctype.material_request.material_request.check_status",
+    }
+}
 
 
 # Scheduled Tasks

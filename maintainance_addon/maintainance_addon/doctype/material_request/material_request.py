@@ -1,27 +1,25 @@
 import frappe
-from frappe.model.document import Document 
+from frappe.model.document import Document
 
 class MaterialRequest(Document):
-	def validate(self):
-		pass
-	# 	self.update_request_form_status()
-	# 	self.check()
-	
-	# def on_change(self):
-	# 	self.check()
+    def validate(self):
+        check_status(self)
+    def on_update(self):
+        check_status(self)
+    def on_change(self):
+        check_status(self)
 
+def check_status(self, method=None):
+    frappe.msgprint('11')
+    frappe.db.sql("""
+    update `tabRequest Form` 
+    set status=%s 
+    where name = %s
+    """,(self.status,self.custom_request_form))
+    frappe.msgprint('1')
+    frappe.db.commit()
 
-	# def check(self):
-	# 	frappe.msgprint('1')
-	# 	if self.custom_request_form:
-	# 		frappe.db.sql("""
-	# 			UPDATE `tabRequest Form`
-	# 			SET status = %s
-	# 			WHERE name = %s
-	# 			""", (self.status, self.custom_request_form))
-	# 		frappe.db.commit()
-	# 		doc = frappe.get_doc('Request Form',self.custom_request_form)
-	# 		doc.save()
-
-# maintainance_addon.maintainance_addon.maintainance_addon.doctype.material_request.material_request.check
-
+    doc = frappe.get_doc("Request Form", self.custom_request_form)
+    frappe.msgprint('111')
+    doc.save()
+    frappe.msgprint('1111')
