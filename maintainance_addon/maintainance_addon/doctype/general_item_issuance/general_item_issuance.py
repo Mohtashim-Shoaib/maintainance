@@ -55,7 +55,6 @@ class GeneralItemIssuance(Document):
 				item.balance_qty = balance_qty
 				item.db_set('balance_qty', balance_qty)
 
-
 	def condition(self):
 			general_item_issuance_ct = {}
 			balance_quantities = {}
