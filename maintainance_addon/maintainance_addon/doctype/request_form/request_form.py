@@ -12,6 +12,7 @@ class RequestForm(Document):
 		self.calculation_of_child_table()
 		self.calculation_of_child_table1()
 		# self.update_status()
+	# self.update_status()
 	
 # 	def update_status(self):
 # 		if self.docstatus == 1:
