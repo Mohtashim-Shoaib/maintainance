@@ -1,5 +1,5 @@
 frappe.listview_settings["Request Form"] = {
-    add_fields: ["status"],
+    add_fields: ["status","per_ordered1","per_received"],
 
     get_indicator: function(doc) {
         if (doc.status == "In Progress") {
