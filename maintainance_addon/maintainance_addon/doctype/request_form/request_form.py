@@ -6,6 +6,7 @@ class RequestForm(Document):
 	def on_submit(self):
 		self.send_data_from_request_form_to_part()
 		self.send_data_from_request_form_to_general()
+		# self.send_data_from_request_form_to_material_request()
 
 	def validate(self):
 		self.send_data_from_request_form_to_material_request()
@@ -91,13 +92,20 @@ class RequestForm(Document):
 						'items': material_request_items,
 						'custom_request_form': self.name,
 						'title': f"Material Request for {self.name}",
+						'per_ordered': 0,
+						'per_received':0
 					})
 					material_request.insert(ignore_permissions=True)
 					material_request.save()
+					frappe.db.commit()  # Ensure data is committed to the database
 					self.db_set('material_request', material_request.name)
 					frappe.msgprint("Material Request created!")
+				else:
+					frappe.msgprint("No items found for Material Request creation.")
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
+		
+
 
 
 	def send_data_from_request_form_to_part(self):

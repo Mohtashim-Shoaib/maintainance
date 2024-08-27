@@ -166,11 +166,14 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "0",
    "fieldname": "per_ordered1",
    "fieldtype": "Percent",
-   "label": "% Ordered"
+   "label": "% Ordered",
+   "precision": "0"
   },
   {
+   "default": "0",
    "fieldname": "per_received",
    "fieldtype": "Percent",
    "label": "% Received"
@@ -183,7 +186,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-27 11:05:54.990725",
+ "modified": "2024-08-27 14:56:22.855037",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Request Form",
