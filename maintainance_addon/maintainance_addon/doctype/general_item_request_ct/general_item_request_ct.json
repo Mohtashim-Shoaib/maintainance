@@ -8,6 +8,7 @@
  "field_order": [
   "item_code",
   "qty",
+  "date",
   "unit",
   "department"
  ],
@@ -54,12 +55,22 @@
    "label": "Department",
    "options": "Department",
    "width": "3"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-11 12:53:09.906099",
+ "modified": "2024-09-05 12:56:57.025842",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Request CT",
