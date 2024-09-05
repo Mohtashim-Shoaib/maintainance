@@ -14,6 +14,46 @@ frappe.ui.form.on('Machine Parts Issuance', {
 	}
 });
 
+
+frappe.ui.form.on('Machine Parts Issuance', {
+    refresh(frm) {
+        frm.add_custom_button('Add Qty', function() {
+            if (frm.doc.docstatus != 1) {
+                frappe.msgprint(__('This operation is only allowed on submitted documents.'));
+                return;
+            }
+
+            var d = new frappe.ui.Dialog({
+                'fields': [
+                    {'label': 'Item', 'fieldname': 'item', 'fieldtype': 'Link', 'options': 'Item'},
+                    {'label': 'Qty', 'fieldname': 'qty', 'fieldtype': 'Int'},
+                    // {'fieldname': 'today', 'fieldtype': 'Date', 'default': frappe.datetime.nowdate()}
+                ],
+                primary_action: function() {
+                    var values = d.get_values();
+                    d.hide();
+                  if (values) {
+                        frappe.call({
+							method: 'maintainance_addon.maintainance_addon.doctype.machine_parts_issuance.machine_parts_issuance.add_machine_part_row',
+							args: {
+								docname: frm.doc.name,
+								item_code: values.item,
+								qty: values.qty
+								// today: values.today
+							},
+							callback: function(response) {
+								frappe.show_alert({message: response.message, indicator: 'green'});
+								frm.reload_doc();
+							}
+						});
+                    }
+                }
+            });
+            d.show();
+        });
+    }
+});
+
 frappe.ui.form.on('Machine Parts Issuance', {
 	refresh(frm) {
 		frm.fields_dict['machine_part_details'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
@@ -50,7 +90,6 @@ function get_part_name_related(frm) {
 	return part_name_related;
 }
 
-
 	// frappe.ui.form.on('Machine Parts Issuance', {
 	// refresh:function (frm){
 	// 	frm.set_df_property('requested_items','cannot_add_rows',1)
@@ -58,157 +97,103 @@ function get_part_name_related(frm) {
 	// }
 	// });
 
+	// frappe.ui.form.on('Machine Parts Issuance', {
+	// 	refresh: function(frm) {
+	// 		// Call calculate totals on form refresh
+	// 		frm.trigger('calculate_totals');
+	// 		frm.trigger('qty_to_provided');
+	// 		frm.trigger('set_status');
+	// 	},
+	
+	// 	// Trigger calculation when form is loaded or fields are updated
+	// 	onload: function(frm) {
+	// 		frm.trigger('calculate_totals');
+	// 		frm.trigger('qty_to_provided');
+	// 		frm.trigger('set_status');
+	// 	},
+	
+	// 	calculate_totals: function(frm) {
+	// 		let requested_total = 0;
+	// 		let issued_total = 0;
+	
+	// 		// Sum requested quantities
+	// 		frm.doc.requested_items.forEach(item => {
+	// 			requested_total += flt(item.request_quantity);
+	// 		});
+	
+	// 		// Sum issued quantities
+	// 		frm.doc.machine_part_details.forEach(item => {
+	// 			issued_total += flt(item.issued_qty);
+	// 		});
+	
+	// 		// Set the total fields
+	// 		frm.set_value('total_requested_item', requested_total);
+	// 		frm.set_value('total_issued_item', issued_total);
+	
+	// 		// Optionally, you can refresh the fields or the form
+	// 		frm.refresh_field('total_requested_item');
+	// 		frm.refresh_field('total_issued_item');
+	// 	},
+		
+	// 	// qty to be provided function
+	// 	qty_to_provided : function(frm){
+	// 		let qty_to_provided = frm.doc.total_requested_item - frm.doc.total_issued_item
+	// 		frm.set_value('qty_to_be_provided', qty_to_provided);
+	// 		frm.refresh_field('qty_to_be_provided');
+	// 	},
+	// 	// set status
+	// 	set_status: function(frm){
+	// 		if (frm.doc.qty_to_be_provided == 0){
+	// 			frm.doc.status = "Completed"
+	// 		}
+	// 		else if (frm.doc.total_issued_item < frm.doc.total_requested_item){
+	// 			frm.doc.status = "In Progress"
+	// 		}
+	// 		else if (frm.doc.qty_to_be_provided < 0){
+	// 			frm.doc.status = "Draft"
+	// 		}
+	// 	}
+	// });
+	
+	// frappe.ui.form.on('Machine Parts Issuance', {
+	// 	refresh: function(frm) {
+	// 		// Add a button to trigger balance quantity update if needed
+	// 		frm.add_custom_button(__('Update Balance Quantity'), function() {
+	// 			frm.trigger('update_balance_qty');
+	// 		});
+	// 	},
+	
+	// 	update_balance_qty: function(frm) {
+	// 		frm.doc.requested_items.forEach(async function(item) {
+	// 			if (!item.item_code) return;
+	
+	// 			// Query the Bin doctype for the item_code
+	// 			let response = await frappe.call({
+	// 			method: 'frappe.client.get_list',
+	// 				args: {
+	// 					doctype: 'Bin',
+	// 					filters: {
+	// 						item_code: item.item_code
+	// 					},
+	// 					fields: ['actual_qty'],
+	// 					limit_page_length: 1
+	// 				},
+	// 				callback: function(r) {
+	// 					if (r.message && r.message.length > 0) {
+	// 						let bin_doc = r.message[0];
+	// 						let balance_qty = bin_doc.actual_qty || 0;
+							
+	// 						// Update the item in the child table
+	// 						frappe.model.set_value(item.doctype, item.name, 'balance_qty', balance_qty);
+	// 						frm.refresh_field('requested_items');
+	// 					} 
+	// 					// else {
+	// 					// 	console.error(`Bin not found for item code: ${item.item_code}`);
+	// 					// }
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// });
+		
 
-// frappe.ui.form.on('Machine Parts Issuance', {
-//     onload: function(frm) {
-//         update_total_qty1(frm);
-//     },
-//     refresh: function(frm) {
-//         update_total_qty1(frm);
-//     },
-//     requested_items_add: function(frm) {
-//         update_total_qty1(frm);
-//     },
-//     requested_items_remove: function(frm) {
-//         update_total_qty1(frm);
-//     },
-// 	// before_save:function(frm){
-// 	// 	update_total_qty1(frm)
-// 	// },
-// 	// validate:function(frm){
-// 	// 	update_total_qty1(frm)
-// 	// }
-// });
-
-// function update_total_qty1(frm) {
-// 	// console.log("test")
-//     let total_qty = 0;
-//     frm.doc.requested_items.forEach(function(row) {
-//         total_qty += row.request_quantity || 0; // Assuming 'qty' is the field name for quantity in the child table
-// 		console.log(total_qty)
-//     });
-
-//     // Assuming 'total_quantity' is the field name in the parent doctype where you want to show the sum
-//     frm.set_value('total_requested_item', total_qty);
-//     refresh_field('total_requested_item'); // Refresh the field to show the updated value
-
-	// frm.set_value('total_request', total_qty);
-    // refresh_field('total_request');
-	// frappe.msgprint('issued')
-// }
-
-
-
-
-
-// frappe.ui.form.on('Machine Parts Issuance', {
-//     onload: function(frm) {
-//         update_total_qty(frm);
-//     },
-//     refresh: function(frm) {
-//         update_total_qty(frm);
-//     },
-//     machine_part_details_add: function(frm) {
-//         update_total_qty(frm);
-//     },
-// 	before_save: function(frm) {
-// 		update_total_qty(frm);
-// 	},
-//     machine_part_details_remove: function(frm) {
-//         update_total_qty(frm);
-//     }
-// });
-
-// function update_total_qty(frm) {
-//     let total_qty = 0;
-//     frm.doc.machine_part_details.forEach(function(row) {
-//         total_qty += row.issued_qty || 0; // Assuming 'qty' is the field name for quantity in the child table
-//     });
-
-//     // Assuming 'total_quantity' is the field name in the parent doctype where you want to show the sum
-//     frm.set_value('total_issued_item', total_qty);
-//     refresh_field('total_issued_item'); // Refresh the field to show the updated value
-
-// 	// frm.set_value('total_issue', total_qty);
-//     // refresh_field('total_issue');
-// }
-
-
-
-
-// frappe.ui.form.on('Machine Parts Issuance', {
-// 	onload: function(frm) {
-// 		update_total_qty(frm);
-// 	},
-// 	before_save:function(frm){
-// 		update_total_qty(frm);
-// 	},
-// 	refresh: function(frm) {
-// 		update_total_qty(frm);
-// 	},
-// 	validate:function(frm){
-// 		update_total_qty(frm);
-// 	},
-// })
-
-// function set_qty(frm){
-// 	let requested_qty = frm.doc.total_requested_item;
-// 	let issued_qty = frm.doc.total_issued_item;
-// 	let qty = requested_qty - issued_qty;
-// 	frm.set_value('qty_to_be_provided',90);
-// }
-
-// frappe.ui.form.on('Machine Parts Issuance', {
-//     after_save: function(frm) {
-//         frm.reload_doc();
-//     }
-// });
-
-// frappe.ui.form.on('Machine Parts Issuance', {
-//     refresh: function(frm) {
-//         console.log(frm); // For debugging, consider removing for production
-//         var totalRequested = frm.doc.total_requested_item;
-//         var totalIssued = frm.doc.total_issued_item;
-//         var balanceQty = totalRequested - totalIssued;
-//         // frappe.msgprint('Balance Quantity: ' + balanceQty);
-// 		frm.set_value('qty_to_be_provided', balanceQty);
-//         if (balanceQty === 0) {
-//             frm.set_value('status', 'Completed');
-//         }
-// 		else if (totalIssued === 0) {
-//             frm.set_value('status', 'Draft');
-//         }
-// 		else if (totalIssued < totalRequested) {
-//             frm.set_value('status', 'In Progress');
-//         }
-//     }
-// });
-
-// frappe.ui.form.on('Machine Parts Issuance', {
-// 	    refresh: function(frm) {
-// 			set_status(frm)
-// 		},
-// 		total_issued_item: function(frm) {
-// 			set_status(frm)
-// 		}
-// 	})
-
-// function set_status(frm){
-// 	var totalRequested = frm.doc.total_requested_item;
-//         var totalIssued = frm.doc.total_issued_item;
-//         var balanceQty = totalRequested - totalIssued;
-//         // frappe.msgprint('Balance Quantity: ' + balanceQty);
-// 		frm.set_value('qty_to_be_provided', balanceQty);
-//         if (balanceQty == 0) {
-//             frm.set_value('status', 'Completed');
-//         }
-// 		// else if (totalIssued === 0) {
-            
-//         // }
-// 		else if (frm.doc.qty_to_be_provided > 0 ) {
-//             frm.set_value('status', 'In Progress');
-//         }
-// 			// else{
-// 			// 	frm.set_value('status', 'Draft');
-// 			// }
-// }

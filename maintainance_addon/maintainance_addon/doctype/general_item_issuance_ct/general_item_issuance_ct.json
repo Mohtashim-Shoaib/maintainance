@@ -8,11 +8,17 @@
  "field_order": [
   "part_name",
   "column_break_mzqe",
+  "column_break_mzqe",
   "qty",
+  "column_break_ljpg",
   "column_break_ljpg",
   "unit",
   "column_break_rfrl",
+  "column_break_rfrl",
   "department",
+  "section_break_ibdb",
+  "rate",
+  "column_break_bbcy",
   "section_break_ibdb",
   "rate",
   "column_break_bbcy",
@@ -26,7 +32,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Item Code",
-   "link_filters": "[]",
+   "link_filters": "[[\"Item\",\"item_group\",\"in\",[\"STATIONERY ITEMS\",\"GENERAL ITEM\"]]]",
    "options": "Item"
   },
   {
@@ -96,12 +102,32 @@
   {
    "fieldname": "column_break_bbcy",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mzqe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ljpg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_rfrl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ibdb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_bbcy",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-08-26 16:01:14.378378",
+ "modified": "2024-08-24 18:42:37.633890",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Issuance CT",

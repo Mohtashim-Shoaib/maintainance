@@ -5,29 +5,29 @@ import frappe
 from frappe.model.document import Document
 
 class MachinePartsIssuance(Document):
-	def validate(self):
+	def before_update_after_submit(self):
 		self.calculate_requested_total()
 		self.calculate_issued_total()
 		self.qty_to_provided()
 		self.set_status()
 		self.update_balance_qty()
 		self.conditions()
-		self.append_status_to_rf()
+
+	def after_submit(self):
+		self.update_balance_qty()
 	
 	def on_submit(self):
+		frappe.logger().info("Running on_submit method")
 		self.send_data_from_mpi_to_si()
 
-	def append_status_to_rf(self):
-		request_form_doc = frappe.get_doc("Request Form",self.request_form)
-		request_form_doc.status = self.status
-		request_form_doc.save()
-
+	@frappe.whitelist(allow_guest=True)
 	def calculate_requested_total(self):
 		total = 0
 		for item in self.requested_items:
 			total += item.request_quantity
 		self.total_requested_item = total
 	
+	@frappe.whitelist(allow_guest=True)
 	def calculate_issued_total(self):
 		total = 0
 		for item in self.machine_part_details:
@@ -47,18 +47,18 @@ class MachinePartsIssuance(Document):
 			self.status = "Draft"
 
 	def update_balance_qty(self):
-		if self.docstatus == 0:
-			# frappe.throw('Cannot update balance quantity after submission.')
+		# if self.docstatus == 1:
+		# 	frappe.throw('Cannot update balance quantity after submission.')
 			# return
-			for item in self.requested_items:
-				item_code = item.item_code
-				bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
-				if not bin_exists:
-					continue
-				bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
-				balance_qty = bin_doc.actual_qty
-				item.balance_qty = balance_qty
-				item.db_set('balance_qty', balance_qty)
+		for item in self.requested_items:
+			item_code = item.item_code
+			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
+			if not bin_exists:
+				continue
+			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+			balance_qty = bin_doc.actual_qty
+			item.balance_qty = balance_qty
+			item.db_set('balance_qty', balance_qty)
 
 	def conditions(self):
 		requested_quantities = {}
@@ -109,3 +109,24 @@ class MachinePartsIssuance(Document):
 			frappe.errprint("Stock Entry created successfully")
 		except Exception as e:
 			frappe.errprint(f"Error in send_data_from_mpi_to_si: {e}")
+	
+@frappe.whitelist(allow_guest=True)
+
+def add_machine_part_row(docname, item_code, qty):
+    doc = frappe.get_doc('Machine Parts Issuance', docname)
+
+    if doc.docstatus != 1:
+        frappe.throw("This operation is only allowed on submitted documents.")
+    qty = float(qty)
+    # Add a new row to the child table
+    new_row = doc.append('machine_part_details', {
+        'item_code': item_code,
+        'issued_qty': qty
+		# 'date': today
+    })
+   
+    doc.save(ignore_permissions=True)
+    frappe.db.commit()
+    
+    return f"Added: {item_code} - {qty}"
+

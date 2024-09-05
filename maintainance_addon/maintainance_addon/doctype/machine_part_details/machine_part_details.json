@@ -9,6 +9,7 @@
  "field_order": [
   "item_code",
   "issued_qty",
+  "date",
   "required_qty",
   "uom",
   "machine_no",
@@ -37,11 +38,10 @@
    "columns": 1,
    "fieldname": "required_qty",
    "fieldtype": "Float",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Required Qty"
   },
   {
+   "allow_on_submit": 1,
    "columns": 1,
    "fieldname": "uom",
    "fieldtype": "Link",
@@ -51,6 +51,7 @@
    "options": "UOM"
   },
   {
+   "allow_on_submit": 1,
    "columns": 2,
    "fieldname": "machine_no",
    "fieldtype": "Link",
@@ -140,12 +141,20 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Issued Qty"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-24 14:26:47.110329",
+ "modified": "2024-09-04 16:06:10.955009",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Part Details",

@@ -100,8 +100,8 @@ class RequestForm(Document):
 					frappe.db.commit()  # Ensure data is committed to the database
 					self.db_set('material_request', material_request.name)
 					frappe.msgprint("Material Request created!")
-				else:
-					frappe.msgprint("No items found for Material Request creation.")
+				# else:
+				# 	frappe.msgprint("No items found for Material Request creation.")
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_material_request: {e}", "RequestForm send_data_from_request_form_to_material_request")
 		
@@ -127,14 +127,14 @@ class RequestForm(Document):
 							'doctype': 'Machine Parts Issuance',
 							'date': self.posting_date,
 							"user": self.request_by,
-							"by_hand": "ABDUL REHMAN",
+							# "by_hand": "ABDUL REHMAN",
 							"requested_items": part_issuance_items,
 							"request_form": self.name
 						})     
 				general_item.insert(ignore_permissions=True)
 				general_item.save()
 				self.db_set('part_request', general_item.name)
-				# self.db_set('part_request_form', general_item.name)
+				self.db_set('part_request_form', general_item.name)
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_part: {e}", "RequestForm send_data_from_request_form_to_part")
 
@@ -158,7 +158,7 @@ class RequestForm(Document):
 						'doctype': 'General Item Issuance',
 						'date': self.posting_date,
 						"user": self.request_by,
-						"by_hand": "ABDUL REHMAN",
+						# "by_hand": "ABDUL REHMAN",
 						"request_form": self.name,
 						"general_item_issuance_ct": general_item_issuance
 					})
@@ -166,7 +166,7 @@ class RequestForm(Document):
 					general_item.insert(ignore_permissions=True)
 					general_item.save()
 					
-					# self.db_set('general_request_form', general_item.name)
+					self.db_set('general_request_form', general_item.name)
 					
 				else:
 					frappe.log_error(f"self.item is not defined or is not a list", "RequestForm send_data_from_request_form_to_general")
