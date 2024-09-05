@@ -107,7 +107,7 @@ class GeneralItemIssuance(Document):
 			stock_entry.insert()
 			stock_entry.save()
 			stock_entry.submit()
-			frappe.errprint('Stock Entry created Successfully')
+			# frappe.errprint('Stock Entry created Successfully')
 			# frappe.errrint(item)
 		except Exception as e:
 			frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
