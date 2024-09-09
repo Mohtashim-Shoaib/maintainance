@@ -17,7 +17,9 @@ class GeneralItemIssuance(Document):
 		self.update_status()
 		self.send_data_from_gii_to_si()
 
-	
+	def on_cancel(self):
+		pass
+
 	def validate(self):
 		self.calculate_total_requested()
 		self.update_balance_qty()
@@ -128,6 +130,7 @@ class GeneralItemIssuance(Document):
 				# stock_entry.submit()
 				self.db_set('stock_entry', stock_entry.name)
 				frappe.msgprint(stock_entry.name)
+				self.db_set('stock_entry', stock_entry.name)
 				# frappe.errprint('Stock Entry created Successfully')
 				# frappe.errrint(item)
 			except Exception as e:
@@ -182,7 +185,7 @@ def add_general_part_row(docname, item, qty):
 
         # Return success message
         return f"Added {item} - {qty}"
-	
+
     except Exception as e:
         frappe.log_error(f"Error in add_general_part_row: {e}", "Add General Part Row")
         frappe.throw(f"Error occurred: {e}")
