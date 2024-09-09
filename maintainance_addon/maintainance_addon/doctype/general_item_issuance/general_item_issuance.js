@@ -39,30 +39,30 @@ frappe.ui.form.on('General Item Issuance',{
         })
     }
 })
-// frappe.ui.form.on('General Item Issuance', {
-//     refresh(frm) {
-//         frm.fields_dict['general_item_request_ct'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
-//             var requested_items = get_requested_items(frm);
-//                 return {
-//                     filters: [
-//                         ["Item","item_code", "in", requested_items ]
-//                     ] 
-//             }
-//         }
-//     }
-// });
+frappe.ui.form.on('General Item Issuance', {
+    refresh(frm) {
+        frm.fields_dict['general_item_request_ct'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
+            var requested_items = get_requested_items(frm);
+                return {
+                    filters: [
+                        ["Item","item_code", "in", requested_items ]
+                    ] 
+            }
+        }
+    }
+});
 
 
-// function get_requested_items(frm) {
-//     var requested_items = [];
-//     frm.doc.general_item_issuance_ct.forEach(row => {
-//         if (!requested_items.includes(row.part_name)) {
-//             requested_items.push(row.part_name);
-//         }
-//     });
-//     console.log("Requested Items:", requested_items);
-//     return requested_items;
-// }
+function get_requested_items(frm) {
+    var requested_items = [];
+    frm.doc.general_item_issuance_ct.forEach(row => {
+        if (!requested_items.includes(row.part_name)) {
+            requested_items.push(row.part_name);
+        }
+    });
+    console.log("Requested Items:", requested_items);
+    return requested_items;
+}
 
 // frappe.ui.form.on('General Item Issuance', {
 //     before_save: function(frm) {

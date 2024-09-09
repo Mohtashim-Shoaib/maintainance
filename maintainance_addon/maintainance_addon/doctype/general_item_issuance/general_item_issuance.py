@@ -10,20 +10,30 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_requested()
 		self.calculate_total_issuance()
 		self.set_qty_to_provided()
-		self.set_remarks()
+		# self.set_remarks()
 		self.set_remarks()
 		self.update_balance_qty()
 		self.condition()
+		self.update_status()
 
 	
 	def validate(self):
 		self.calculate_total_requested()
+		self.update_balance_qty()
 		self.calculate_total_issuance()
 		self.set_qty_to_provided()
 		self.set_remarks()
 
 	def on_submit(self):
 		self.send_data_from_gii_to_si()
+	
+	def update_status(self):
+		frappe.db.sql("""
+		UPDATE `tabRequest Form`
+				set status = %s,
+				general_item_status = %s
+				where name = %s
+			""", (self.status, self.status, self.request_form))
 	
 	def calculate_total_requested(self):
 		total = 0
@@ -56,7 +66,7 @@ class GeneralItemIssuance(Document):
 			if not bin_exists:
 				continue
 			bin_doc = frappe.get_doc('Bin',{'item_code':item_code})
-			balance_qty = bin_doc.balance_qty
+			balance_qty = bin_doc.actual_qty
 			item.balance_qty = balance_qty
 			item.db_set('balance_qty', balance_qty)
 
