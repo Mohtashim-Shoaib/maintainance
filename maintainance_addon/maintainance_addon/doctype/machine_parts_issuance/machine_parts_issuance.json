@@ -26,6 +26,7 @@
   "request_form",
   "column_break_wwmw",
   "qty_to_be_provided",
+  "stock_entry",
   "column_break_rdxy",
   "title",
   "column_break_hbea",
@@ -213,12 +214,17 @@
    "fieldname": "request_form",
    "fieldtype": "Data",
    "label": "Request Form"
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Data",
+   "label": "Stock Entry"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-24 16:55:43.604579",
+ "modified": "2024-09-09 16:06:43.356124",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",

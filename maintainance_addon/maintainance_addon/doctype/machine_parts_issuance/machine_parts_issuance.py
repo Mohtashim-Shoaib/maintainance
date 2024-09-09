@@ -28,6 +28,13 @@ class MachinePartsIssuance(Document):
 	def on_submit(self):
 		frappe.logger().info("Running on_submit method")
 		self.send_data_from_mpi_to_si()
+	
+	def on_cancel(self):
+		if self.stock_entry:
+			stock_entry_name = frappe.get_doc('Stock Entry', self.stock_entry)
+			if stock_entry_name.docstatus == 1:
+				stock_entry_name.cancel()
+
 
 	def update_status(self):
 		frappe.db.sql("""
@@ -117,7 +124,7 @@ class MachinePartsIssuance(Document):
 					})
 				stock_entry = frappe.get_doc({
 					"doctype":"Stock Entry",
-					'purpose': 'Material Transfer',
+					# 'purpose': 'Material Transfer',
 					'posting_date': self.date,
 					'stock_entry_type': 'Material Issue',
 					'items': stock_entry_item
@@ -126,6 +133,7 @@ class MachinePartsIssuance(Document):
 				stock_entry.save()
 				stock_entry.submit()
 				frappe.errprint("Stock Entry created successfully")
+				self.db_set('stock_entry', stock_entry.name)
 			except Exception as e:
 				frappe.errprint(f"Error in send_data_from_mpi_to_si: {e}")
 	
