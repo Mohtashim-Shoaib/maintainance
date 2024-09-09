@@ -12,6 +12,15 @@ class MachinePartsIssuance(Document):
 		self.set_status()
 		self.update_balance_qty()
 		self.conditions()
+		self.update_status()
+
+	def validate(self):
+		self.calculate_requested_total()
+		self.calculate_issued_total()
+		self.qty_to_provided()
+		self.set_status()
+		self.update_balance_qty()
+		self.conditions()
 
 	def after_submit(self):
 		self.update_balance_qty()
@@ -19,6 +28,15 @@ class MachinePartsIssuance(Document):
 	def on_submit(self):
 		frappe.logger().info("Running on_submit method")
 		self.send_data_from_mpi_to_si()
+
+	def update_status(self):
+		frappe.db.sql("""
+		update `tabRequest Form`
+				set status = %s,
+				machine_parts_status = %s
+				where name = %s
+		""", (self.status, self.status, self.request_form))
+
 
 	@frappe.whitelist(allow_guest=True)
 	def calculate_requested_total(self):
