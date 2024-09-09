@@ -14,6 +14,20 @@ class RequestForm(Document):
 		self.calculation_of_child_table1()
 		# self.update_status()
 	# self.update_status()
+
+	def on_cancel(self):
+		if self.general_request_form:
+			general_request_form1 = frappe.get_doc('General Item Issuance', self.general_request_form)
+			if general_request_form1.docstatus == 1:
+				general_request_form1.cancel()
+		
+		if self.part_request:
+			part_request1 = frappe.get_doc("Machine Parts Issuance", self.part_request)
+			if part_request1.docstatus == 1:
+				part_request1.cancel()
+
+		frappe.db.commit()
+
 	
 	def update_status(self):
 		if self.docstatus == 1:
@@ -183,3 +197,4 @@ def get_available_qty(item_code):
     except Exception as e:
         frappe.log_error(f"Error getting available qty for {item_code}: {e}", "get_available_qty")
         return None
+	
