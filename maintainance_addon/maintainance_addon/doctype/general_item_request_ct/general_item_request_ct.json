@@ -10,7 +10,8 @@
   "qty",
   "date",
   "unit",
-  "department"
+  "department",
+  "is_temp_row"
  ],
  "fields": [
   {
@@ -65,12 +66,22 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Date"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_temp_row",
+   "fieldtype": "Check",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "is_temp_row"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-05 12:56:57.025842",
+ "modified": "2024-09-09 14:49:39.682747",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Request CT",

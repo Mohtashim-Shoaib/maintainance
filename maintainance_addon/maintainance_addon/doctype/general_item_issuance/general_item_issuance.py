@@ -15,6 +15,7 @@ class GeneralItemIssuance(Document):
 		self.update_balance_qty()
 		self.condition()
 		self.update_status()
+		self.send_data_from_gii_to_si()
 
 	
 	def validate(self):
@@ -24,8 +25,8 @@ class GeneralItemIssuance(Document):
 		self.set_qty_to_provided()
 		self.set_remarks()
 
-	def on_submit(self):
-		self.send_data_from_gii_to_si()
+	# def on_submit(self):
+	# 	self.send_data_from_gii_to_si()
 	
 	def update_status(self):
 		frappe.db.sql("""
@@ -94,47 +95,94 @@ class GeneralItemIssuance(Document):
 				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
 
 	def send_data_from_gii_to_si(self):
-		try:
-			frappe.errprint("Starting send_data_from_mpi_to_si")
-			stock_entry_item = []
-			for item in self.general_item_request_ct:
-				stock_entry_item.append({
-					'item_code': item.item_code,
-					'qty': item.qty,
-					's_warehouse': "Stores - SAH",
-					# 'basic_rate': item.rate,
-					# 'warehouse': item.warehouse
+		if self.total_issued == self.total_requested:
+			try:
+				frappe.errprint("Starting send_data_from_mpi_to_si")
+				stock_entry_item = []
+				# new_rows = [item for item in self.general_item_request_ct if item.is_new]
+				# if not new_rows:
+				# 	frappe.errprint('no new rows to process')
+				# 	return
+				for item in self.general_item_request_ct:
+					stock_entry_item.append({
+						'item_code': item.item_code,
+						'qty': item.qty,
+						's_warehouse': "Stores - SAH",
+						# 'basic_rate': item.rate,
+						# 'warehouse': item.warehouse
+					})
+				if not stock_entry_item:
+					frappe.errprint("No valid stock entry items to create")
+					return
+				stock_entry= frappe.get_doc({
+					'doctype': 'Stock Entry',
+					'posting_date': self.date,
+					'stock_entry_type': 'Material Issue',
+					# 'posting_time': self.posting_time,
+					'from_warehouse': "Stores - SAH",
+					# 'to_warehouse': "Work In Progress - SAH",
+					'items': stock_entry_item
 				})
-			stock_entry= frappe.get_doc({
-				'doctype': 'Stock Entry',
-				'posting_date': self.date,
-				'stock_entry_type': 'Material Issue',
-				# 'posting_time': self.posting_time,
-				'from_warehouse': "Stores - SAH",
-				# 'to_warehouse': "Work In Progress - SAH",
-				'items': stock_entry_item
-			})
-			stock_entry.insert()
-			stock_entry.save()
-			stock_entry.submit()
-			# frappe.errprint('Stock Entry created Successfully')
-			# frappe.errrint(item)
-		except Exception as e:
-			frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
+				stock_entry.insert()
+				stock_entry.save()
+				# stock_entry.submit()
+				self.db_set('stock_entry', stock_entry.name)
+				frappe.msgprint(stock_entry.name)
+				# frappe.errprint('Stock Entry created Successfully')
+				# frappe.errrint(item)
+			except Exception as e:
+				frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
+	
+	# def add_general_part_row(self, item_code, qty):
+	# 	new_row = self.append('general_item_request_ct', {})
+	# 	new_row.item_code = item_code
+	# 	new_row.qty = qty
+	# 	new_row.is_new = True  # Mark as new
+	# 	self.save(ignore_permissions=True)
+	# 	frappe.db.commit()
 
+# @frappe.whitelist(allow_guest=True)
+# def add_general_part_row(docname, item, qty):
+# 	doc = frappe.get_doc('General Item Issuance', docname)
+# 	if doc.docstatus != 1:
+# 		frappe.throw('This operation is only valid for submitted Documents')
+# 	qty = float(qty)
+# 	new_row = doc.append('general_item_request_ct',{
+# 		'item_code':item,
+# 		'qty':qty,
+# 		'is_new': True
+# 	})
+# 	# doc.save(ignore_permission=True)
+# 	doc.save(ignore_permissions=True)
+# 	frappe.db.commit()
+# 	return f"Added {item} - {qty}"
+	
+	
 @frappe.whitelist(allow_guest=True)
 def add_general_part_row(docname, item, qty):
-	doc = frappe.get_doc('General Item Issuance', docname)
-	if doc.docstatus != 1:
-		frappe.throw('This operation is only valid for submitted Documents')
-	qty = float(qty)
-	new_row = doc.append('general_item_request_ct',{
-		'item_code':item,
-		'qty':qty
-	})
-	# doc.save(ignore_permission=True)
-	doc.save(ignore_permissions=True)
-	frappe.db.commit()
-	return f"Added {item} - {qty}"
+    try:
+        doc = frappe.get_doc('General Item Issuance', docname)
+        
+        if doc.docstatus != 1:
+            frappe.throw('This operation is only valid for submitted documents')
+        
+        qty = float(qty)
+        # doc.add_general_part_row(item, qty)
+        # Use the doctype method to add the row
+        # doc.add_general_part_row(item, qty)
+
+        new_row = doc.append('machine_part_details', {
+        'item_code': item,
+        'issued_qty': qty
+		# 'date': today
+    	})
+		# Save and commit the document
+        doc.save(ignore_permissions=True)
+        frappe.db.commit()
+
+        # Return success message
+        return f"Added {item} - {qty}"
 	
-	
+    except Exception as e:
+        frappe.log_error(f"Error in add_general_part_row: {e}", "Add General Part Row")
+        frappe.throw(f"Error occurred: {e}")
