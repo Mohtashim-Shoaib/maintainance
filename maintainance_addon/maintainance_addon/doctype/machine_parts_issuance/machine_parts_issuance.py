@@ -132,7 +132,7 @@ class MachinePartsIssuance(Document):
 				stock_entry.insert()
 				stock_entry.save()
 				stock_entry.submit()
-				frappe.errprint("Stock Entry created successfully")
+				# frappe.errprint("Stock Entry created successfully")
 				self.db_set('stock_entry', stock_entry.name)
 			except Exception as e:
 				frappe.errprint(f"Error in send_data_from_mpi_to_si: {e}")

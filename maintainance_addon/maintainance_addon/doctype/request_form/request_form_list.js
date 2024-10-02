@@ -65,11 +65,5 @@ frappe.listview_settings["Request Form"] = {
         else if (doc.status == "Partially Ordered"){
             return [__("Partially Ordered"), "green"];
         }
-        
-        
-        
-        
-        
-       
     }
 };

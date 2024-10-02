@@ -31,12 +31,16 @@ class GeneralItemIssuance(Document):
 	# 	self.send_data_from_gii_to_si()
 	
 	def update_status(self):
-		frappe.db.sql("""
-		UPDATE `tabRequest Form`
-				set status = %s,
-				general_item_status = %s
-				where name = %s
-			""", (self.status, self.status, self.request_form))
+		try:
+			frappe.db.sql("""UPDATE `tabRequest Form`
+				SET status = %s,
+					general_item_status = %s
+				WHERE name = %s""", (self.status, self.status, self.request_form))
+			frappe.db.commit()  # Ensure the changes are committed
+			
+		except Exception as e:
+			frappe.log_error(message=str(e), title='Update Status Error')
+
 	
 	def calculate_total_requested(self):
 		total = 0
@@ -127,9 +131,9 @@ class GeneralItemIssuance(Document):
 				})
 				stock_entry.insert()
 				stock_entry.save()
-				# stock_entry.submit()
+				stock_entry.submit()
 				self.db_set('stock_entry', stock_entry.name)
-				frappe.msgprint(stock_entry.name)
+				# frappe.msgprint(stock_entry.name)
 				self.db_set('stock_entry', stock_entry.name)
 				# frappe.errprint('Stock Entry created Successfully')
 				# frappe.errrint(item)
