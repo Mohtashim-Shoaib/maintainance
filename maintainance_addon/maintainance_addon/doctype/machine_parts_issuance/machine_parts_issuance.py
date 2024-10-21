@@ -13,6 +13,8 @@ class MachinePartsIssuance(Document):
 		self.update_balance_qty()
 		self.conditions()
 		self.update_status()
+		self.send_data_from_mpi_to_si()
+		# self.send_data_from_mpi_to_si()
 
 	def validate(self):
 		self.calculate_requested_total()
@@ -21,13 +23,15 @@ class MachinePartsIssuance(Document):
 		self.set_status()
 		self.update_balance_qty()
 		self.conditions()
+		# self.send_data_from_mpi_to_si()
 
 	def after_submit(self):
 		self.update_balance_qty()
+		# self.send_data_from_mpi_to_si()
 	
 	def on_submit(self):
 		frappe.logger().info("Running on_submit method")
-		self.send_data_from_mpi_to_si()
+		# self.send_data_from_mpi_to_si()
 	
 	def on_cancel(self):
 		if self.stock_entry:
@@ -139,6 +143,8 @@ class MachinePartsIssuance(Document):
 			
 			except Exception as e:
 				frappe.errprint(f"Error in send_data_from_mpi_to_si: {e}")
+		else:
+			frappe.msgprint('test')
 	
 @frappe.whitelist(allow_guest=True)
 
