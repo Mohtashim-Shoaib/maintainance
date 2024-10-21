@@ -51,7 +51,7 @@ class GeneralItemIssuance(Document):
 	def calculate_total_issuance(self):
 		total = 0
 		for item in self.general_item_request_ct:
-			total += item.qty
+			total += item.qty if item.qty else 0
 		self.total_issued = total
 
 	def set_qty_to_provided(self):
@@ -178,9 +178,9 @@ def add_general_part_row(docname, item, qty):
         # Use the doctype method to add the row
         # doc.add_general_part_row(item, qty)
 
-        new_row = doc.append('machine_part_details', {
+        new_row = doc.append('general_item_request_ct', {
         'item_code': item,
-        'issued_qty': qty
+        'qty': qty
 		# 'date': today
     	})
 		# Save and commit the document

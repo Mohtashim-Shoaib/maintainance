@@ -71,3 +71,12 @@ function get_requested_items(frm) {
 // });
 
 
+frappe.ui.form.on('General Item Issuance', {
+	refresh:function (frm){
+		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
+		frm.set_df_property('general_item_request_ct','cannot_add_rows',1)
+		frm.set_df_property('general_item_issuance_ct','read_only',1)
+	}
+	});
+
+
