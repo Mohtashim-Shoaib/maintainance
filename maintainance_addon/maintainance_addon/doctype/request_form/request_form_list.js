@@ -9,7 +9,7 @@ frappe.listview_settings["Request Form"] = {
             return [__('Completed'), 'green'];
         }
         else if (doc.status == "Draft") {
-            return [__('Draft'), 'red'];
+            return [__('Initilize'), 'red'];
         }
         else if (doc.status == "Stopped"){
             return [__("Stopped"), "red"];
