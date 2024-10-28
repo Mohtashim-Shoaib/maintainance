@@ -104,6 +104,7 @@
    "label": "Returned"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "machine_part_returned",
    "fieldtype": "Table",
    "label": "Machine Part Returned",
@@ -224,7 +225,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-09 16:06:43.356124",
+ "modified": "2024-10-28 12:31:54.257080",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",
