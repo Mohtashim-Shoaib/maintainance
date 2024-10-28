@@ -113,7 +113,12 @@ class RequestForm(Document):
 					material_request.save()
 					frappe.db.commit()  # Ensure data is committed to the database
 					self.db_set('material_request', material_request.name)
-					frappe.msgprint("Material Request created!")
+					frappe.msgprint(
+					"📄 Material Request has been created!<br><br>"
+					"✅ Please print this document and obtain the necessary approvals to proceed with the next steps.",
+					title="Action Required",
+					indicator="blue"
+)
 				# else:
 				# 	frappe.msgprint("No items found for Material Request creation.")
 			except Exception as e:
