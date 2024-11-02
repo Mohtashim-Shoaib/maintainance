@@ -55,6 +55,18 @@ frappe.ui.form.on('Machine Parts Issuance', {
 });
 
 frappe.ui.form.on('Machine Parts Issuance', {
+    after_save: function(frm) {
+        frappe.msgprint({
+            title: __('Refreshing...'),
+            message: 'The document will now refresh.',
+            indicator: 'green'
+        });
+        frm.reload_doc();
+    }
+});
+
+
+frappe.ui.form.on('Machine Parts Issuance', {
 	refresh(frm) {
 		frm.fields_dict['machine_part_details'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {
 			var requested_items = get_requested_items(frm);

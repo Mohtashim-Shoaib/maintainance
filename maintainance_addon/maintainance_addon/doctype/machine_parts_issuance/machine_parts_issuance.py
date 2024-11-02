@@ -13,8 +13,8 @@ class MachinePartsIssuance(Document):
 		self.update_balance_qty()
 		self.conditions()
 		self.update_status()
-		self.send_data_from_mpi_to_si()
 		# self.send_data_from_mpi_to_si()
+		self.send_data_from_mpi_to_si()
 
 	def validate(self):
 		self.calculate_requested_total()
@@ -113,19 +113,21 @@ class MachinePartsIssuance(Document):
 				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
 
 	def send_data_from_mpi_to_si(self):
-		if self.total_issued_item == self.total_requested_item:
+		# if self.total_issued_item == self.total_requested_item:
+		if 1 == 1:
 			try:
 				frappe.errprint("Starting send_data_from_mpi_to_si")
 
 				stock_entry_item = []
 				for item in self.machine_part_details:
-					stock_entry_item.append({
-						'item_code': item.item_code,
-						'qty': item.issued_qty,
-						's_warehouse': "Stores - SAH",
-						# 'basic_rate': item.rate,
-						# 'warehouse': item.warehouse
-					})
+					if item.stock_entry_marked == 0:
+						stock_entry_item.append({
+							'item_code': item.item_code,
+							'qty': item.issued_qty,
+							's_warehouse': "Stores - SAH",
+							# 'basic_rate': item.rate,
+							# 'warehouse': item.warehouse
+						})
 				stock_entry = frappe.get_doc({
 					"doctype":"Stock Entry",
 					# 'purpose': 'Material Transfer',
@@ -136,8 +138,11 @@ class MachinePartsIssuance(Document):
 				stock_entry.insert()
 				stock_entry.save()
 				stock_entry.submit()
+				item.stock_entry = stock_entry.name 
+				item.stock_entry_marked = 1
+
 				# frappe.errprint("Stock Entry created successfully")
-				self.db_set('stock_entry', stock_entry.name)
+				# self.db_set('stock_entry', stock_entry.name)
 			# except Exception as e:
 				# frappe.errprint(f"Error in send_data_from_mpi_to_si: {e}")
 			
