@@ -135,7 +135,7 @@ class MachinePartsIssuance(Document):
 				})
 				stock_entry.insert()
 				stock_entry.save()
-				# stock_entry.submit()
+				stock_entry.submit()
 				# frappe.errprint("Stock Entry created successfully")
 				self.db_set('stock_entry', stock_entry.name)
 			# except Exception as e:
