@@ -15,25 +15,25 @@
   "by_hand",
   "requested_section",
   "requested_items",
-  "total_requested_item",
   "issuance_section",
   "machine_part_details",
-  "total_issued_item",
   "returned_section",
   "machine_part_returned",
   "section_break_cryg",
-  "status",
-  "request_form",
+  "total_requested_item",
   "column_break_wwmw",
-  "qty_to_be_provided",
+  "total_issued_item",
   "stock_entry",
   "column_break_rdxy",
+  "qty_to_be_provided",
   "title",
   "column_break_hbea",
   "requested_qty",
   "column_break_ywqs",
+  "status",
   "issued_qty",
   "column_break_ywfs",
+  "request_form",
   "amended_from"
  ],
  "fields": [
@@ -99,6 +99,7 @@
    "options": "Machine Part Details"
   },
   {
+   "collapsible": 1,
    "fieldname": "returned_section",
    "fieldtype": "Section Break",
    "label": "Returned"
@@ -116,14 +117,16 @@
    "fieldname": "total_requested_item",
    "fieldtype": "Float",
    "label": "Total Requested Item",
-   "precision": "0"
+   "precision": "0",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "total_issued_item",
    "fieldtype": "Float",
    "label": "Total Issued Item",
-   "precision": "0"
+   "precision": "0",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
@@ -134,7 +137,8 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Draft\nCompleted\nIn Progress\nPartial\nCancel\nHold"
+   "options": "Draft\nCompleted\nIn Progress\nPartial\nCancel\nHold",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -154,7 +158,8 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "Qty to be Provided"
+   "label": "Qty to be Provided",
+   "read_only": 1
   },
   {
    "fieldname": "title",
@@ -163,7 +168,8 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "Title"
+   "label": "Title",
+   "read_only": 1
   },
   {
    "fieldname": "requested_qty",
@@ -172,7 +178,8 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "Requested Qty"
+   "label": "Requested Qty",
+   "read_only": 1
   },
   {
    "fieldname": "issued_qty",
@@ -181,15 +188,18 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "Issued Qty"
+   "label": "Issued Qty",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_bgxq",
    "fieldtype": "Column Break"
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_cryg",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "More Info"
   },
   {
    "fieldname": "column_break_wwmw",
@@ -214,18 +224,20 @@
   {
    "fieldname": "request_form",
    "fieldtype": "Data",
-   "label": "Request Form"
+   "label": "Request Form",
+   "read_only": 1
   },
   {
    "fieldname": "stock_entry",
    "fieldtype": "Data",
-   "label": "Stock Entry"
+   "label": "Stock Entry",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-10-28 12:31:54.257080",
+ "modified": "2024-11-02 12:02:54.719277",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",

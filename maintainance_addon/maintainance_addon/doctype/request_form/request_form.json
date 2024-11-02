@@ -8,22 +8,29 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "naming_series",
   "posting_date",
-  "column_break_wxjzs",
+  "column_break_aheu",
   "request_by",
+  "column_break_wxjzs",
+  "naming_series",
   "section_break_aosm2",
   "items",
   "amended_from",
+  "section_break_ijix",
   "item",
-  "total_parts",
-  "total_general",
-  "general_request_form",
-  "part_request",
-  "status",
-  "material_request",
-  "status1",
+  "section_break_alfm",
   "text",
+  "section_break_ppcb",
+  "status1",
+  "part_request",
+  "column_break_mfte",
+  "total_parts",
+  "general_request_form",
+  "column_break_nque",
+  "total_general",
+  "status",
+  "column_break_kmiz",
+  "material_request",
   "section_break_gzsw",
   "more_info_column",
   "per_ordered1",
@@ -127,16 +134,16 @@
   },
   {
    "allow_on_submit": 1,
-   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_filter": 1,
    "in_global_search": 1,
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Completed\nIn Progress\nDraft\nSubmitted\nStopped\nCancelled\nPending\nPartially Ordered\nPartially Received\nOrdered\nIssued\nTransferred\nReceived"
+   "options": "Initialize\nCompleted\nIn Progress\nDraft\nSubmitted\nStopped\nCancelled\nPending\nPartially Ordered\nPartially Received\nOrdered\nIssued\nTransferred\nReceived"
   },
   {
    "fieldname": "material_request",
@@ -151,6 +158,7 @@
    "allow_on_submit": 1,
    "fieldname": "status1",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Status1"
   },
   {
@@ -159,6 +167,7 @@
    "label": "Text"
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_gzsw",
    "fieldtype": "Section Break",
    "label": "More Info"
@@ -193,12 +202,44 @@
    "fieldname": "general_item_status",
    "fieldtype": "Data",
    "label": "General Item Status"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_ppcb",
+   "fieldtype": "Section Break",
+   "label": "More Details"
+  },
+  {
+   "fieldname": "column_break_mfte",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nque",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_kmiz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_alfm",
+   "fieldtype": "Section Break",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_ijix",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_aheu",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-09 13:29:09.376379",
+ "modified": "2024-11-02 12:02:29.017102",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Request Form",
@@ -220,7 +261,12 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Blue",
+   "title": "Initialize"
+  }
+ ],
  "track_changes": 1,
  "track_seen": 1,
  "track_views": 1

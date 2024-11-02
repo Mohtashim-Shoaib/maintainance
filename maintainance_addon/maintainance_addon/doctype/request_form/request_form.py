@@ -133,29 +133,34 @@ class RequestForm(Document):
 				part_issuance_items = []
 				for item in getattr(self, 'items', []):
 					part_issuance_items.append({
-							'item_code': item.item_code,
-							'item_name': item.item_code,
-							'requested_qty': item.qty,
-							'request_quantity': item.qty,
-							'remarks': item.remarks,
-							'balance_qty': item.balance_qty
-						})
+						'item_code': item.item_code,
+						'item_name': item.item_code,
+						'requested_qty': item.qty,
+						'request_quantity': item.qty,
+						'remarks': item.remarks,
+						'balance_qty': item.balance_qty
+					})
 
 				if part_issuance_items:
 					general_item = frappe.get_doc({
-							'doctype': 'Machine Parts Issuance',
-							'date': self.posting_date,
-							"user": self.request_by,
-							# "by_hand": "ABDUL REHMAN",
-							"requested_items": part_issuance_items,
-							"request_form": self.name
-						})     
-				general_item.insert(ignore_permissions=True)
-				general_item.save()
-				self.db_set('part_request', general_item.name)
-				self.db_set('part_request_form', general_item.name)
+						'doctype': 'Machine Parts Issuance',
+						'date': self.posting_date,
+						"user": self.request_by,
+						# "by_hand": "ABDUL REHMAN",
+						"requested_items": part_issuance_items,
+						"request_form": self.name
+					})     
+					general_item.insert(ignore_permissions=True)
+					general_item.save()
+					general_item.submit()
+					
+					# Set the part request reference in the current document
+					self.db_set('part_request', general_item.name)
+					self.db_set('part_request_form', general_item.name)
+                
 			except Exception as e:
 				frappe.log_error(f"Error in send_data_from_request_form_to_part: {e}", "RequestForm send_data_from_request_form_to_part")
+
 
 	def send_data_from_request_form_to_general(self):
 		pass
@@ -184,6 +189,7 @@ class RequestForm(Document):
 					
 					general_item.insert(ignore_permissions=True)
 					general_item.save()
+					general_item.submit()
 					
 					self.db_set('general_request_form', general_item.name)
 					

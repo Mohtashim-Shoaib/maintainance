@@ -1,69 +1,51 @@
 frappe.listview_settings["Request Form"] = {
-    add_fields: ["status","per_ordered1","per_received"],
+    add_fields: ["status", "per_ordered1", "per_received"],
 
     get_indicator: function(doc) {
-        if (doc.status == "In Progress") {
-            return [__('In Progress'), 'blue'];
+        if (doc.status === "Initialize") {
+            return [__("Initialize"), "green", "status,=,Initialize"];
         }
-        if (doc.status == "Completed") {
-            return [__('Completed'), 'green'];
+        if (doc.status === "In Progress") {
+            return [__("In Progress"), "blue", "status,=,In Progress"];
         }
-        else if (doc.status == "Draft") {
-            return [__('Initilize'), 'red'];
+        if (doc.status === "Completed") {
+            return [__("Completed"), "green", "status,=,Completed"];
         }
-        else if (doc.status == "Stopped"){
-            return [__("Stopped"), "red"];
+        if (doc.status === "Stopped") {
+            return [__("Stopped"), "red", "status,=,Stopped"];
         }
-        else if (doc.status == "Cancelled"){
-            return [__("Cancelled"), "red"];
+        if (doc.status === "Cancelled") {
+            return [__("Cancelled"), "red", "status,=,Cancelled"];
         }
-        else if (doc.status == "Ordered"){
-             return [__('Ordered'), 'green'];
+        if (doc.status === "Ordered") {
+            return [__("Ordered"), "green", "status,=,Ordered"];
         }
-        else if (doc.status == "Not Started"){
-             return [__("Not Started"), "orange"];
+        if (doc.status === "Not Started") {
+            return [__("Not Started"), "orange", "status,=,Not Started"];
         }
-        else if (doc.status == "In Transit"){
-            return [__("In Transit"), "yellow"];
+        if (doc.status === "In Transit") {
+            return [__("In Transit"), "yellow", "status,=,In Transit"];
         }
-        else if (doc.status == "Not Started"){
-             return [__("Not Started"), "orange"];
+        if (doc.status === "Pending") {
+            return [__("Pending"), "orange", "status,=,Pending"];
         }
-        else if (doc.status == "In Transit"){
-            return [__("In Transit"), "yellow"];
+        if (doc.status === "Partially Received") {
+            return [__("Partially Received"), "yellow", "status,=,Partially Received"];
         }
-        else if (doc.status == "Completed"){
-            return [__("Completed"), "green"];
+        if (doc.status === "Received") {
+            return [__("Received"), "green", "status,=,Received"];
         }
-        else if (doc.status == "Pending"){
-            return [__("Pending"), "orange"];
+        if (doc.status === "Transferred") {
+            return [__("Transferred"), "green", "status,=,Transferred"];
         }
-        else if (doc.status == "Partially Received"){
-            return [__("Partially Received"), "yellow"];
+        if (doc.status === "Issued") {
+            return [__("Issued"), "green", "status,=,Issued"];
         }
-        else if (doc.status == "Received"){
-            return [__("Received"), "green"];
+        if (doc.status === "Manufactured") {
+            return [__("Manufactured"), "green", "status,=,Manufactured"];
         }
-        else if (doc.status == "Ordered"){
-            return [__("Ordered"), "green"];
-        }
-        else if (doc.status == "Transferred"){
-           return [__("Transfered"), "green"];
-        }
-        else if (doc.status == "Partially Received"){
-            return [__("Partially Received"), "yellow"];
-        }
-        else if (doc.status == "Issued"){
-            return [__("Issued"), "green"];
-        }
-        else if (doc.status == "Received"){
-            return [__("Received"), "green"];
-        }
-        else if (doc.status == "Manufactured"){
-            return [__("Manufactured"), "green"];
-        }
-        else if (doc.status == "Partially Ordered"){
-            return [__("Partially Ordered"), "green"];
+        if (doc.status === "Partially Ordered") {
+            return [__("Partially Ordered"), "green", "status,=,Partially Ordered"];
         }
     }
 };
