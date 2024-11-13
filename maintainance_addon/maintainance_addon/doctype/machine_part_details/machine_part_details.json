@@ -63,16 +63,17 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Machine No",
-   "options": "Asset"
+   "options": "Asset",
+   "reqd": 1
   },
   {
    "columns": 2,
+   "fetch_from": "machine_no.location",
    "fieldname": "department",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Department",
-   "options": "Department"
+   "label": "Department"
   },
   {
    "columns": 1,
@@ -183,7 +184,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-02 13:42:47.560943",
+ "modified": "2024-11-08 17:08:17.942459",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Part Details",

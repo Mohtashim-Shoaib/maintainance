@@ -11,7 +11,9 @@
   "date",
   "unit",
   "department",
-  "is_temp_row"
+  "is_temp_row",
+  "stock_entry_marked",
+  "stock_entry"
  ],
  "fields": [
   {
@@ -76,12 +78,24 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "is_temp_row"
+  },
+  {
+   "default": "0",
+   "fieldname": "stock_entry_marked",
+   "fieldtype": "Check",
+   "label": "Stock Entry Marked"
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Stock Entry",
+   "options": "Stock Entry"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-09 14:49:39.682747",
+ "modified": "2024-11-02 14:50:35.452296",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Request CT",

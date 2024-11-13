@@ -101,45 +101,46 @@ class GeneralItemIssuance(Document):
 				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
 
 	def send_data_from_gii_to_si(self):
-		if self.total_issued == self.total_requested:
+		if 1 == 1:  # This should ideally be a meaningful condition, like self.docstatus == 1
 			try:
 				frappe.errprint("Starting send_data_from_mpi_to_si")
 				stock_entry_item = []
-				# new_rows = [item for item in self.general_item_request_ct if item.is_new]
-				# if not new_rows:
-				# 	frappe.errprint('no new rows to process')
-				# 	return
+				
+				# Collect items for Stock Entry
 				for item in self.general_item_request_ct:
-					stock_entry_item.append({
-						'item_code': item.item_code,
-						'qty': item.qty,
-						's_warehouse': "Stores - SAH",
-						# 'basic_rate': item.rate,
-						# 'warehouse': item.warehouse
-					})
+					if item.stock_entry_marked == 0:
+						stock_entry_item.append({
+							'item_code': item.item_code,
+							'qty': item.qty,
+							's_warehouse': "Stores - SAH",
+						})
+
 				if not stock_entry_item:
 					frappe.errprint("No valid stock entry items to create")
 					return
-				stock_entry= frappe.get_doc({
+
+				# Create Stock Entry
+				stock_entry = frappe.get_doc({
 					'doctype': 'Stock Entry',
 					'posting_date': self.date,
 					'stock_entry_type': 'Material Issue',
-					# 'posting_time': self.posting_time,
 					'from_warehouse': "Stores - SAH",
-					# 'to_warehouse': "Work In Progress - SAH",
 					'items': stock_entry_item
 				})
 				stock_entry.insert()
-				stock_entry.save()
 				stock_entry.submit()
+
+				# Set stock entry name for relevant items
+				for item in self.general_item_request_ct:
+					if item.stock_entry_marked == 0:
+						item.stock_entry = stock_entry.name
+						item.stock_entry_marked = 1
+				
+				# Save stock entry reference in the main document
 				self.db_set('stock_entry', stock_entry.name)
-				# frappe.msgprint(stock_entry.name)
-				self.db_set('stock_entry', stock_entry.name)
-				# frappe.errprint('Stock Entry created Successfully')
-				# frappe.errrint(item)
+			
 			except Exception as e:
 				frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
-	
 	# def add_general_part_row(self, item_code, qty):
 	# 	new_row = self.append('general_item_request_ct', {})
 	# 	new_row.item_code = item_code
