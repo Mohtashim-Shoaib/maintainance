@@ -46,7 +46,7 @@ function get_available_stock(frm, item_code, qty) {
             frm.refresh_field("items");
         };
 
-        if (["ELECTRIC ITEMS", "MACHINE SPARE PARTS", "TOOLS"].includes(group)) {
+        if (["MACHINE SPARE PARTS"].includes(group)) {
             frappe.call({
                 method: "maintainance_addon.maintainance_addon.doctype.request_form.request_form.get_available_qty",
                 args: { item_code: item_code },
@@ -70,7 +70,7 @@ function get_available_stock_1(frm, item_code, qty) {
             frm.refresh_field("item");
         };
 
-        if (["STATIONERY ITEMS", "GENERAL ITEM"].includes(group)) {
+        if (["STATIONERY ITEMS", "GENERAL ITEM" , "ELECTRIC ITEMS", "TOOLS"].includes(group)) {
             frappe.call({
                 method: "maintainance_addon.maintainance_addon.doctype.request_form.request_form.get_available_qty",
                 args: { item_code: item_code },

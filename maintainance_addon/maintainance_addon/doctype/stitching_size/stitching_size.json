@@ -12,7 +12,9 @@
   "column_break_vqei",
   "standard_size",
   "column_break_zasf",
-  "flap"
+  "flap",
+  "column_break_uopy",
+  "consumption"
  ],
  "fields": [
   {
@@ -63,11 +65,20 @@
   {
    "fieldname": "column_break_zasf",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "consumption",
+   "fieldtype": "Float",
+   "label": "Consumption"
+  },
+  {
+   "fieldname": "column_break_uopy",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-11 18:50:33.703946",
+ "modified": "2024-11-13 17:18:19.533003",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Stitching Size",
