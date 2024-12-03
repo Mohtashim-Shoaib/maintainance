@@ -50,6 +50,7 @@ function get_available_stock(frm, item_code, qty) {
             frappe.call({
                 method: "maintainance_addon.maintainance_addon.doctype.request_form.request_form.get_available_qty",
                 args: { item_code: item_code },
+                args: { item_code: item_code },
                 callback: function (r) {
                     addItemToTable(item_code, r.message, qty);
                 }
