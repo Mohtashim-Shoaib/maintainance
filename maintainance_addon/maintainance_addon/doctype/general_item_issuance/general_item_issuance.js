@@ -71,12 +71,28 @@ function get_requested_items(frm) {
 // });
 
 
+frappe.ui.form.on('General Item Issuance', {
+	refresh:function (frm){
+		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
+		frm.set_df_property('general_item_request_ct','cannot_add_rows',1)
+		frm.set_df_property('general_item_issuance_ct','read_only',1)
+        frm.set_df_property('general_item_issuance_ct','cannot_delete_rows',1)
+	}
+	});
+
 // frappe.ui.form.on('General Item Issuance', {
-// 	refresh:function (frm){
-// 		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
-// 		frm.set_df_property('general_item_request_ct','cannot_add_rows',1)
-// 		frm.set_df_property('general_item_issuance_ct','read_only',1)
-// 	}
-// 	});
-
-
+//     refresh: function (frm) {
+//         // Check if the user is an Administrator or has the System Manager role
+//         if (frappe.user.has_role('System Manager') || frappe.user.name === 'Administrator') {
+//             // Allow adding rows and make fields editable for privileged users
+//             frm.set_df_property('general_item_issuance_ct', 'cannot_add_rows', 0);
+//             frm.set_df_property('general_item_request_ct', 'cannot_add_rows', 0);
+//             frm.set_df_property('general_item_issuance_ct', 'read_only', 0);
+//         } else {
+//             // Restrict actions for non-privileged users
+//             frm.set_df_property('general_item_issuance_ct', 'cannot_add_rows', 1);
+//             frm.set_df_property('general_item_request_ct', 'cannot_add_rows', 1);
+//             frm.set_df_property('general_item_issuance_ct', 'read_only', 1);
+//         }
+//     }
+// });
