@@ -83,3 +83,14 @@ function get_available_stock_1(frm, item_code, qty) {
     });
 }
 
+
+frappe.ui.form.on('Request Form', {
+	refresh:function (frm){
+		frm.set_df_property('items','cannot_add_rows',1)
+		frm.set_df_property('item','cannot_add_rows',1)
+		frm.set_df_property('items','read_only',1)
+        frm.set_df_property('items','cannot_delete_rows',1)
+        frm.set_df_property('item','read_only',1)
+        frm.set_df_property('item','cannot_delete_rows',1)
+	}
+	});
