@@ -39,6 +39,7 @@
   {
    "fieldname": "balance_qty",
    "fieldtype": "Float",
+   "hidden": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Balance Qty"
@@ -46,6 +47,7 @@
   {
    "fieldname": "required_qty",
    "fieldtype": "Float",
+   "hidden": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Required Qty"
@@ -54,13 +56,14 @@
    "fetch_from": "item_code.item_group",
    "fieldname": "item_category",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Item Category"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-11 13:29:42.365437",
+ "modified": "2024-12-31 00:12:13.480533",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Parts Request CT",
