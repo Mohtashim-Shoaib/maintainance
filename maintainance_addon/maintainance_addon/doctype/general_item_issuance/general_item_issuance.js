@@ -1,6 +1,38 @@
 // Copyright (c) 2024, mohtashim and contributors
 // For license information, please see license.txt
 
+frappe.ui.form.on('General Item Issuance', {
+    refresh: function(frm) {
+        // Add a custom button to close the document under the "Status" section
+        if (!frm.doc.__islocal && frm.doc.docstatus === 1) {
+            frm.add_custom_button(__('Close'), () => frm.events.close_purchase_order(frm), __("Status"));
+        }
+    },
+    
+    // Function to handle the "Close" action
+    close_purchase_order: function(frm) {
+        // Update the status field to 'Closed'
+        frm.call({
+            method: 'frappe.client.set_value',
+            args: {
+                doctype: frm.doc.doctype,
+                name: frm.doc.name,
+                fieldname: 'status',  // Replace with your actual status field name
+                value: 'Closed'       // New status value to set
+            },
+            callback: function(response) {
+                if (!response.exc) {
+                    frappe.msgprint(__('The document has been successfully closed.'));
+                    frm.reload_doc();  // Reload the form to reflect the status change
+                } else {
+                    frappe.msgprint(__('Error while closing the document.'));
+                }
+            }
+        });
+    }
+});
+
+
 frappe.ui.form.on('General Item Issuance',{
     refresh(frm){
         frm.add_custom_button('Add Qty', function(){
@@ -71,14 +103,14 @@ function get_requested_items(frm) {
 // });
 
 
-frappe.ui.form.on('General Item Issuance', {
-	refresh:function (frm){
-		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
-		frm.set_df_property('general_item_request_ct','cannot_add_rows',1)
-		frm.set_df_property('general_item_issuance_ct','read_only',1)
-        frm.set_df_property('general_item_issuance_ct','cannot_delete_rows',1)
-	}
-	});
+// frappe.ui.form.on('General Item Issuance', {
+// 	refresh:function (frm){
+// 		frm.set_df_property('general_item_issuance_ct','cannot_add_rows',1)
+// 		frm.set_df_property('general_item_request_ct','cannot_add_rows',1)
+// 		frm.set_df_property('general_item_issuance_ct','read_only',1)
+//         frm.set_df_property('general_item_issuance_ct','cannot_delete_rows',1)
+// 	}
+// 	});
 
 // frappe.ui.form.on('General Item Issuance', {
 //     refresh: function (frm) {
