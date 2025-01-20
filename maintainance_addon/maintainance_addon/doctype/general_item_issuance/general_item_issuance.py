@@ -69,36 +69,55 @@ class GeneralItemIssuance(Document):
 	def update_balance_qty(self):
 		for item in self.general_item_issuance_ct:
 			item_code = item.part_name
-			bin_exists = frappe.db.exists('Bin',{'item_code':item_code})
+
+			# Check if a Bin exists for the item
+			bin_exists = frappe.db.exists('Bin', {'item_code': item_code})
 			if not bin_exists:
+				frappe.msgprint(f"Bin does not exist for Item Code: {item_code}")
+				item.balance_qty = 0
+				item.db_set('balance_qty', 0)
 				continue
-			bin_doc = frappe.get_doc('Bin',{'item_code':item_code})
-			balance_qty = bin_doc.actual_qty
-			item.balance_qty = balance_qty
-			item.db_set('balance_qty', balance_qty)
+
+			# Fetch the Bin document
+			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
+
+			# Calculate new balance quantity
+			new_balance_qty = bin_doc.actual_qty - item.qty
+
+			# Update the balance quantity in the child table
+			item.balance_qty = new_balance_qty
+			item.db_set('balance_qty', new_balance_qty)
+
 
 	def condition(self):
+		# Aggregate issued and balance quantities
 		general_item_issuance_ct = {}
 		balance_quantities = {}
+
 		for item in self.general_item_issuance_ct:
 			item_code = item.part_name
-			if item_code in general_item_issuance_ct:
-				general_item_issuance_ct[item_code] += item.qty
-			else:
-				general_item_issuance_ct[item_code] = item.qty
-			if item_code in balance_quantities:
-				balance_quantities[item_code] += item.balance_qty
-			else:
-				balance_quantities[item_code] = item.balance_qty
+
+			# Track issued quantities
+			general_item_issuance_ct[item_code] = general_item_issuance_ct.get(item_code, 0) + item.qty
+
+			# Use the latest updated balance quantity
+			balance_quantities[item_code] = item.balance_qty
+
+		# Validate requested quantities against issued and balance
 		for detail in self.general_item_request_ct:
 			item_code = detail.item_code
-			issued_qty = detail.qty 
-			total_requested_qty = general_item_issuance_ct.get(item_code, 0)
+			requested_qty = detail.qty
+			issued_qty = general_item_issuance_ct.get(item_code, 0)
 			total_balance_qty = balance_quantities.get(item_code, 0)
-			if issued_qty > total_requested_qty:
-				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than requested quantity ({total_requested_qty}).")
+
+			# Check if issued exceeds requested
+			if issued_qty > requested_qty:
+				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the requested quantity ({requested_qty}).")
+
+			# Check if issued exceeds available balance
 			if issued_qty > total_balance_qty:
-				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
+				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
+
 
 	def send_data_from_gii_to_si(self):
 		if 1 == 1:  # This should ideally be a meaningful condition, like self.docstatus == 1
