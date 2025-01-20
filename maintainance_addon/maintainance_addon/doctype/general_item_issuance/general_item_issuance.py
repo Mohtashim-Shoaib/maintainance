@@ -27,6 +27,14 @@ class GeneralItemIssuance(Document):
 		self.set_qty_to_provided()
 		self.set_remarks()
 
+	def on_update_after_submit(self):
+		# Update balance quantities
+		self.update_balance_qty()
+
+		# Validate issuance conditions
+		self.condition()
+
+
 	# def on_submit(self):
 	# 	self.send_data_from_gii_to_si()
 	
