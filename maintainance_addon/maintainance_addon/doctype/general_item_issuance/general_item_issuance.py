@@ -15,7 +15,7 @@ class GeneralItemIssuance(Document):
 		self.update_balance_qty()
 		self.condition()
 		self.update_status()
-		self.send_data_from_gii_to_si()
+		# self.send_data_from_gii_to_si()
 
 	def on_cancel(self):
 		pass
@@ -194,3 +194,19 @@ def add_general_part_row(docname, item, qty):
     except Exception as e:
         frappe.log_error(f"Error in add_general_part_row: {e}", "Add General Part Row")
         frappe.throw(f"Error occurred: {e}")
+
+
+
+@frappe.whitelist(allow_guest=True)
+def close_document(docname):
+    try:
+        # Directly update the status to 'Closed'
+        frappe.db.set_value('General Item Issuance', docname, 'status', 'Closed')
+
+        # Commit the changes to apply them immediately
+        frappe.db.commit()
+
+        return {'status': 'success', 'message': 'Document closed successfully.'}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), 'Close Document Error')
+        frappe.throw(_('An error occurred while closing the document: {0}').format(str(e)))

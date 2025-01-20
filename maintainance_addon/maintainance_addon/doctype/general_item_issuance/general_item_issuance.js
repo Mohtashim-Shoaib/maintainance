@@ -1,34 +1,32 @@
 // Copyright (c) 2024, mohtashim and contributors
 // For license information, please see license.txt
-
 frappe.ui.form.on('General Item Issuance', {
     refresh: function(frm) {
-        // Add a custom button to close the document under the "Status" section
         if (!frm.doc.__islocal && frm.doc.docstatus === 1) {
-            frm.add_custom_button(__('Close'), () => frm.events.close_purchase_order(frm), __("Status"));
+            frm.add_custom_button(__('Close Document'), () => frm.events.close_document(frm), __("Status"));
         }
     },
-    
-    // Function to handle the "Close" action
-    close_purchase_order: function(frm) {
-        // Update the status field to 'Closed'
-        frm.call({
-            method: 'frappe.client.set_value',
-            args: {
-                doctype: frm.doc.doctype,
-                name: frm.doc.name,
-                fieldname: 'status',  // Replace with your actual status field name
-                value: 'Closed'       // New status value to set
-            },
-            callback: function(response) {
-                if (!response.exc) {
-                    frappe.msgprint(__('The document has been successfully closed.'));
-                    frm.reload_doc();  // Reload the form to reflect the status change
-                } else {
-                    frappe.msgprint(__('Error while closing the document.'));
-                }
+
+    close_document: function(frm) {
+        frappe.confirm(
+            __('Are you sure you want to close this document?'),
+            function() {
+                frappe.call({
+                    method:'maintainance_addon.maintainance_addon.doctype.general_item_issuance.general_item_issuance.close_document',
+                    args: {
+                        docname: frm.doc.name
+                    },
+                    callback: function(response) {
+                        if (!response.exc) {
+                            frappe.msgprint(__('The document has been successfully closed.'));
+                            frm.reload_doc();
+                        } else {
+                            frappe.msgprint(__('Error while closing the document.'));
+                        }
+                    }
+                });
             }
-        });
+        );
     }
 });
 

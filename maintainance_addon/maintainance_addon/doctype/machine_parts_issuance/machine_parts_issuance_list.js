@@ -11,6 +11,9 @@ frappe.listview_settings["Machine Parts Issuance"] = {
         else if (doc.status == "Draft") {
             return [__('Draft'), 'green'];
         }
+        else if (doc.status == "Closed") {
+            return [__('Closed'), 'grey'];
+        }
        
     }
 };

@@ -15,6 +15,7 @@ class MachinePartsIssuance(Document):
 		self.update_status()
 		# self.send_data_from_mpi_to_si()
 		self.send_data_from_mpi_to_si()
+		# self.stock_reversal_entry()
 
 	def validate(self):
 		self.calculate_requested_total()
@@ -38,7 +39,8 @@ class MachinePartsIssuance(Document):
 			stock_entry_name = frappe.get_doc('Stock Entry', self.stock_entry)
 			if stock_entry_name.docstatus == 1:
 				stock_entry_name.cancel()
-
+	
+	
 
 	def update_status(self):
 		frappe.db.sql("""
@@ -171,3 +173,17 @@ def add_machine_part_row(docname, item_code, qty):
     
     return f"Added: {item_code} - {qty}"
 
+
+@frappe.whitelist(allow_guest=True)
+def close_document(docname):
+    try:
+        # Directly update the status to 'Closed'
+        frappe.db.set_value('Machine Parts Issuance', docname, 'status', 'Closed')
+
+        # Commit the changes to apply them immediately
+        frappe.db.commit()
+
+        return {'status': 'success', 'message': 'Document closed successfully.'}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), 'Close Document Error')
+        frappe.throw(_('An error occurred while closing the document: {0}').format(str(e)))

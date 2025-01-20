@@ -27,7 +27,8 @@
   "section_break_irq1n",
   "item_name",
   "description",
-  "max_qty"
+  "max_qty",
+  "stock_reversal_entry"
  ],
  "fields": [
   {
@@ -63,8 +64,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Machine No",
-   "options": "Asset",
-   "reqd": 1
+   "options": "Asset"
   },
   {
    "columns": 2,
@@ -169,22 +169,35 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "stock_entry_marked",
    "fieldtype": "Check",
    "label": "Stock Entry Marked"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "stock_entry",
    "fieldtype": "Link",
    "label": "Stock Entry",
    "options": "Stock Entry"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "stock_reversal_entry",
+   "fieldtype": "Check",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Stock Reversal Entry"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-08 17:08:17.942459",
+ "modified": "2024-12-31 01:08:26.889747",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Part Details",

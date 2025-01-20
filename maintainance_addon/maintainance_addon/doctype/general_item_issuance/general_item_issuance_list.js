@@ -10,5 +10,8 @@ frappe.listview_settings["General Item Issuance"] = {
         if (doc.status == "Draft") {
             return [__('Draft'), 'red'];
         }
+        if (doc.status == "Closed") {
+            return [__('Closed'), 'yellow'];
+        }
     }
 };

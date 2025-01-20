@@ -1,5 +1,33 @@
-// Copyright (c) 2024, mohtashim and contributors
-// For license information, please see license.txt
+frappe.ui.form.on('Machine Parts Issuance', {
+    refresh: function(frm) {
+        if (!frm.doc.__islocal && frm.doc.docstatus === 1) {
+            frm.add_custom_button(__('Close Document'), () => frm.events.close_document(frm), __("Status"));
+        }
+    },
+
+    close_document: function(frm) {
+        frappe.confirm(
+            __('Are you sure you want to close this document?'),
+            function() {
+                frappe.call({
+                    method: 'maintainance_addon.maintainance_addon.doctype.machine_parts_issuance.machine_parts_issuance.close_document',
+                    args: {
+                        docname: frm.doc.name
+                    },
+                    callback: function(response) {
+                        if (!response.exc) {
+                            frappe.msgprint(__('The document has been successfully closed.'));
+                            frm.reload_doc();
+                        } else {
+                            frappe.msgprint(__('Error while closing the document.'));
+                        }
+                    }
+                });
+            }
+        );
+    }
+});
+
 
 frappe.ui.form.on('Machine Parts Issuance', {
 	refresh(frm) {
@@ -209,4 +237,5 @@ function get_part_name_related(frm) {
 	// 	}
 	// });
 		
+
 
