@@ -69,6 +69,50 @@ frappe.ui.form.on('General Item Issuance',{
         })
     }
 })
+
+frappe.ui.form.on('General Item Issuance', {
+    refresh: function(frm) {
+        frm.add_custom_button(__('Refresh'), function() {
+            // Get the value of the field 'stock_entry_marked'
+            var current_value = frm.doc.check;
+            
+            // Toggle the value between 0 and 1
+            frm.set_value('check', current_value == 0 ? 1 : 0);
+            
+            // Save the changes
+            frm.save()
+                .then(() => {
+                    // Reload the document to reflect the changes
+                    frm.reload_doc();
+                })
+                .catch((error) => {
+                    frappe.msgprint(__('Error while saving changes.'));
+                    console.error(error);
+                });
+
+        });
+        // Add button for Stock Ledger Route with item filtering
+        frm.add_custom_button(__('Go to Stock Ledger'), function() {
+            let item_codes = frm.doc.general_item_request_ct.map(item => item.item_code).join(',');
+            let warehouse = "Stores - SAH"; // Default warehouse, adjust if necessary
+            frappe.set_route('query-report', 'Stock Ledger', {
+                item_code: item_codes,  // Filter by item codes from the General Item Request
+                warehouse: warehouse     // You can customize this based on your logic
+            });
+        });
+
+        // Add button for Stock Balance Route with item filtering
+        frm.add_custom_button(__('Go to Stock Balance'), function() {
+            let item_codes = frm.doc.general_item_request_ct.map(item => item.item_code).join(',');
+            let warehouse = "Stores - SAH"; // Default warehouse, adjust if necessary
+            frappe.set_route('query-report', 'Stock Balance', {
+                item_code: item_codes,  // Filter by item codes from the General Item Request
+                warehouse: warehouse     // Customize warehouse if necessary
+            });
+        });
+    }
+});
+
 frappe.ui.form.on('General Item Issuance', {
     refresh(frm) {
         frm.fields_dict['general_item_request_ct'].grid.get_field('item_code').get_query = function (doc, cdt, cdn) {

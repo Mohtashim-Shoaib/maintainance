@@ -80,12 +80,14 @@
    "label": "is_temp_row"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "stock_entry_marked",
    "fieldtype": "Check",
    "label": "Stock Entry Marked"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "stock_entry",
    "fieldtype": "Link",
    "label": "Stock Entry",
@@ -95,7 +97,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-02 14:50:35.452296",
+ "modified": "2025-01-30 18:08:44.537963",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "General Item Request CT",

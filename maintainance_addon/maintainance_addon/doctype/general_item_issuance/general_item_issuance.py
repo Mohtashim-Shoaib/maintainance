@@ -15,7 +15,7 @@ class GeneralItemIssuance(Document):
 		self.update_balance_qty()
 		self.condition()
 		self.update_status()
-		# self.send_data_from_gii_to_si()
+		self.send_data_from_gii_to_si()
 
 	def on_cancel(self):
 		pass
@@ -26,10 +26,12 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_issuance()
 		self.set_qty_to_provided()
 		self.set_remarks()
+		# self.send_data_from_gii_to_si()
 
 	def on_update_after_submit(self):
 		# Update balance quantities
 		self.update_balance_qty()
+		self.send_data_from_gii_to_si()
 
 		# Validate issuance conditions
 		self.condition()
@@ -90,7 +92,8 @@ class GeneralItemIssuance(Document):
 			bin_doc = frappe.get_doc('Bin', {'item_code': item_code})
 
 			# Calculate new balance quantity
-			new_balance_qty = bin_doc.actual_qty - item.qty
+			# new_balance_qty = bin_doc.actual_qty - item.qty
+			new_balance_qty = bin_doc.actual_qty
 
 			# Update the balance quantity in the child table
 			item.balance_qty = new_balance_qty
@@ -119,55 +122,66 @@ class GeneralItemIssuance(Document):
 			total_balance_qty = balance_quantities.get(item_code, 0)
 
 			# Check if issued exceeds requested
-			if issued_qty > requested_qty:
+			# if issued_qty > requested_qty:
+			if requested_qty > issued_qty:
 				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the requested quantity ({requested_qty}).")
 
 			# Check if issued exceeds available balance
-			if issued_qty > total_balance_qty:
+			# if issued_qty > total_balance_qty:
+			if total_balance_qty > issued_qty:
 				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
 
 
 	def send_data_from_gii_to_si(self):
-		if 1 == 1:  # This should ideally be a meaningful condition, like self.docstatus == 1
-			try:
-				frappe.errprint("Starting send_data_from_mpi_to_si")
-				stock_entry_item = []
-				
-				# Collect items for Stock Entry
-				for item in self.general_item_request_ct:
-					if item.stock_entry_marked == 0:
-						stock_entry_item.append({
-							'item_code': item.item_code,
-							'qty': item.qty,
-							's_warehouse': "Stores - SAH",
-						})
+		frappe.msgprint('chacha')
 
-				if not stock_entry_item:
-					frappe.errprint("No valid stock entry items to create")
-					return
+		if self.docstatus != 1:  
+			frappe.throw("Document must be submitted before sending data to Stock Entry")
 
-				# Create Stock Entry
-				stock_entry = frappe.get_doc({
-					'doctype': 'Stock Entry',
-					'posting_date': self.date,
-					'stock_entry_type': 'Material Issue',
-					'from_warehouse': "Stores - SAH",
-					'items': stock_entry_item
-				})
-				stock_entry.insert()
-				stock_entry.submit()
+		try:
+			frappe.errprint("Starting send_data_from_mpi_to_si")
 
-				# Set stock entry name for relevant items
-				for item in self.general_item_request_ct:
-					if item.stock_entry_marked == 0:
-						item.stock_entry = stock_entry.name
-						item.stock_entry_marked = 1
-				
-				# Save stock entry reference in the main document
-				self.db_set('stock_entry', stock_entry.name)
+			stock_entry_item = []
 			
-			except Exception as e:
-				frappe.throw(f"Error in send_data_from_gii_to_si: {e}")
+			for item in self.general_item_request_ct:
+				frappe.errprint(f"Checking item: {item.item_code}, Marked: {item.stock_entry_marked}")
+				if item.stock_entry_marked == 0:
+					stock_entry_item.append({
+						'item_code': item.item_code,
+						'qty': item.qty,
+						's_warehouse': "Stores - SAH",  # Ensure correct warehouse field
+					})
+
+					if not stock_entry_item:
+						frappe.throw("No valid stock entry items to create")
+
+					# Create Stock Entry
+					stock_entry = frappe.get_doc({
+						'doctype': 'Stock Entry',
+						'posting_date': self.date or frappe.utils.nowdate(),
+						'stock_entry_type': 'Material Issue',
+						'items': stock_entry_item
+					})
+
+					stock_entry.insert()
+					stock_entry.submit()
+					item.stock_entry_marked = 1
+					item.stock_entry = stock_entry.name
+
+					frappe.msgprint(f"Stock Entry {stock_entry.name} created successfully")
+
+					for item in self.general_item_request_ct:
+						if item.stock_entry_marked == 0:
+							item.stock_entry = stock_entry.name
+							item.stock_entry_marked = 1
+					
+					self.db_set('stock_entry', stock_entry.name)
+
+		except Exception as e:
+			frappe.log_error(f"Error in send_data_from_gii_to_si: {e}", "Stock Entry Error")
+			frappe.throw(f"Error in processing: {e}")
+
+
 	# def add_general_part_row(self, item_code, qty):
 	# 	new_row = self.append('general_item_request_ct', {})
 	# 	new_row.item_code = item_code
