@@ -127,13 +127,13 @@ class GeneralItemIssuance(Document):
 				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the requested quantity ({requested_qty}).")
 
 			# Check if issued exceeds available balance
-			# if issued_qty > total_balance_qty:
-			if total_balance_qty > issued_qty:
+			if issued_qty > total_balance_qty:
+			# if total_balance_qty > issued_qty:
 				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
 
 
 	def send_data_from_gii_to_si(self):
-		frappe.msgprint('chacha')
+		# frappe.msgprint('chacha')
 
 		if self.docstatus != 1:  
 			frappe.throw("Document must be submitted before sending data to Stock Entry")
