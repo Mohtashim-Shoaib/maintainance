@@ -75,6 +75,38 @@ class GeneralItemIssuance(Document):
 			self.status = "In Progress"
 		elif self.total_issued == 0:
 			self.status = "Draft"
+   
+	def condition(self):
+		# Aggregate issued and balance quantities
+		general_item_issuance_ct = {}
+		balance_quantities = {}
+
+		for item in self.general_item_issuance_ct:
+			item_code = item.part_name
+
+			# Accumulate issued quantity
+			general_item_issuance_ct[item_code] = general_item_issuance_ct.get(item_code, 0) + item.qty
+
+			# Track balance quantity correctly (pick lowest value encountered)
+			if item_code not in balance_quantities:
+				balance_quantities[item_code] = item.balance_qty
+			else:
+				balance_quantities[item_code] = min(balance_quantities[item_code], item.balance_qty)
+
+		# Validate requested quantities against issued and balance
+		for detail in self.general_item_request_ct:
+			item_code = detail.item_code
+			requested_qty = detail.qty
+			issued_qty = general_item_issuance_ct.get(item_code, 0)
+			total_balance_qty = balance_quantities.get(item_code, 0)
+
+			# Validate that issued does not exceed requested
+			if requested_qty > issued_qty:
+				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the requested quantity ({requested_qty}).")
+
+			# Validate that issued does not exceed available balance
+			# if issued_qty > total_balance_qty:
+			# 	frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
 	
 	def update_balance_qty(self):
 		for item in self.general_item_issuance_ct:
@@ -108,11 +140,14 @@ class GeneralItemIssuance(Document):
 		for item in self.general_item_issuance_ct:
 			item_code = item.part_name
 
-			# Track issued quantities
+			# Accumulate issued quantity
 			general_item_issuance_ct[item_code] = general_item_issuance_ct.get(item_code, 0) + item.qty
 
-			# Use the latest updated balance quantity
-			balance_quantities[item_code] = item.balance_qty
+			# Track balance quantity correctly (pick lowest value encountered)
+			if item_code not in balance_quantities:
+				balance_quantities[item_code] = item.balance_qty
+			else:
+				balance_quantities[item_code] = min(balance_quantities[item_code], item.balance_qty)
 
 		# Validate requested quantities against issued and balance
 		for detail in self.general_item_request_ct:
@@ -121,15 +156,13 @@ class GeneralItemIssuance(Document):
 			issued_qty = general_item_issuance_ct.get(item_code, 0)
 			total_balance_qty = balance_quantities.get(item_code, 0)
 
-			# Check if issued exceeds requested
-			# if issued_qty > requested_qty:
+			# Validate that issued does not exceed requested
 			if requested_qty > issued_qty:
 				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the requested quantity ({requested_qty}).")
 
-			# Check if issued exceeds available balance
-			if issued_qty > total_balance_qty:
-			# if total_balance_qty > issued_qty:
-				frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
+			# Validate that issued does not exceed available balance
+			# if issued_qty > total_balance_qty:
+			# 	frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
 
 
 	def send_data_from_gii_to_si(self):
