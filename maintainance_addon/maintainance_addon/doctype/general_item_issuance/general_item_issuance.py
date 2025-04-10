@@ -16,6 +16,7 @@ class GeneralItemIssuance(Document):
 		self.condition()
 		self.update_status()
 		self.send_data_from_gii_to_si()
+		# self.close_document()
 
 	def on_cancel(self):
 		pass
@@ -26,6 +27,7 @@ class GeneralItemIssuance(Document):
 		self.calculate_total_issuance()
 		self.set_qty_to_provided()
 		self.set_remarks()
+		self.update_status()
 		# self.send_data_from_gii_to_si()
 
 	def on_update_after_submit(self):
@@ -35,6 +37,31 @@ class GeneralItemIssuance(Document):
 
 		# Validate issuance conditions
 		self.condition()
+		self.update_status()
+
+	
+	def close_document(self):
+		# frappe.throw("Function Started")  # Debugging message
+		
+		if self.status == "Closed":
+			frappe.throw("Inside Closed Check")  # Debugging message
+			
+			request = frappe.get_doc("Request Form", self.request_form)
+			
+			if request:
+				frappe.throw(f"Request Form Found: {self.request_form}")  # Debugging message
+				
+				request.status = "Closed"
+				request.save()  # ✅ Save changes to Request Form
+				
+				frappe.db.commit()  # ✅ Commit changes
+				
+				frappe.msgprint("Request Form closed successfully.")
+			else:
+				frappe.throw("Request Form Not Found")
+		else:
+			frappe.throw("Status is not Closed")
+
 
 
 	# def on_submit(self):
@@ -75,6 +102,9 @@ class GeneralItemIssuance(Document):
 			self.status = "In Progress"
 		elif self.total_issued == 0:
 			self.status = "Draft"
+
+	
+
    
 	def condition(self):
 		# Aggregate issued and balance quantities
@@ -164,55 +194,211 @@ class GeneralItemIssuance(Document):
 			# if issued_qty > total_balance_qty:
 			# 	frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
 
-
 	def send_data_from_gii_to_si(self):
-		# frappe.msgprint('chacha')
-
-		if self.docstatus != 1:  
+		if self.docstatus != 1:
 			frappe.throw("Document must be submitted before sending data to Stock Entry")
 
 		try:
-			frappe.errprint("Starting send_data_from_mpi_to_si")
+			# Check if there are any unmarked items first
+			unmarked_items = [item for item in self.general_item_request_ct if item.stock_entry_marked == 0]
+			if not unmarked_items:
+				frappe.msgprint("All items have already been processed")
+				return
 
-			stock_entry_item = []
+			# Get items from database (more reliable than UI cache)
+			db_items = frappe.get_all(
+				"General Item Request CT",
+				filters={"parent": self.name, "stock_entry_marked": 0},
+				fields=["name", "item_code", "qty", "stock_entry_marked", "stock_entry", "unit", "idx"],
+				order_by="idx"
+			)
 			
-			for item in self.general_item_request_ct:
-				frappe.errprint(f"Checking item: {item.item_code}, Marked: {item.stock_entry_marked}")
-				if item.stock_entry_marked == 0:
-					stock_entry_item.append({
-						'item_code': item.item_code,
-						'qty': item.qty,
-						's_warehouse': "Stores - SAH",  # Ensure correct warehouse field
-					})
+			if not db_items:
+				frappe.msgprint("No unprocessed items found")
+				return
 
-					if not stock_entry_item:
-						frappe.throw("No valid stock entry items to create")
+			# Prepare stock entry items
+			stock_entry_items = []
+			for item in db_items:
+				stock_entry_items.append({
+					'item_code': item.item_code,
+					'qty': item.qty,
+					's_warehouse': "Stores - SAH",
+					'uom': item.unit or frappe.db.get_value("Item", item.item_code, "stock_uom") or "Nos",
+					'conversion_factor': 1.0
+				})
 
-					# Create Stock Entry
-					stock_entry = frappe.get_doc({
-						'doctype': 'Stock Entry',
-						'posting_date': self.date or frappe.utils.nowdate(),
-						'stock_entry_type': 'Material Issue',
-						'items': stock_entry_item
-					})
+			# Create and submit stock entry
+			stock_entry = frappe.get_doc({
+				'doctype': 'Stock Entry',
+				'posting_date': self.date or frappe.utils.nowdate(),
+				'stock_entry_type': 'Material Issue',
+				'items': stock_entry_items,
+				'custom_general_item_issuance': self.name
+			})
+			
+			stock_entry.insert(ignore_permissions=True)
+			stock_entry.submit()
 
-					stock_entry.insert()
-					stock_entry.submit()
-					item.stock_entry_marked = 1
-					item.stock_entry = stock_entry.name
+			# Update child records
+			for item in db_items:
+				frappe.db.set_value(
+					"General Item Request CT",
+					item.name,
+					{
+						'stock_entry_marked': 1,
+						'stock_entry': stock_entry.name
+					}
+				)
 
-					frappe.msgprint(f"Stock Entry {stock_entry.name} created successfully")
-
-					for item in self.general_item_request_ct:
-						if item.stock_entry_marked == 0:
-							item.stock_entry = stock_entry.name
-							item.stock_entry_marked = 1
-					
-					self.db_set('stock_entry', stock_entry.name)
+			# Update parent document
+			self.db_set('stock_entry', stock_entry.name)
+			
+			frappe.msgprint(f"Successfully created Stock Entry {stock_entry.name}")
+			return stock_entry.name
 
 		except Exception as e:
-			frappe.log_error(f"Error in send_data_from_gii_to_si: {e}", "Stock Entry Error")
-			frappe.throw(f"Error in processing: {e}")
+			frappe.log_error(
+				title=f"Stock Entry Creation Error for {self.name}",
+				message=frappe.get_traceback()
+			)
+			frappe.throw(f"Failed to create Stock Entry: {str(e)}")
+	# def send_data_from_gii_to_si(self):
+	# 	if self.docstatus != 1:
+	# 		frappe.throw("Document must be submitted before sending data to Stock Entry")
+
+	# 	try:
+	# 		for item in self.general_item_request_ct:
+	# 			if item.stock_entry_marked == 0:
+			
+	# 				# 2. Debug information
+	# 				frappe.errprint(f"DEBUG: Processing document {self.name}")
+	# 				frappe.errprint(f"DEBUG: DocStatus: {self.docstatus}")
+	# 				frappe.errprint(f"DEBUG: Current stock_entry: {self.stock_entry}")
+
+	# 				# 3. Get items from child table - using correct field name
+	# 				child_items = self.get("general_item_request_ct") or []
+	# 				frappe.errprint(f"DEBUG: Found {len(child_items)} items in child table (UI cache)")
+
+	# 				# 4. Additional check - get from database directly
+	# 				db_items = frappe.get_all(
+	# 					"General Item Request CT",  # This is the Doctype name
+	# 					filters={"parent": self.name},
+	# 					fields=["name", "item_code", "qty", "stock_entry_marked", "stock_entry", "unit", "idx"],
+	# 					order_by="idx"
+	# 				)
+	# 				frappe.errprint(f"DEBUG: Found {len(db_items)} items in database")
+
+	# 				if not child_items and not db_items:
+	# 					frappe.throw("No items found in the General Item Request CT table")
+
+	# 				# 5. Process items
+	# 				stock_entry_items = []
+	# 				valid_items = 0
+					
+	# 				# Use database items if available, fallback to UI items
+	# 				items_to_process = db_items if db_items else child_items
+					
+	# 				for item in items_to_process:
+	# 					frappe.errprint(f"DEBUG: Processing item {getattr(item, 'idx', '?')} - {item.item_code}")
+						
+	# 					stock_entry_items.append({
+	# 						'item_code': item.item_code,
+	# 						'qty': item.qty,
+	# 						's_warehouse': "Stores - SAH",
+	# 						'uom': getattr(item, 'unit', None) or frappe.db.get_value("Item", item.item_code, "stock_uom") or "Nos",
+	# 						'conversion_factor': 1.0
+	# 					})
+	# 					valid_items += 1
+
+	# 				if not stock_entry_items:
+	# 					if valid_items == 0:
+	# 						frappe.msgprint("All items have already been processed")
+	# 						return
+	# 					frappe.throw("No valid items found to process")
+
+	# 				# 6. Create stock entry
+	# 				stock_entry = frappe.get_doc({
+	# 					'doctype': 'Stock Entry',
+	# 					'posting_date': self.date or frappe.utils.nowdate(),
+	# 					'stock_entry_type': 'Material Issue',
+	# 					'items': stock_entry_items,
+	# 					'custom_general_item_issuance': self.name
+	# 				})
+	# 				for item in self.general_item_request_ct:
+	# 					if item.stock_entry_marked == 0:
+	# 						stock_entry.insert(ignore_permissions=True)
+	# 						stock_entry.submit()
+
+	# 						# 7. Update child records
+	# 						updated = 0
+	# 						for item in items_to_process:
+	# 							if not getattr(item, 'stock_entry_marked', 0) and item.item_code in [i.item_code for i in stock_entry.items]:
+	# 								frappe.db.set_value(
+	# 									"General Item Request CT",  # Doctype name
+	# 									item.name,
+	# 									{
+	# 										'stock_entry_marked': 1,
+	# 										'stock_entry': stock_entry.name
+	# 									}
+	# 								)
+	# 								updated += 1
+
+	# 								frappe.errprint(f"DEBUG: Updated {updated} child records")
+	# 								self.db_set('stock_entry', stock_entry.name)
+									
+	# 								frappe.msgprint(f"Successfully created Stock Entry {stock_entry.name}")
+	# 								return stock_entry.name
+
+	# 	except Exception as e:
+	# 		frappe.log_error(
+	# 			title=f"Stock Entry Creation Error for {self.name}",
+	# 			message=frappe.get_traceback()
+	# 		)
+	# 		frappe.throw(f"Failed to create Stock Entry: {str(e)}")
+	# def send_data_from_gii_to_si(self):
+	# 	if self.docstatus != 1:  
+	# 		frappe.throw("Document must be submitted before sending data to Stock Entry")
+
+	# 	try:
+	# 		frappe.errprint("Starting send_data_from_gii_to_si")
+
+	# 		stock_entry_item = [
+	# 			{
+	# 				'item_code': item.item_code,
+	# 				'qty': item.qty,
+	# 				's_warehouse': "Stores - SAH",
+	# 			}
+	# 			for item in self.general_item_request_ct if item.stock_entry_marked == 0
+	# 		]
+
+	# 		if not stock_entry_item:
+	# 			frappe.throw("No valid stock entry items to create")
+
+	# 		stock_entry = frappe.get_doc({
+	# 			'doctype': 'Stock Entry',
+	# 			'posting_date': self.date or frappe.utils.nowdate(),
+	# 			'stock_entry_type': 'Material Issue',
+	# 			'items': stock_entry_item
+	# 		})
+
+	# 		stock_entry.insert()
+	# 		stock_entry.submit()  # Ensure it's submitted
+
+	# 		for item in self.general_item_request_ct:
+	# 			if item.stock_entry_marked == 0:
+	# 				item.stock_entry_marked = 1
+	# 				item.stock_entry = stock_entry.name
+	# 				item.db_update()  # Save changes
+
+	# 		self.db_set('stock_entry', stock_entry.name)
+
+	# 		frappe.msgprint(f"Stock Entry {stock_entry.name} created successfully")
+
+	# 	except Exception as e:
+	# 		frappe.log_error(f"Error in send_data_from_gii_to_si: {e}", "Stock Entry Error")
+	# 		frappe.throw(f"Error in processing: {e}")
+
 
 
 	# def add_general_part_row(self, item_code, qty):
@@ -276,6 +462,7 @@ def close_document(docname):
     try:
         # Directly update the status to 'Closed'
         frappe.db.set_value('General Item Issuance', docname, 'status', 'Closed')
+        frappe.db.set_value('Request Form', docname.request_form, 'status', 'Closed')
 
         # Commit the changes to apply them immediately
         frappe.db.commit()
@@ -283,4 +470,6 @@ def close_document(docname):
         return {'status': 'success', 'message': 'Document closed successfully.'}
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), 'Close Document Error')
-        frappe.throw(_('An error occurred while closing the document: {0}').format(str(e)))
+        frappe.throw(('An error occurred while closing the document: {0}').format(str(e)))
+
+
