@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"1ydPis97T5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Maintainance Addon</span>\",\"col\":12}},{\"id\":\"nu1WdadBGD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request Form\",\"col\":3}},{\"id\":\"8nABJ9OHpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Machine Parts Issuance\",\"col\":3}},{\"id\":\"xfF3QSq3pZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Item Issuance\",\"col\":3}},{\"id\":\"pLGTZvSrho\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Complaint\",\"col\":3}}]",
+ "content": "[{\"id\":\"1ydPis97T5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Maintainance Addon</span>\",\"col\":12}},{\"id\":\"IjqF0RdcXq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Report\",\"col\":3}},{\"id\":\"E8mGCIOiSX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Ledger\",\"col\":3}},{\"id\":\"y9sJaS7aED\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"D43yYaWILj\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nu1WdadBGD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request Form\",\"col\":3}},{\"id\":\"8nABJ9OHpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Machine Parts Issuance\",\"col\":3}},{\"id\":\"xfF3QSq3pZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Item Issuance\",\"col\":3}},{\"id\":\"pLGTZvSrho\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Complaint\",\"col\":3}},{\"id\":\"9d-mGUJbZY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"l0gnIUzG66\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request for Quotation\",\"col\":3}},{\"id\":\"DwgLZWBx9Q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier Quotation\",\"col\":3}},{\"id\":\"-6dCVwXKv-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"rreEsZskEg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipt\",\"col\":3}},{\"id\":\"9gu47dX3o5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}}]",
  "creation": "2024-06-11 12:20:26.655349",
  "custom_blocks": [],
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "is_hidden": 0,
  "label": "Maintainance Addon",
  "links": [],
- "modified": "2024-09-30 16:53:23.475199",
+ "modified": "2025-07-26 15:39:47.709457",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Maintainance Addon",
@@ -22,14 +22,94 @@
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 33.0,
+ "sequence_id": 22.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock Report",
+   "link_to": "Stock Report",
+   "report_ref_doctype": "Stock Ledger Entry",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "General Item Issuance",
+   "link_to": "General Item Issuance",
+   "stats_filter": "[[\"General Item Issuance\",\"docstatus\",\"!=\",\"2\",false],[\"General Item Issuance\",\"status\",\"in\",[\"In Progress\",null],false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Order",
+   "link_to": "Purchase Order",
+   "stats_filter": "[[\"Purchase Order\",\"status\",\"in\",[\"To Receive and Bill\",\"To Bill\",\"\",\"To Receive\",\"\",\"Draft\",\"\",null],false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Material Request",
+   "link_to": "Material Request",
+   "stats_filter": "[[\"Material Request\",\"status\",\"in\",[\"Draft\",\"Pending\",\"Partially Ordered\",\"Partially Received\",null],false],[\"Material Request\",\"docstatus\",\"!=\",\"2\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Request for Quotation",
+   "link_to": "Request for Quotation",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Supplier Quotation",
+   "link_to": "Supplier Quotation",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Invoice",
+   "link_to": "Purchase Invoice",
+   "stats_filter": "[[\"Purchase Invoice\",\"workflow_state\",\"=\",\"Pending For Approval\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Receipt",
+   "link_to": "Purchase Receipt",
+   "stats_filter": "[[\"Purchase Receipt\",\"status\",\"=\",\"To Bill\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock Ledger",
+   "link_to": "Stock Ledger Report",
+   "report_ref_doctype": "Stock Ledger Entry",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Machine Parts Issuance",
+   "link_to": "Machine Parts Issuance",
+   "stats_filter": "[[\"Machine Parts Issuance\",\"status\",\"in\",[\"Draft\",\"In Progress\",null],false]]",
+   "type": "DocType"
+  },
   {
    "color": "Grey",
    "doc_view": "List",
    "label": "Request Form",
    "link_to": "Request Form",
-   "stats_filter": "[]",
+   "stats_filter": "[[\"Request Form\",\"status\",\"in\",[\"Initialize\",\"In Progress\",null],false],[\"Request Form\",\"docstatus\",\"!=\",\"2\",false]]",
    "type": "DocType"
   },
   {
@@ -43,18 +123,10 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "General Item Issuance",
-   "link_to": "General Item Issuance",
-   "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Machine Parts Issuance",
-   "link_to": "Machine Parts Issuance",
-   "stats_filter": "[]",
-   "type": "DocType"
+   "label": "Stock Balance",
+   "link_to": "Stock Balance Report",
+   "report_ref_doctype": "Stock Ledger Entry",
+   "type": "Report"
   }
  ],
  "title": "Maintainance Addon"
