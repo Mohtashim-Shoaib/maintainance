@@ -8,7 +8,7 @@ frappe.listview_settings["Request Form"] = {
         if (doc.status === "In Progress") {
             return [__("In Progress"), "blue", "status,=,In Progress"];
         }
-        if (doc.status === "Closed") {
+        if (doc.status == "Closed") {
             return [__("Closed"), "yellow", "status,=,Closed"];
         }
         if (doc.status === "Completed") {

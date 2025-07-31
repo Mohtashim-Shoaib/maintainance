@@ -458,18 +458,220 @@ def add_general_part_row(docname, item, qty):
 
 
 @frappe.whitelist(allow_guest=True)
+def aggressive_refresh_list_view(doctype, docname=None):
+    """Aggressively force refresh the list view by clearing all possible caches"""
+    try:
+        print(f"DEBUG: Aggressively refreshing list view for {doctype}")
+        
+        # Clear all possible caches multiple times
+        for i in range(3):
+            frappe.clear_cache()
+            frappe.clear_cache(doctype=doctype)
+            print(f"DEBUG: Cache clear iteration {i+1}")
+        
+        # Force database refresh
+        frappe.db.commit()
+        
+        # Clear specific document cache
+        if docname:
+            frappe.get_doc(doctype, docname).reload()
+            print(f"DEBUG: Document {docname} reloaded")
+        
+        # Force refresh by clearing all caches again
+        frappe.clear_cache()
+        frappe.db.commit()
+        
+        print(f"DEBUG: Aggressive list view cache cleared for {doctype}")
+        
+        return {
+            'status': 'success',
+            'message': f'Aggressive list view refresh completed for {doctype}',
+            'doctype': doctype,
+            'docname': docname,
+            'force_reload': True
+        }
+    except Exception as e:
+        print(f"DEBUG: Exception in aggressive_refresh_list_view: {str(e)}")
+        frappe.log_error(frappe.get_traceback(), 'Aggressive Refresh List View Error')
+        frappe.throw(f"Error in aggressive refresh: {str(e)}")
+
+
+@frappe.whitelist(allow_guest=True)
+def get_client_refresh_script(doctype, docname):
+    """Return JavaScript code to force client-side refresh"""
+    try:
+        print(f"DEBUG: Generating client refresh script for {doctype}")
+        
+        script = f"""
+        // Force refresh the list view
+        if (frappe.views.ListView && frappe.views.ListView.list_view) {{
+            frappe.views.ListView.list_view.refresh();
+            console.log('List view refreshed via JavaScript');
+        }}
+        
+        // Force reload the current page if it's a list view
+        if (window.location.href.includes('/list/')) {{
+            window.location.reload(true);
+            console.log('Page reloaded via JavaScript');
+        }}
+        
+        // Force refresh any open list views
+        frappe.ui.toolbar.clear_cache();
+        console.log('Toolbar cache cleared');
+        """
+        
+        return {
+            'status': 'success',
+            'script': script,
+            'doctype': doctype,
+            'docname': docname
+        }
+    except Exception as e:
+        print(f"DEBUG: Exception in get_client_refresh_script: {str(e)}")
+        frappe.log_error(frappe.get_traceback(), 'Client Refresh Script Error')
+        frappe.throw(f"Error generating refresh script: {str(e)}")
+
+
+@frappe.whitelist(allow_guest=True)
+def force_refresh_list_view(doctype, docname=None):
+    """Force refresh the list view for a specific doctype"""
+    try:
+        print(f"DEBUG: Force refreshing list view for {doctype}")
+        
+        # Clear all caches
+        frappe.clear_cache()
+        frappe.clear_cache(doctype=doctype)
+        
+        # Force database refresh
+        frappe.db.commit()
+        
+        print(f"DEBUG: List view cache cleared for {doctype}")
+        
+        return {
+            'status': 'success',
+            'message': f'List view refreshed for {doctype}',
+            'doctype': doctype,
+            'docname': docname
+        }
+    except Exception as e:
+        print(f"DEBUG: Exception in force_refresh_list_view: {str(e)}")
+        frappe.log_error(frappe.get_traceback(), 'Force Refresh List View Error')
+        frappe.throw(f"Error refreshing list view: {str(e)}")
+
+
+@frappe.whitelist(allow_guest=True)
 def close_document(docname):
     try:
+        # Debug: Print the document name
+        print(f"DEBUG: Starting close_document for docname: {docname}")
+        
+        # Get the document to access its request_form field
+        doc = frappe.get_doc('General Item Issuance', docname)
+        print(f"DEBUG: Document loaded successfully: {doc.name}")
+        print(f"DEBUG: Document request_form field: {doc.request_form}")
+        
         # Directly update the status to 'Closed'
+        print(f"DEBUG: Updating General Item Issuance status to Closed")
         frappe.db.set_value('General Item Issuance', docname, 'status', 'Closed')
-        frappe.db.set_value('Request Form', docname.request_form, 'status', 'Closed')
+        
+        # Update the Request Form status if request_form exists
+        if doc.request_form:
+            print(f"DEBUG: Request form exists: {doc.request_form}")
+            print(f"DEBUG: Updating Request Form status to Closed")
+            
+            # Check if Request Form exists before updating
+            if frappe.db.exists('Request Form', doc.request_form):
+                print(f"DEBUG: Request Form document exists in database")
+                frappe.db.set_value('Request Form', doc.request_form, 'status', 'Closed')
+                frappe.db.set_value('Request Form', doc.request_form, 'general_item_status', 'Closed')
+                print(f"DEBUG: Request Form status and general_item_status updated successfully")
+                
+                # Clear cache for Request Form to refresh list view
+                frappe.clear_cache(doctype='Request Form')
+                print(f"DEBUG: Cache cleared for Request Form")
+                
+                # Force refresh the list view
+                force_complete_refresh('Request Form', doc.request_form)
+                print(f"DEBUG: List view completely refreshed")
+                
+                # Clear document cache by reloading the document
+                frappe.get_doc('Request Form', doc.request_form).reload()
+                print(f"DEBUG: Request Form document reloaded")
+                
+                # Force refresh the list view by clearing list cache
+                frappe.clear_cache(doctype='Request Form')
+                frappe.db.commit()
+                print(f"DEBUG: List view cache cleared and committed")
+                
+            else:
+                print(f"DEBUG: ERROR - Request Form document does not exist: {doc.request_form}")
+        else:
+            print(f"DEBUG: No request_form field found in document")
 
         # Commit the changes to apply them immediately
+        print(f"DEBUG: Committing changes to database")
         frappe.db.commit()
+        print(f"DEBUG: Database changes committed successfully")
+        
+        # Clear cache for General Item Issuance as well
+        frappe.clear_cache(doctype='General Item Issuance')
+        print(f"DEBUG: Cache cleared for General Item Issuance")
 
-        return {'status': 'success', 'message': 'Document closed successfully.'}
+        return {
+            'status': 'success', 
+            'message': 'Document closed successfully.',
+            'refresh': True,
+            'request_form': doc.request_form if doc.request_form else None,
+            'force_refresh': True,
+            'list_refresh': True,
+            'client_script': get_client_refresh_script('Request Form', doc.request_form)['script'] if doc.request_form else None
+        }
     except Exception as e:
+        print(f"DEBUG: Exception occurred: {str(e)}")
         frappe.log_error(frappe.get_traceback(), 'Close Document Error')
         frappe.throw(('An error occurred while closing the document: {0}').format(str(e)))
+
+
+@frappe.whitelist(allow_guest=True)
+def force_complete_refresh(doctype, docname=None):
+    """Force a complete refresh by clearing all caches and reloading"""
+    try:
+        print(f"DEBUG: Force complete refresh for {doctype}")
+        
+        # Clear all possible caches multiple times
+        for i in range(5):
+            frappe.clear_cache()
+            frappe.clear_cache(doctype=doctype)
+            print(f"DEBUG: Complete cache clear iteration {i+1}")
+        
+        # Force database refresh
+        frappe.db.commit()
+        
+        # Clear specific document cache
+        if docname:
+            try:
+                frappe.get_doc(doctype, docname).reload()
+                print(f"DEBUG: Document {docname} reloaded")
+            except:
+                print(f"DEBUG: Could not reload document {docname}")
+        
+        # Force refresh by clearing all caches again
+        frappe.clear_cache()
+        frappe.db.commit()
+        
+        print(f"DEBUG: Complete refresh completed for {doctype}")
+        
+        return {
+            'status': 'success',
+            'message': f'Complete refresh completed for {doctype}',
+            'doctype': doctype,
+            'docname': docname,
+            'force_reload': True,
+            'clear_all_caches': True
+        }
+    except Exception as e:
+        print(f"DEBUG: Exception in force_complete_refresh: {str(e)}")
+        frappe.log_error(frappe.get_traceback(), 'Force Complete Refresh Error')
+        frappe.throw(f"Error in complete refresh: {str(e)}")
 
 
