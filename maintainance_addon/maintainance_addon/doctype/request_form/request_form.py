@@ -111,6 +111,7 @@ class RequestForm(Document):
 					})
 					material_request.insert(ignore_permissions=True)
 					material_request.save()
+					material_request.workflow_state = "For Approval"
 					frappe.db.commit()  # Ensure data is committed to the database
 					self.db_set('material_request', material_request.name)
 					frappe.msgprint(
