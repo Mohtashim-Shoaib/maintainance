@@ -46,7 +46,7 @@ function get_available_stock(frm, item_code, qty) {
             frm.refresh_field("items");
         };
 
-        if (["MACHINE SPARE PARTS"].includes(group)) {
+        if (["MACHINE SPARE PARTS", "CUTTING MACHINE", "STITCHING MACHINE", "SUCKTION MACHINE"].includes(group)) {
             frappe.call({
                 method: "maintainance_addon.maintainance_addon.doctype.request_form.request_form.get_available_qty",
                 args: { item_code: item_code },
