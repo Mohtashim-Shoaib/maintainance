@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"1ydPis97T5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Maintainance Addon</span>\",\"col\":12}},{\"id\":\"IjqF0RdcXq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Report\",\"col\":3}},{\"id\":\"E8mGCIOiSX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Ledger\",\"col\":3}},{\"id\":\"y9sJaS7aED\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"D43yYaWILj\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nu1WdadBGD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request Form\",\"col\":3}},{\"id\":\"8nABJ9OHpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Machine Parts Issuance\",\"col\":3}},{\"id\":\"xfF3QSq3pZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Item Issuance\",\"col\":3}},{\"id\":\"pLGTZvSrho\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Complaint\",\"col\":3}},{\"id\":\"9d-mGUJbZY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"l0gnIUzG66\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request for Quotation\",\"col\":3}},{\"id\":\"DwgLZWBx9Q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier Quotation\",\"col\":3}},{\"id\":\"-6dCVwXKv-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"rreEsZskEg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipt\",\"col\":3}},{\"id\":\"9gu47dX3o5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"Br4PX8XSDp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Work Order Transfer Manager\",\"col\":3}},{\"id\":\"aiMh4-4Rkc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Raw Material Transfer\",\"col\":3}},{\"id\":\"z-M-8ufRVI\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Subcontracting</b></span>\",\"col\":12}},{\"id\":\"KizgmuqzW6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"ZX9C1xqQM7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subcontracting Order\",\"col\":3}},{\"id\":\"5otxFV0y5Q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subcontracting Receipt\",\"col\":3}}]",
+ "content": "[{\"id\":\"1ydPis97T5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Maintainance Addon</span>\",\"col\":12}},{\"id\":\"IjqF0RdcXq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Report\",\"col\":3}},{\"id\":\"E8mGCIOiSX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Ledger\",\"col\":3}},{\"id\":\"y9sJaS7aED\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"D43yYaWILj\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nu1WdadBGD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request Form\",\"col\":3}},{\"id\":\"8nABJ9OHpr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Machine Parts Issuance\",\"col\":3}},{\"id\":\"xfF3QSq3pZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Item Issuance\",\"col\":3}},{\"id\":\"pLGTZvSrho\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Complaint\",\"col\":3}},{\"id\":\"9d-mGUJbZY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"l0gnIUzG66\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Request for Quotation\",\"col\":3}},{\"id\":\"DwgLZWBx9Q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier Quotation\",\"col\":3}},{\"id\":\"-6dCVwXKv-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"rreEsZskEg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipt\",\"col\":3}},{\"id\":\"9gu47dX3o5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"Br4PX8XSDp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Work Order Transfer Manager\",\"col\":3}},{\"id\":\"aiMh4-4Rkc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Raw Material Transfer\",\"col\":3}},{\"id\":\"z-M-8ufRVI\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Subcontracting</b></span>\",\"col\":12}},{\"id\":\"KizgmuqzW6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"ZX9C1xqQM7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subcontracting Order\",\"col\":3}},{\"id\":\"5otxFV0y5Q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subcontracting Receipt\",\"col\":3}},{\"id\":\"lTsBSb3-22\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Report</b></span>\",\"col\":12}},{\"id\":\"RSuG-oHaBm\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order Analysis\",\"col\":3}}]",
  "creation": "2024-06-11 12:20:26.655349",
  "custom_blocks": [],
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "is_hidden": 0,
  "label": "Maintainance Addon",
  "links": [],
- "modified": "2025-08-29 17:54:11.600142",
+ "modified": "2025-09-07 16:10:41.739464",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Maintainance Addon",
@@ -24,6 +24,14 @@
  "roles": [],
  "sequence_id": 22.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Order Analysis",
+   "link_to": "Purchase Order Analysis",
+   "report_ref_doctype": "Purchase Order",
+   "type": "Report"
+  },
   {
    "color": "Grey",
    "doc_view": "List",

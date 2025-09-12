@@ -107,7 +107,8 @@ class RequestForm(Document):
 						'custom_request_form': self.name,
 						'title': f"Material Request for {self.name}",
 						'per_ordered': 0,
-						'per_received':0
+						'per_received':0,
+						'naming_series': 'MR-RF-.###.-.YY'
 					})
 					material_request.insert(ignore_permissions=True)
 					material_request.save()
