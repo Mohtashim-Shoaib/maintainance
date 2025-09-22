@@ -115,6 +115,8 @@ class MachinePartsIssuance(Document):
 				frappe.throw(f"Item {item_code}: Issued quantity ({issued_qty}) cannot be greater than balance quantity ({total_balance_qty}).")
 
 	def send_data_from_mpi_to_si(self):
+		settings = frappe.get_single('Maintainance Addon Settings')
+		m_type = settings.machine_part_stock_entry_type
 		# if self.total_issued_item == self.total_requested_item:
 		if 1 == 1:
 			try:
@@ -134,7 +136,7 @@ class MachinePartsIssuance(Document):
 					"doctype":"Stock Entry",
 					# 'purpose': 'Material Transfer',
 					'posting_date': self.date,
-					'stock_entry_type': 'Material Issue',
+					'stock_entry_type': m_type,
 					'items': stock_entry_item
 				})
 				stock_entry.insert()

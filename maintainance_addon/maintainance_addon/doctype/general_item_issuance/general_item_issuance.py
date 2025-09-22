@@ -195,6 +195,8 @@ class GeneralItemIssuance(Document):
 			# 	frappe.throw(f"Issued quantity ({issued_qty}) for item {item_code} exceeds the available balance ({total_balance_qty}).")
 
 	def send_data_from_gii_to_si(self):
+		settings = frappe.get_single('Maintainance Addon Settings')
+		g_type = settings.g_type
 		if self.docstatus != 1:
 			frappe.throw("Document must be submitted before sending data to Stock Entry")
 
@@ -232,7 +234,7 @@ class GeneralItemIssuance(Document):
 			stock_entry = frappe.get_doc({
 				'doctype': 'Stock Entry',
 				'posting_date': self.date or frappe.utils.nowdate(),
-				'stock_entry_type': 'Material Issue',
+				'stock_entry_type': g_type,
 				'items': stock_entry_items,
 				'custom_general_item_issuance': self.name
 			})
