@@ -1,0 +1,129 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-11 18:50:00.000000",
+ "description": "Report showing items linked to assets and their stock entries",
+ "doctype": "Report",
+ "engine": "InnoDB",
+ "field_order": [
+  "report_name",
+  "module",
+  "report_type",
+  "is_standard",
+  "disabled",
+  "use_indicator",
+  "add_total_row",
+  "disabled",
+  "prepared_report",
+  "query_report",
+  "report_script",
+  "js_file",
+  "json",
+  "report_type",
+  "is_standard",
+  "module",
+  "report_name"
+ ],
+ "fields": [
+  {
+   "default": "Asset Report",
+   "fieldname": "report_name",
+   "fieldtype": "Data",
+   "label": "Report Name",
+   "reqd": 1
+  },
+  {
+   "default": "Maintainance Addon",
+   "fieldname": "module",
+   "fieldtype": "Link",
+   "label": "Module",
+   "options": "Module Def",
+   "reqd": 1
+  },
+  {
+   "default": "Report Builder",
+   "fieldname": "report_type",
+   "fieldtype": "Select",
+   "label": "Report Type",
+   "options": "Report Builder\nQuery Report\nScript Report\nCustom Report",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_standard",
+   "fieldtype": "Check",
+   "label": "Is Standard"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "use_indicator",
+   "fieldtype": "Check",
+   "label": "Use Indicator"
+  },
+  {
+   "default": "0",
+   "fieldname": "add_total_row",
+   "fieldtype": "Check",
+   "label": "Add Total Row"
+  },
+  {
+   "default": "0",
+   "fieldname": "prepared_report",
+   "fieldtype": "Check",
+   "label": "Prepared Report"
+  },
+  {
+   "default": "0",
+   "fieldname": "query_report",
+   "fieldtype": "Check",
+   "label": "Query Report"
+  },
+  {
+   "default": "maintainance_addon.maintainance_addon.report.asset_report.asset_report.execute",
+   "fieldname": "report_script",
+   "fieldtype": "Data",
+   "label": "Report Script"
+  },
+  {
+   "fieldname": "js_file",
+   "fieldtype": "Attach",
+   "label": "JS File"
+  },
+  {
+   "fieldname": "json",
+   "fieldtype": "Code",
+   "label": "JSON"
+  }
+ ],
+ "idx": 0,
+ "is_standard": 0,
+ "json": "{\n \"filters\": [\n  {\n   \"fieldname\": \"asset\",\n   \"fieldtype\": \"Link\",\n   \"label\": \"Asset\",\n   \"options\": \"Asset\"\n  },\n  {\n   \"fieldname\": \"company\",\n   \"fieldtype\": \"Link\",\n   \"label\": \"Company\",\n   \"options\": \"Company\"\n  },\n  {\n   \"fieldname\": \"from_date\",\n   \"fieldtype\": \"Date\",\n   \"label\": \"From Date\"\n  },\n  {\n   \"fieldname\": \"to_date\",\n   \"fieldtype\": \"Date\",\n   \"label\": \"To Date\"\n  }\n ]\n}",
+ "modified": "2025-10-11 18:50:00.000000",
+ "modified_by": "Administrator",
+ "module": "Maintainance Addon",
+ "name": "Asset Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "report_name": "Asset Report",
+ "report_script": "maintainance_addon.maintainance_addon.report.asset_report.asset_report.execute",
+ "report_type": "Script Report"
+}

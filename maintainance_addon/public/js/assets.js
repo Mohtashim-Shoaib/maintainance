@@ -28,7 +28,7 @@ const ASSET_CONNECTION_STYLES = `
 frappe.ui.form.on('Asset', {
     refresh(frm) {
         console.log('Asset DEBUG: refresh - assets.js loaded!');
-        
+
         // Inject styles once
         if (!document.getElementById('asset-connection-styles')) {
             $('head').append(ASSET_CONNECTION_STYLES);
@@ -46,6 +46,11 @@ frappe.ui.form.on('Asset', {
             // Test the API first
             test_api_call(frm);
             add_connection_tab_content(frm);
+            
+            // Also try to add content after a longer delay
+            setTimeout(() => {
+                add_connection_tab_content(frm);
+            }, 3000);
         }
     },
     
@@ -56,14 +61,45 @@ frappe.ui.form.on('Asset', {
         // Add event listener for tab changes
         $(document).on('click', '.nav-link[data-toggle="tab"]', function() {
             const tabName = $(this).attr('data-fieldname');
-            console.log('Asset DEBUG: Tab clicked:', tabName);
+            const tabText = $(this).text().trim();
+            console.log('Asset DEBUG: Tab clicked:', tabName, 'Text:', tabText);
             
-            if (tabName === 'connections_tab' || $(this).text().trim() === 'Connection') {
+            if (tabName === 'connections_tab' || tabText === 'Connection') {
                 setTimeout(() => {
                     console.log('Asset DEBUG: Connection tab activated, adding content');
                     add_connection_tab_content(frm);
                 }, 500);
             }
+        });
+        
+        // Also try to add content immediately if we're already on the connection tab
+        setTimeout(() => {
+            const activeTab = $('.nav-link.active');
+            if (activeTab.length > 0 && activeTab.text().trim() === 'Connection') {
+                console.log('Asset DEBUG: Already on Connection tab, adding content');
+                add_connection_tab_content(frm);
+            }
+        }, 2000);
+        
+        // Use MutationObserver to watch for DOM changes and detect when Connection tab is loaded
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    const connectionTab = $('.tab-pane').filter(function() {
+                        return $(this).attr('id') && $(this).attr('id').includes('connection');
+                    });
+                    if (connectionTab.length > 0 && connectionTab.is(':visible')) {
+                        console.log('Asset DEBUG: Connection tab detected via MutationObserver');
+                        add_connection_tab_content(frm);
+                    }
+                }
+            });
+        });
+        
+        // Start observing
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
         });
     }
 });
@@ -200,28 +236,62 @@ function add_error_state_to_connection_tab(frm, error) {
 function add_html_to_connection_tab(frm, html) {
     // Wait for the connection tab to be available
     setTimeout(() => {
+        console.log('Asset DEBUG: Looking for connection tab...');
+        
         // Try to find the connection tab content area
         const connectionTab = $('.form-layout .tab-content .tab-pane[data-fieldname="connections_tab"]');
         if (connectionTab.length > 0) {
             console.log('Asset DEBUG: Found connection tab, adding content');
             connectionTab.html(html);
-        } else {
-            // Try alternative selectors
-            const alternativeSelectors = [
-                '.form-layout .tab-content .tab-pane.active',
-                '.form-layout .tab-content .tab-pane:last',
-                '.form-layout .tab-content',
-                '.form-layout .form-document'
-            ];
-            
-            for (let selector of alternativeSelectors) {
-                const element = $(selector);
-                if (element.length > 0) {
-                    console.log('Asset DEBUG: Found element with selector:', selector);
-                    element.append(html);
-                    break;
+            return;
+        }
+        
+        // Try to find the connection tab by looking for the tab with "Connection" text
+        const connectionTabLink = $('.nav-link').filter(function() {
+            return $(this).text().trim() === 'Connection';
+        });
+        
+        if (connectionTabLink.length > 0) {
+            const tabId = connectionTabLink.attr('href');
+            if (tabId) {
+                const targetTab = $(tabId);
+                if (targetTab.length > 0) {
+                    console.log('Asset DEBUG: Found connection tab by href, adding content');
+                    targetTab.html(html);
+                    return;
                 }
             }
+        }
+        
+        // Try alternative selectors
+        const alternativeSelectors = [
+            '.form-layout .tab-content .tab-pane.active',
+            '.form-layout .tab-content .tab-pane:last',
+            '.form-layout .tab-content',
+            '.form-layout .form-document',
+            '.form-layout .form-document .form-layout',
+            '.form-layout .form-document .form-layout .tab-content',
+            '.tab-content .tab-pane.active',
+            '.tab-content .tab-pane:last',
+            '.tab-content',
+            '.form-document .tab-content',
+            '.form-document .tab-content .tab-pane',
+            '.form-document .tab-content .tab-pane.active'
+        ];
+        
+        for (let selector of alternativeSelectors) {
+            const element = $(selector);
+            if (element.length > 0) {
+                console.log('Asset DEBUG: Found element with selector:', selector);
+                element.append(html);
+                break;
+            }
+        }
+        
+        // If still not found, try to inject directly into the body
+        if ($('.asset-connection-content').length === 0) {
+            console.log('Asset DEBUG: No suitable container found, injecting into body');
+            $('body').append(html);
         }
     }, 1000);
 }
