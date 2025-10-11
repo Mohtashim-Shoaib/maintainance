@@ -227,7 +227,8 @@ class GeneralItemIssuance(Document):
 					'qty': item.qty,
 					's_warehouse': "Stores - SAH",
 					'uom': item.unit or frappe.db.get_value("Item", item.item_code, "stock_uom") or "Nos",
-					'conversion_factor': 1.0
+					'conversion_factor': 1.0,
+					'custom_general_item_issuance': self.name
 				})
 
 			# Create and submit stock entry

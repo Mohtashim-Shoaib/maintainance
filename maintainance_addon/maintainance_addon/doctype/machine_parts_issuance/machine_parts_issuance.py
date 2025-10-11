@@ -129,6 +129,7 @@ class MachinePartsIssuance(Document):
 							'item_code': item.item_code,
 							'qty': item.issued_qty,
 							's_warehouse': "Stores - SAH",
+							'custom_machine_parts_issuance': self.name
 							# 'basic_rate': item.rate,
 							# 'warehouse': item.warehouse
 						})
