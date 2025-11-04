@@ -234,10 +234,20 @@
    "read_only": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-12-31 01:03:36.657809",
+ "links": [
+  {
+   "link_doctype": "Stock Entry",
+   "link_fieldname": "custom_machine_parts_issuance"
+  },
+  {
+   "link_doctype": "Request Form",
+   "link_fieldname": "part_request"
+  }
+ ],
+ "modified": "2025-11-05 01:48:18.169264",
  "modified_by": "Administrator",
  "module": "Maintainance Addon",
  "name": "Machine Parts Issuance",
@@ -257,6 +267,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
