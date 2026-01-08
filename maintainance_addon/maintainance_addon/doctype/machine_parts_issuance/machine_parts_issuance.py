@@ -117,6 +117,7 @@ class MachinePartsIssuance(Document):
 	def send_data_from_mpi_to_si(self):
 		settings = frappe.get_single('Maintainance Addon Settings')
 		m_type = settings.machine_part_stock_entry_type
+		maintainance_addon_settings = frappe.get_single('Maintainance Addon Settings')
 		# if self.total_issued_item == self.total_requested_item:
 		if 1 == 1:
 			try:
@@ -129,7 +130,8 @@ class MachinePartsIssuance(Document):
 							'item_code': item.item_code,
 							'qty': item.issued_qty,
 							's_warehouse': "Stores - SAH",
-							'custom_machine_parts_issuance': self.name
+							'custom_machine_parts_issuance': self.name,
+							'cost_center': maintainance_addon_settings.cost_center
 							# 'basic_rate': item.rate,
 							# 'warehouse': item.warehouse
 						})
@@ -138,7 +140,8 @@ class MachinePartsIssuance(Document):
 					# 'purpose': 'Material Transfer',
 					'posting_date': self.date,
 					'stock_entry_type': m_type,
-					'items': stock_entry_item
+					'items': stock_entry_item,
+					'custom_cost_center': maintainance_addon_settings.cost_center
 				})
 				stock_entry.insert()
 				stock_entry.save()
